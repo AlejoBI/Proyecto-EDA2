@@ -1,0 +1,1 @@
+export const SECRET_ACCESS_TOKEN = "secret_token"
