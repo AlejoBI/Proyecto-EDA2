@@ -3,7 +3,6 @@ import { createContext, useState, useContext, useEffect } from "react";
 import { registerRequest, loginRequest, verifyTokenRequest } from "../api/auth"; // Import the request functions from the auth file
 
 import Cookies from "js-cookie";
-import { set } from "mongoose";
 
 export const AuthContext = createContext(); // Create a context for the authentication
 
