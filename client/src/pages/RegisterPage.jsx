@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form"; // Used for form validation in React
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
@@ -14,7 +14,7 @@ function RegisterPage() {
     handleSubmit,
     formState: { errors },
   } = useForm();
-  const { signup, isAuthenticated, errors: RegisterErrors } = useAuth(); // Call the useAuth function to get the signup function
+  const { signup, isAuthenticated, errors: registerErrors } = useAuth(); // Call the useAuth function to get the signup function
   const navigate = useNavigate();
   const [showToast, setShowToast] = useState(false); // Create a state to show the toast message
 
@@ -29,18 +29,19 @@ function RegisterPage() {
 
   useEffect(() => { 
     // Show the toast message if there are errors
-    if (RegisterErrors) {
+    if (registerErrors) {
       setShowToast(true);
     }
-  }, [RegisterErrors]);
+  }, [registerErrors]);
 
   return (
     <div className="container">
+      <h1>Register</h1>
       <CustomToast
         show={showToast}
-        message={RegisterErrors && RegisterErrors.message}
+        message={registerErrors && registerErrors.message}
         position={{ top: 0, right: 0 }}
-        duration={2000} // 2000 ms = 2 segundos
+        duration={3000} // 3000 ms = 3 segundos
         onClose={() => setShowToast(false)}
       />
       <Form onSubmit={onSubmit}>
@@ -79,6 +80,7 @@ function RegisterPage() {
           Register
         </Button>
       </Form>
+      <p> Do you already have an account? <Link to="/login">Login</Link></p>
     </div>
   );
 }

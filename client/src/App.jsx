@@ -6,6 +6,8 @@ import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import ProfilePage from "./pages/ProfilePage";
 
+import ProtectedRoute from "./ProtectedRoute";
+
 export default function App() {
   return (
     <AuthProvider>
@@ -14,7 +16,9 @@ export default function App() {
           <Route path="/" Component={HomePage} />
           <Route path="/login" Component={LoginPage} />
           <Route path="/register" Component={RegisterPage} />
-          <Route path="/profile" Component={ProfilePage} />
+          <Route Component={ProtectedRoute}>
+            <Route path="/profile" Component={ProfilePage} />
+          </Route>
         </Routes>
       </BrowserRouter>
     </AuthProvider>
