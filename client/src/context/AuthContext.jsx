@@ -1,6 +1,6 @@
 import { createContext, useState, useContext, useEffect } from "react";
 
-import { registerRequest, loginRequest, verifyTokenRequest } from "../api/auth"; // Import the request functions from the auth file
+import { registerRequest, loginRequest, verifyTokenRequest, logoutRequest } from "../api/auth"; // Import the request functions from the auth file
 
 import Cookies from "js-cookie";
 
@@ -44,6 +44,15 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const logout = async () => {
+    // Create a logout function to log out a user
+    // Lo intente hacer desde el backend pero no me funciono
+    // await logoutRequest();
+    Cookies.remove("token");
+    setUser(null);
+    setIsAuthenticated(false);
+  }
+
   useEffect(() => {
     async function checkLogin() {
       const cookies = Cookies.get();
@@ -77,7 +86,7 @@ export const AuthProvider = ({ children }) => {
   return (
     // Return the AuthContext.Provider with the signup function and user state
     <AuthContext.Provider
-      value={{ signup, signin, loading, user, isAuthenticated, errors }}
+      value={{ signup, signin, logout, loading, user, isAuthenticated, errors }}
     >
       {children}
     </AuthContext.Provider>
