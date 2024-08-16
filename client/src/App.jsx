@@ -1,6 +1,7 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext";
 
+import NavigationMenu from "./components/Navbar";
 import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
@@ -12,6 +13,7 @@ export default function App() {
   return (
     <AuthProvider>
       <BrowserRouter>
+        <NavigationMenu />
         <Routes>
           <Route path="/" Component={HomePage} />
           <Route path="/login" Component={LoginPage} />
