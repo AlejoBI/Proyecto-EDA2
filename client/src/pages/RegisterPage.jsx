@@ -27,7 +27,7 @@ function RegisterPage() {
     signup(values); // Call the signup function with the form values
   });
 
-  useEffect(() => { 
+  useEffect(() => {
     // Show the toast message if there are errors
     if (registerErrors) {
       setShowToast(true);
@@ -76,11 +76,23 @@ function RegisterPage() {
             <p style={{ color: "red" }}>Password is required</p>
           )}
         </Form.Group>
+        <Form.Group className="mb-3" controlId="formBasicRole">
+          <Form.Label>Role</Form.Label>
+          <Form.Select
+            {...register("role", { required: true })}
+          >
+            <option value="customer">Customer</option>
+            <option value="professional">Professional</option>
+          </Form.Select>
+          {errors.role && <p style={{ color: "red" }}>Role is required</p>}
+        </Form.Group>
         <Button variant="primary" type="submit">
           Register
         </Button>
       </Form>
-      <p> Do you already have an account? <Link to="/login">Login</Link></p>
+      <p>
+        Do you already have an account? <Link to="/login">Login</Link>
+      </p>
     </div>
   );
 }

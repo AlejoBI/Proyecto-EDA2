@@ -1,6 +1,5 @@
 import axios from './axios';
 
-const API = 'http://localhost:3000/api';
 
 export const registerRequest = async (user) => {
     const res = await axios.post(`/register`, user);
@@ -12,6 +11,9 @@ export const loginRequest = async (user) => {
     return res.data;
 }
 
-export const verifyTokenRequest = () => axios.get(`/verify`);
+export const logoutRequest = () => axios.post(`/logout`);
 
-export const logoutRequest = () => axios.get(`/logout`);
+export const checkAuthRequest = async () => {
+    const res = await axios.get(`/check-auth`);
+    return res.data;
+};

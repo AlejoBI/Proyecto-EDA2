@@ -2,8 +2,7 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form"; // Used for form validation in React
 import { useNavigate, Link } from "react-router-dom";
 
-import Form from "react-bootstrap/Form";
-import Button from "react-bootstrap/Button";
+import { Form, Button } from "react-bootstrap";
 
 import { useAuth } from "../context/AuthContext"; // Import the useAuth function from the AuthContext file
 import CustomToast from "../components/CustomToast"; // Import the CustomToast component
@@ -14,8 +13,8 @@ function LoginPage() {
     handleSubmit,
     formState: { errors },
   } = useForm();
-  const {signin,isAuthenticated, errors: signinErrors} = useAuth();
-  const navigate = useNavigate();
+  const { signin, isAuthenticated, errors: signinErrors } = useAuth();
+  const navigate = useNavigate(); // Create a navigate function to redirect the user
   const [showToast, setShowToast] = useState(false); // Create a state to show the toast message
 
   useEffect(() => {
@@ -24,10 +23,10 @@ function LoginPage() {
   }, [isAuthenticated]);
 
   const onSubmit = handleSubmit((data) => {
-    signin(data);
+    signin(data); // Call the signin function from the AuthContext file
   });
 
-  useEffect(() => { 
+  useEffect(() => {
     // Show the toast message if there are errors
     if (signinErrors) {
       setShowToast(true);
@@ -69,7 +68,9 @@ function LoginPage() {
           Login
         </Button>
       </Form>
-      <p>Don't you have an account? <Link to="/register">Sign up</Link></p>
+      <p>
+        Don't you have an account? <Link to="/register">Sign up</Link>
+      </p>
     </div>
   );
 }

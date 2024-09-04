@@ -15,15 +15,15 @@ function NavigationMenu() {
         <Navbar.Toggle aria-controls="navbar-dark-example" />
         <Navbar.Collapse id="navbar-dark-example">
           <Nav className="me-auto">
-            <Nav.Link href="/Support">Support</Nav.Link>
-            <Nav.Link href="/About">About</Nav.Link>
+            <Nav.Link href="/support">Support</Nav.Link>
+            <Nav.Link href="/about">About</Nav.Link>
           </Nav>
           <Nav style={{ justifyContent: "flex-end" }}>
             {isAuthenticated ? (
               <>
                 <NavDropdown title={tittle} id="navbarScrollingDropdown">
-                  <NavDropdown.Item href="/Profile">Profile</NavDropdown.Item>
-                  <NavDropdown.Item href="/Settings">Settings</NavDropdown.Item>
+                  <NavDropdown.Item href="/profile">Profile</NavDropdown.Item>
+                  <NavDropdown.Item href="/settings">Settings</NavDropdown.Item>
                   <NavDropdown.Divider />
                   <NavDropdown.Item
                     href="/"
@@ -37,8 +37,8 @@ function NavigationMenu() {
               </>
             ) : (
               <>
-                <Nav.Link href="/Login">Login</Nav.Link>
-                <Nav.Link href="/Register">Register</Nav.Link>
+                <Nav.Link href="/login">Login</Nav.Link>
+                <Nav.Link href="/register">Register</Nav.Link>
               </>
             )}
           </Nav>
