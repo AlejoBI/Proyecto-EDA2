@@ -14,7 +14,7 @@ function LoginPage() {
     formState: { errors },
   } = useForm();
   const { signin, isAuthenticated, errors: signinErrors } = useAuth();
-  const navigate = useNavigate();
+  const navigate = useNavigate(); // Create a navigate function to redirect the user
   const [showToast, setShowToast] = useState(false); // Create a state to show the toast message
 
   useEffect(() => {

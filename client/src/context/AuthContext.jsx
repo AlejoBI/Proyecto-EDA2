@@ -1,26 +1,19 @@
 import { createContext, useState, useContext, useEffect } from "react";
 
-import { registerRequest, loginRequest, verifyTokenRequest, logoutRequest } from "../api/auth"; // Import the request functions from the auth file
-
-import Cookies from "js-cookie";
+import {
+  checkAuthRequest,
+  registerRequest,
+  loginRequest,
+  logoutRequest,
+} from "../api/auth"; // Import the request functions from the auth file
 
 export const AuthContext = createContext(); // Create a context for the authentication
-
-export const useAuth = () => {
-  // Create a custom hook to use the AuthContext
-  const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error("useAuth must be used within an AuthProvider");
-  }
-  return context;
-};
 
 export const AuthProvider = ({ children }) => {
   // Create a provider to wrap the application
   const [user, setUser] = useState(null);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(null);
   const [errors, setErrors] = useState(null);
-  const [loading, setLoading] = useState(true);
 
   const signup = async (user) => {
     // Create a signup function to register a user
@@ -46,49 +39,44 @@ export const AuthProvider = ({ children }) => {
 
   const logout = async () => {
     // Create a logout function to log out a user
-    // Lo intente hacer desde el backend pero no me funciono
-    // await logoutRequest();
-    Cookies.remove("token");
+    await logoutRequest();
     setUser(null);
-    setIsAuthenticated(false);
-  }
+    setIsAuthenticated(null);
+  };
 
   useEffect(() => {
     async function checkLogin() {
-      const cookies = Cookies.get();
-
-      if (!cookies.token) {
-        setIsAuthenticated(false);
-        setLoading(false);
-        return setUser(null);
-      }
-
-        try {
-          const res = await verifyTokenRequest(cookies.token);
-          if (!res.data){
-            setIsAuthenticated(false);
-            setLoading(false);
-            return;
-          }
-
+      console.log("Checking login: " + isAuthenticated);
+      try {
+        const res = await checkAuthRequest();
+        if (res) {
+          setUser(res);
           setIsAuthenticated(true);
-          setUser(res.data);
-          setLoading(false);
-        } catch (error) {
+        } else {
           setIsAuthenticated(false);
-          setUser(null);
-          setLoading(false);
         }
+      } catch (error) {
+        setIsAuthenticated(false);
       }
+    }
     checkLogin();
   }, []);
 
   return (
     // Return the AuthContext.Provider with the signup function and user state
     <AuthContext.Provider
-      value={{ signup, signin, logout, loading, user, isAuthenticated, errors }}
+      value={{ signup, signin, logout, user, isAuthenticated, errors }}
     >
       {children}
     </AuthContext.Provider>
   );
+};
+
+export const useAuth = () => {
+  // Create a custom hook to use the AuthContext
+  const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error("useAuth must be used within an AuthProvider");
+  }
+  return context;
 };

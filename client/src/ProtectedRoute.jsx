@@ -1,11 +1,19 @@
-import { useAuth } from "./context/AuthContext";
 import { Navigate, Outlet } from "react-router-dom";
+import { useAuth } from "./context/AuthContext";
+
+import CustomSpinner from "./components/CustomSpinner";
 
 function ProtectedRoute() {
-  const { loading, isAuthenticated } = useAuth();
+  const { isAuthenticated } = useAuth();
 
-  if (loading) return <h1>Loading...</h1>;
-  if (!loading && !isAuthenticated) return <Navigate to="/login" replace />;
+  // Agrega una lógica para manejar la carga inicial mientras se verifica la autenticación
+  if (isAuthenticated === null) {
+    return <CustomSpinner />;
+  }
+
+  if (!isAuthenticated) {
+    return <Navigate to="/login" replace />;
+  }
 
   return <Outlet />;
 }
