@@ -2,6 +2,8 @@ import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import NavDropdown from "react-bootstrap/NavDropdown";
+import Button from 'react-bootstrap/Button';
+import Image from "react-bootstrap/Image";
 import { useAuth } from "../context/AuthContext";
 
 function NavigationMenu() {
@@ -9,7 +11,8 @@ function NavigationMenu() {
   const tittle = user ? `${user.username}` : "Home";
 
   return (
-    <Navbar variant="dark" bg="dark" expand="lg">
+    <Navbar style={{ backgroundColor: "#8306AD", padding: '1% 10%', width: '87%',  height: '5%', margin: '25px auto', borderRadius: "30px"}} variant="dark" expand="lg">
+      
       <Container>
         <Navbar.Brand href="/">Home</Navbar.Brand>
         <Navbar.Toggle aria-controls="navbar-dark-example" />
@@ -37,8 +40,12 @@ function NavigationMenu() {
               </>
             ) : (
               <>
-                <Nav.Link href="/login">Login</Nav.Link>
-                <Nav.Link href="/register">Register</Nav.Link>
+                <Button href="/login" style={{ backgroundColor: "#520078", borderColor: "#520078", marginRight: "10px"}}>
+                  Login
+                </Button>
+                <Button href="/register" style={{ backgroundColor: "#520078", borderColor: "#520078" }}>
+                  Register
+                </Button>
               </>
             )}
           </Nav>
