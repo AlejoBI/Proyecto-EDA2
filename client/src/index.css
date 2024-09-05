@@ -3,7 +3,6 @@
   line-height: 1.5;
   font-weight: 400;
 
-  color-scheme: light dark; /* Enable light/dark mode */
   background-color: #ffffff;
 
   font-synthesis: none; /* Disable system font synthesis */
@@ -102,4 +101,60 @@ body {
 
 #cardLanding6:hover {
   background-color: var(--verdementa-hover);
+}
+
+/* Degradado background login y register# */
+.bg-gradient-custom {
+  background: linear-gradient(to right, #520078, #8306AD);
+}
+
+#buttonLogin {
+  background: var(--morado);
+  border: none;
+  color: var(--blanco);
+}
+
+#buttonLogin:hover {
+  background: var(--morado-hover);
+}
+
+#buttonGoogleLogin {
+  background: var(--blanco);
+  color: var(--negro)
+}
+
+#buttonGoogleLogin:hover {
+  background: var(--gris);
+}
+
+/* Divisor de login */
+.divider {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  margin: 20px 0;
+}
+
+.divider::before,
+.divider::after {
+  content: '';
+  flex: 1;
+  border-bottom: 1px solid #ccc;
+}
+
+.divider:not(:empty)::before {
+  margin-right: 10px;
+}
+
+.divider:not(:empty)::after {
+  margin-left: 10px;
+}
+
+/* Texto sign up y forget password */
+#linkText {
+  color: var(--morado);
+}
+
+#linkText:hover {
+  color: var(--morado-hover-light);
 }
