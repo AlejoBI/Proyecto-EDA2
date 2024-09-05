@@ -1,9 +1,12 @@
 import CustomLabelLanding from "../components/CustomLabelLanding";
+import SearchServiceLanding from "../components/SearchServiceLanding";
 
-import paginaweb from "../assets/paginaweb.jpg";
-
-function HomePage() {
+const HomePage = () =>{
   return (
+    <div className="container">
+      <SearchServiceLanding />
+    </div>
+    
     <div className="container">
       <div style={{
         display: "flex",

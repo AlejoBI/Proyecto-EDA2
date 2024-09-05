@@ -2,7 +2,8 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext";
 import "./index.css"; 
 
-import NavigationMenu from "./components/Navbar";
+import NavigationMenu from "./components/NavigationMenu";
+import Footer from "./components/Footer";   
 import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
@@ -23,6 +24,7 @@ export default function App() {
             <Route path="/profile" Component={ProfilePage} />
           </Route>
         </Routes>
+        <Footer />
       </BrowserRouter>
     </AuthProvider>
   );
