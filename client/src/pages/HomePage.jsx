@@ -1,6 +1,8 @@
 import CustomLabelLanding from "../components/CustomLabelLanding";
 import SearchServiceLanding from "../components/SearchServiceLanding";
 
+import paginaweb from "../assets/paginaweb.jpg";
+
 const HomePage = () => {
   return (
     <>
