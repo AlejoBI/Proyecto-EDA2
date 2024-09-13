@@ -11,7 +11,7 @@
   -moz-osx-font-smoothing: grayscale; /* Antialias text */
 
   /* Colores de la pagina */
-  --transparente: #00000000;
+  --transparente: rgba(255, 255, 255, 0);
   --blanco: #ffffff;
   --negro: black;
   --gris: #f5f5f5;
@@ -108,22 +108,22 @@ body {
   background: linear-gradient(to right, #520078, #8306AD);
 }
 
-#buttonLogin {
+#buttonLoginRegister {
   background: var(--morado);
   border: none;
   color: var(--blanco);
 }
 
-#buttonLogin:hover {
+#buttonLoginRegister:hover {
   background: var(--morado-hover);
 }
 
-#buttonGoogleLogin {
+#buttonGoogleLoginRegister {
   background: var(--blanco);
   color: var(--negro)
 }
 
-#buttonGoogleLogin:hover {
+#buttonGoogleLoginRegister:hover {
   background: var(--gris);
 }
 
@@ -157,4 +157,41 @@ body {
 
 #linkText:hover {
   color: var(--morado-hover-light);
+}
+
+.search-container-custom {
+  background: var(--morado);
+  padding: 2%;
+  margin: 25px auto;
+  border-radius: 50px;
+  justify-content: space-between;
+}
+
+.text-search {
+  color: var(--blanco);
+  margin: 2%;
+}
+
+.image-search {
+  margin: 2%;
+}
+/* Estilos del footer */
+.footer-custom{
+  color: var(--blanco);
+  background: var(--morado);
+  border-radius: 50px 50px 0 0;
+  flex-direction: column;
+}
+
+/* Tabla del footer */
+#style-table {
+  border: none;
+  background: var(--transparente);
+  color: var(--blanco);
+  font-size: 14px;
+}
+
+#style-table2 {
+  color: var(--blanco);
+  text-decoration: none;
 }

@@ -1,26 +1,20 @@
 import SearchBar from "./SearchBar";
 import searchImage from "../assets/imageCanva.png";
-import { Image } from "react-bootstrap";
+import { Container, Image } from "react-bootstrap";
 
 const SearchServiceLanding = () => {
-    return (
-      <div className="mb-3" style={{backgroundColor: '#8306AD', padding: '2% 7%', width: '87%', height: 'auto', margin: '25px auto', justifyContent: 'space-between', alignItems: 'center', borderRadius: '50px', display: 'flex'}}>
-        <div style={{width: '40%', height: '100%', color: 'white', alignItems: 'center'}}>
+  return (
+    <Container className="mb-3 w-87 h-auto d-flex align-items-center search-container-custom">
+      <div className="w-40 h-100 align-items-center m-4 text-search">
         <h1>Quickly discover the perfect freelance service for your needs</h1>
         <p>Find the perfect freelance services for your business</p>
         <SearchBar />
-        </div>
-        <div style={{width: '60%', margin: '2%'}}>
-          <Image
-            src={searchImage}
-            className="img-fluid"
-            style={{ width: "", height: ""}}
-          />
-        </div>
       </div>
-      
-    );
-  }
-  
+      <div className="w-60 image-search">
+        <Image src={searchImage} className="img-fluid" />
+      </div>
+    </Container>
+  );
+};
+
 export default SearchServiceLanding;
-  

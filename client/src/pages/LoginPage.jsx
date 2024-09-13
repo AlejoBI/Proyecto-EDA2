@@ -73,7 +73,7 @@ function LoginPage() {
           <Container className="d-flex justify-content-center align-items-center">
             <Button
             className="w-100 border"
-            id="buttonGoogleLogin">
+            id="buttonGoogleLoginRegister">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="16"
@@ -114,14 +114,7 @@ function LoginPage() {
             <div className="d-flex justify-content-end m-2">
               <Link to="/register" id="linkText">Forget your password</Link>
             </div>
-            <Button
-              variant="primary"
-              type="submit"
-              className="w-100"
-              id="buttonLogin"
-            >
-              Login
-            </Button>
+            <Button variant="primary" type="submit" className="w-100" id="buttonLoginRegister">Login</Button>
           </Form>
         </Card.Body>
       </Card>
