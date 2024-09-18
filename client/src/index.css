@@ -3,7 +3,6 @@
   line-height: 1.5;
   font-weight: 400;
 
-  color-scheme: light dark; /* Enable light/dark mode */
   background-color: #ffffff;
 
   font-synthesis: none; /* Disable system font synthesis */
@@ -12,7 +11,7 @@
   -moz-osx-font-smoothing: grayscale; /* Antialias text */
 
   /* Colores de la pagina */
-  --transparente: #00000000;
+  --transparente: rgba(255, 255, 255, 0);
   --blanco: #ffffff;
   --negro: black;
   --gris: #f5f5f5;
@@ -102,4 +101,97 @@ body {
 
 #cardLanding6:hover {
   background-color: var(--verdementa-hover);
+}
+
+/* Degradado background login y register# */
+.bg-gradient-custom {
+  background: linear-gradient(to right, #520078, #8306AD);
+}
+
+#buttonLoginRegister {
+  background: var(--morado);
+  border: none;
+  color: var(--blanco);
+}
+
+#buttonLoginRegister:hover {
+  background: var(--morado-hover);
+}
+
+#buttonGoogleLoginRegister {
+  background: var(--blanco);
+  color: var(--negro)
+}
+
+#buttonGoogleLoginRegister:hover {
+  background: var(--gris);
+}
+
+/* Divisor de login */
+.divider {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  margin: 20px 0;
+}
+
+.divider::before,
+.divider::after {
+  content: '';
+  flex: 1;
+  border-bottom: 1px solid #ccc;
+}
+
+.divider:not(:empty)::before {
+  margin-right: 10px;
+}
+
+.divider:not(:empty)::after {
+  margin-left: 10px;
+}
+
+/* Texto sign up y forget password */
+#linkText {
+  color: var(--morado);
+}
+
+#linkText:hover {
+  color: var(--morado-hover-light);
+}
+
+.search-container-custom {
+  background: var(--morado);
+  padding: 2%;
+  margin: 25px auto;
+  border-radius: 50px;
+  justify-content: space-between;
+}
+
+.text-search {
+  color: var(--blanco);
+  margin: 2%;
+}
+
+.image-search {
+  margin: 2%;
+}
+/* Estilos del footer */
+.footer-custom{
+  color: var(--blanco);
+  background: var(--morado);
+  border-radius: 50px 50px 0 0;
+  flex-direction: column;
+}
+
+/* Tabla del footer */
+#style-table {
+  border: none;
+  background: var(--transparente);
+  color: var(--blanco);
+  font-size: 14px;
+}
+
+#style-table2 {
+  color: var(--blanco);
+  text-decoration: none;
 }
