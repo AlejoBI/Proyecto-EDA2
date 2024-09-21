@@ -12,7 +12,7 @@ function NavigationMenu() {
   const tittle = user ? `${user.username}` : "Home";
 
   return (
-    <Navbar style={{ backgroundColor: "#8306AD", padding: '0.3% 8%', width: '87%', height: '5%', margin: '25px auto', borderRadius: "40px", fontFamily: 'Inter'}} variant="dark" expand="lg">
+    <Navbar style={{ backgroundColor: "#8306AD", padding: '0.3% 8%', width: '86%', height: '5%', margin: '25px auto', borderRadius: "40px", fontFamily: 'Inter'}} variant="dark" expand="lg">
       <Container>
         <Navbar.Brand href="/">
           <div style={{ display: 'flex', alignItems: 'center' }}>
