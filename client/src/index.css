@@ -1,0 +1,197 @@
+:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  background-color: #ffffff;
+
+  font-synthesis: none; /* Disable system font synthesis */
+  text-rendering: optimizeLegibility; /* Optimize for readability */
+  -webkit-font-smoothing: antialiased; /* Antialias text */
+  -moz-osx-font-smoothing: grayscale; /* Antialias text */
+
+  /* Colores de la pagina */
+  --transparente: rgba(255, 255, 255, 0);
+  --blanco: #ffffff;
+  --negro: black;
+  --gris: #f5f5f5;
+
+  --morado: #8306ad;
+  --moradoclaro: #a5a6f6;
+  --verdeclaro: #63c07c;
+  --naranjaclaro: #f9a86d;
+  --rosaclaro: #f4537c;
+  --verdementa: #7ed2b9;
+
+  --morado-hover: #6b0490; 
+  --moradoclaro-hover: #8e8fff; 
+  --verdeclaro-hover: #4ca367; 
+  --naranjaclaro-hover: #e58b54; 
+  --rosaclaro-hover: #d14269; 
+  --verdementa-hover: #64b89e; 
+
+  --morado-hover-light: #a56cd1; 
+  --moradoclaro-hover-light: #c0bffd; 
+  --verdeclaro-hover-light: #89d4a3; 
+  --naranjaclaro-hover-light: #fbc199; 
+  --rosaclaro-hover-light: #fa718d; 
+  --verdementa-hover-light: #a0e5d0; 
+}
+
+body {
+  margin: 0;
+}
+
+/* Colores cardLanding# */
+#cardLanding1 {
+  color: var(--blanco);
+  background-color: var(--morado);
+  box-shadow: 5px 5px 15px rgba(131, 6, 173, 0.5);
+}
+
+#cardLanding1:hover {
+  background-color: var(--morado-hover);
+}
+
+#cardLanding2 {
+  color: var(--blanco);
+  background-color: var(--moradoclaro);
+  box-shadow: 5px 5px 15px rgba(165, 166, 246, 0.5);
+}
+
+#cardLanding2:hover {
+  background-color: var(--moradoclaro-hover);
+}
+
+#cardLanding3 {
+  color: var(--blanco);
+  background-color: var(--verdeclaro);
+  box-shadow: 5px 5px 15px rgba(99, 192, 124, 0.5);
+}
+
+#cardLanding3:hover {
+  background-color: var(--verdeclaro-hover);
+}
+
+#cardLanding4 {
+  color: var(--blanco);
+  background-color: var(--naranjaclaro);
+  box-shadow: 5px 5px 15px rgba(249, 168, 109, 0.5);
+}
+
+#cardLanding4:hover {
+  background-color: var(--naranjaclaro-hover);
+}
+
+#cardLanding5 {
+  color: var(--blanco);
+  background-color: var(--rosaclaro);
+  box-shadow: 5px 5px 15px rgba(244, 83, 124, 0.5);
+}
+
+#cardLanding5:hover {
+  background-color: var(--rosaclaro-hover);
+}
+
+#cardLanding6 {
+  color: var(--blanco);
+  background-color: var(--verdementa);
+  box-shadow: 5px 5px 15px rgba(126, 210, 185, 0.5);
+}
+
+#cardLanding6:hover {
+  background-color: var(--verdementa-hover);
+}
+
+/* Degradado background login y register# */
+.bg-gradient-custom {
+  background: linear-gradient(to right, #520078, #8306AD);
+}
+
+#buttonLoginRegister {
+  background: var(--morado);
+  border: none;
+  color: var(--blanco);
+}
+
+#buttonLoginRegister:hover {
+  background: var(--morado-hover);
+}
+
+#buttonGoogleLoginRegister {
+  background: var(--blanco);
+  color: var(--negro)
+}
+
+#buttonGoogleLoginRegister:hover {
+  background: var(--gris);
+}
+
+/* Divisor de login */
+.divider {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  margin: 20px 0;
+}
+
+.divider::before,
+.divider::after {
+  content: '';
+  flex: 1;
+  border-bottom: 1px solid #ccc;
+}
+
+.divider:not(:empty)::before {
+  margin-right: 10px;
+}
+
+.divider:not(:empty)::after {
+  margin-left: 10px;
+}
+
+/* Texto sign up y forget password */
+#linkText {
+  color: var(--morado);
+}
+
+#linkText:hover {
+  color: var(--morado-hover-light);
+}
+
+.search-container-custom {
+  background: var(--morado);
+  padding: 2%;
+  margin: 25px auto;
+  border-radius: 50px;
+  justify-content: space-between;
+}
+
+.text-search {
+  color: var(--blanco);
+  margin: 2%;
+}
+
+.image-search {
+  margin: 2%;
+}
+/* Estilos del footer */
+.footer-custom{
+  color: var(--blanco);
+  background: var(--morado);
+  border-radius: 50px 50px 0 0;
+  flex-direction: column;
+}
+
+/* Tabla del footer */
+#style-table {
+  border: none;
+  background: var(--transparente);
+  color: var(--blanco);
+  font-size: 14px;
+}
+
+#style-table2 {
+  color: var(--blanco);
+  text-decoration: none;
+}
