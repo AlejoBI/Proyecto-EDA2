@@ -1,21 +1,28 @@
 import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext";
-import "./index.css";
 
-import NavigationMenu from "./components/NavigationMenu";
-import Footer from "./components/Footer";
-import HomePage from "./pages/HomePage";
-import LoginPage from "./pages/LoginPage";
-import RegisterPage from "./pages/RegisterPage";
-import ProfilePage from "./pages/ProfilePage";
-import ProtectedRoute from "./ProtectedRoute";
+import { NavigationMenu, Footer } from "./components/index.jsx";
+
+import {
+  NotFoundPage,
+  AdminDashboard,
+  JobsPage,
+  FreelancersPage,
+  HomePage,
+  LoginPage,
+  RegisterPage,
+  ProfilePage
+} from "./pages/index.jsx";
+
+import ProtectedRoute from "./utils/ProtectedRoute";
+import PublicRoute from "./utils/PublicRoute";
 
 // Layout component to include NavigationMenu and Footer
 function Layout({ children }) {
   const location = useLocation();
 
   // Determine if NavigationMenu and Footer should be shown
-  const showNavAndFooter = !['/login', '/register'].includes(location.pathname);
+  const showNavAndFooter = !["/login", "/register"].includes(location.pathname);
 
   return (
     <>
@@ -31,12 +38,56 @@ function App() {
     <AuthProvider>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Layout><HomePage /></Layout>} />
-          <Route path="/login" element={<Layout><LoginPage /></Layout>} />
-          <Route path="/register" element={<Layout><RegisterPage /></Layout>} />
-          <Route element={<ProtectedRoute />}>
-            <Route path="/profile" element={<Layout><ProfilePage /></Layout>} />
+          <Route
+            path="/"
+            element={
+              <Layout>
+                <HomePage />
+              </Layout>
+            }
+          />
+
+          <Route element={<PublicRoute />}>
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/register" element={<RegisterPage />} />
+            <Route
+              path="/jobs"
+              element={
+                <Layout>
+                  <JobsPage />
+                </Layout>
+              }
+            />
+            <Route
+              path="/freelancers"
+              element={
+                <Layout>
+                  <FreelancersPage />
+                </Layout>
+              }
+            />
           </Route>
+
+          <Route element={<ProtectedRoute />}>
+            <Route
+              path="/user/profile"
+              element={
+                <Layout>
+                  <ProfilePage />
+                </Layout>
+              }
+            />
+            <Route path="/admin/AdminDashboard" element={<AdminDashboard />} />
+          </Route>
+
+          <Route
+            path="*"
+            element={
+              <Layout>
+                <NotFoundPage />
+              </Layout>
+            }
+          />
         </Routes>
       </BrowserRouter>
     </AuthProvider>

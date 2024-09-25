@@ -1,5 +1,4 @@
-import CustomLabelLanding from "../components/CustomLabelLanding";
-import SearchServiceLanding from "../components/SearchServiceLanding";
+import { CustomLabelLanding, SearchServiceLanding } from "../components/index";
 
 import paginaweb from "../assets/paginaweb.jpg";
 

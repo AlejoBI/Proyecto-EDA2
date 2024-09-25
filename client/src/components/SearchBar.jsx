@@ -3,7 +3,7 @@ import searchImage from "../assets/search.png";
 
 const SearchBar = () => {
   return (
-    <InputGroup className="mb-3" style={{width: '50%'}}>
+    <InputGroup className="mb-3" style={{ width: "50%" }}>
       <Form.Control
         placeholder="Search a service"
         aria-label="Search a service"
@@ -13,7 +13,7 @@ const SearchBar = () => {
         <Image
           src={searchImage}
           className="img-fluid"
-          style={{ width: "20px", height: "20px"}}
+          style={{ width: "20px", height: "20px" }}
         />
       </InputGroup.Text>
     </InputGroup>

@@ -46,7 +46,6 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     async function checkLogin() {
-      console.log("Checking login: " + isAuthenticated);
       try {
         const res = await checkAuthRequest();
         if (res) {
