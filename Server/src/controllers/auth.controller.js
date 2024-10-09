@@ -1,5 +1,5 @@
 import appFirebase from "../firebase/credentials.js";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "firebase/auth";
 import { getFirestore, doc, setDoc, getDoc } from "firebase/firestore";
 
 const auth = getAuth(appFirebase);
@@ -29,6 +29,11 @@ export const register = async (req, res) => {
             role: user.role,
         });
     } catch (error) {
+        if (error.code === 'auth/email-already-in-use') {
+            return res.status(400).json({ message: "Email already in use" });
+        } else if (error.code === 'permission-denied') {
+            return res.status(403).json({ message: "Insufficient permissions" });
+        }
         res.status(500).json({ message: error.message });
     }
 };
@@ -41,6 +46,11 @@ export const login = async (req, res) => {
 
         const docRef = doc(fireStore, "users", userFound.user.uid);
         const userDoc = await getDoc(docRef);
+
+        if (!userDoc.exists()) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
         const user = userDoc.data();
 
         return res.status(201).json({
@@ -50,13 +60,20 @@ export const login = async (req, res) => {
             role: user.role
         });
     } catch (error) {
+        if (error.code === 'permission-denied') {
+            return res.status(403).json({ message: "Insufficient permissions" });
+        }
         res.status(500).json({ message: error.message });
     }
 };
 
 export const logout = async (req, res) => {
-    signOut(auth); // Sign out the user 
-    return res.sendStatus(200);
+    try {
+        await signOut(auth); // Sign out the user 
+        return res.sendStatus(200);
+    } catch (error) {
+        return res.status(500).json({ message: error.message });
+    }
 };
 
 export const profile = async (req, res) => {
