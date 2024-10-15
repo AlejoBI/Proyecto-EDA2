@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useJobs } from "../../context/JobsContext";
 import { EditJob, ConfirmModal, CustomToast } from "../index";
-import { Container, Button, Stack } from "react-bootstrap";
+import { Container, Button } from "react-bootstrap";
 
 const JobsList = ({ jobs, user }) => {
   const [showEditModal, setShowEditModal] = useState(false);

@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { JobsList, CreateJob } from "../components/index";
 import { Button, Container } from "react-bootstrap";
-import "../assets/css/JobsPage.css";
 import { useJobs } from "../context/JobsContext";
 import { useAuth } from "../context/AuthContext";
 
