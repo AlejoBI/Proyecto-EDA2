@@ -10,7 +10,7 @@ import {
 import logo from "../assets/logo.png";
 import { useAuth } from "../context/AuthContext";
 
-function NavigationMenu() {
+const NavigationMenu = () => {
   const { isAuthenticated, logout, user } = useAuth();
   const tittle = user ? `${user.username}` : "Home";
 
@@ -67,7 +67,7 @@ function NavigationMenu() {
                   <NavDropdown.Item href="/user/profile">
                     Profile
                   </NavDropdown.Item>
-                  <NavDropdown.Item href="/settings">Settings</NavDropdown.Item>
+                  <NavDropdown.Item href="/user/settings">Settings</NavDropdown.Item>
                   <NavDropdown.Divider />
                   <NavDropdown.Item
                     href="/"

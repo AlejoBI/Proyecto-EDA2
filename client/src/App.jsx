@@ -1,5 +1,6 @@
 import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext";
+import { JobsProvider } from "./context/JobsContext";
 
 import { NavigationMenu, Footer } from "./components/index.jsx";
 
@@ -36,60 +37,65 @@ function Layout({ children }) {
 function App() {
   return (
     <AuthProvider>
-      <BrowserRouter>
-        <Routes>
-          <Route
-            path="/"
-            element={
-              <Layout>
-                <HomePage />
-              </Layout>
-            }
-          />
-
-          <Route element={<PublicRoute />}>
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/register" element={<RegisterPage />} />
+      <JobsProvider>
+        <BrowserRouter>
+          <Routes>
             <Route
-              path="/jobs"
+              path="/"
               element={
                 <Layout>
-                  <JobsPage />
+                  <HomePage />
                 </Layout>
               }
             />
+
+            <Route element={<PublicRoute />}>
+              <Route path="/login" element={<LoginPage />} />
+              <Route path="/register" element={<RegisterPage />} />
+              <Route
+                path="/jobs"
+                element={
+                  <Layout>
+                    <JobsPage />
+                  </Layout>
+                }
+              />
+              <Route
+                path="/freelancers"
+                element={
+                  <Layout>
+                    <FreelancersPage />
+                  </Layout>
+                }
+              />
+            </Route>
+
+            <Route element={<ProtectedRoute />}>
+              <Route
+                path="/user/profile"
+                element={
+                  <Layout>
+                    <ProfilePage />
+                  </Layout>
+                }
+              />
+              <Route
+                path="/admin/AdminDashboard"
+                element={<AdminDashboard />}
+              />
+            </Route>
+
             <Route
-              path="/freelancers"
+              path="*"
               element={
                 <Layout>
-                  <FreelancersPage />
+                  <NotFoundPage />
                 </Layout>
               }
             />
-          </Route>
-
-          <Route element={<ProtectedRoute />}>
-            <Route
-              path="/user/profile"
-              element={
-                <Layout>
-                  <ProfilePage />
-                </Layout>
-              }
-            />
-            <Route path="/admin/AdminDashboard" element={<AdminDashboard />} />
-          </Route>
-
-          <Route
-            path="*"
-            element={
-              <Layout>
-                <NotFoundPage />
-              </Layout>
-            }
-          />
-        </Routes>
-      </BrowserRouter>
+          </Routes>
+        </BrowserRouter>
+      </JobsProvider>
     </AuthProvider>
   );
 }

@@ -17,7 +17,7 @@ export const register = async (req, res) => {
             username: username,
             email: email,
             role: role
-        }); // Save the user in the database
+        });
 
         const userDoc = await getDoc(docRef);
         const user = userDoc.data();
@@ -105,11 +105,49 @@ export const checkAuth = async (req, res) => {
 
         return res.json({
             id: user.uid,
-            email: user.email,
+            email: userData.email,
             username: userData.username,
-            role: userData.role,
+            role: userData.role
         });
     } else {
         return res.status(401).json({ message: "No está autenticado" });
     }
 };
+
+export const updateProfile = async (req, res) => {
+    const {age, name, lastName, gender, phone, city, country } = req.body;
+
+    try {
+        const userDocFound = doc(fireStore, "users", req.user.id);
+        if (!userDocFound)
+            return res.status(400).json({ message: "Usuario no encontrado" });
+
+        await setDoc(userDocFound, {
+            username: userDocFound.username,
+            email: userDocFound.email,
+            role: userDocFound.role,
+            age: age,
+            name: name,
+            lastName: lastName,
+            gender: gender,
+            phone: phone,
+            city: city,
+            country: country
+        });
+
+        return res.json({
+            username: userDocFound.username,
+            email: userDocFound.email,
+            role: userDocFound.role,
+            age: age,
+            name: name,
+            lastName: lastName,
+            gender: gender,
+            phone: phone,
+            city: city,
+            country: country
+        });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}
