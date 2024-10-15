@@ -4,16 +4,17 @@ import {
   checkAuthRequest,
   registerRequest,
   loginRequest,
-  logoutRequest,
+  logoutRequest
 } from "../api/auth"; // Import the request functions from the auth file
 
-export const AuthContext = createContext(); // Create a context for the authentication
+export const AuthContext = createContext(); 
 
 export const AuthProvider = ({ children }) => {
   // Create a provider to wrap the application
   const [user, setUser] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(null);
   const [errors, setErrors] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   const signup = async (user) => {
     // Create a signup function to register a user
@@ -21,6 +22,7 @@ export const AuthProvider = ({ children }) => {
       const res = await registerRequest(user); // Call the registerRequest function with the form values
       setUser(res);
       setIsAuthenticated(true);
+      setLoading(false);
     } catch (error) {
       setErrors(error.response.data);
     }
@@ -32,20 +34,38 @@ export const AuthProvider = ({ children }) => {
       const res = await loginRequest(user); // Call the loginRequest function with the form values
       setUser(res);
       setIsAuthenticated(true);
+      setLoading(false);
     } catch (error) {
       setErrors(error.response.data);
+      setLoading(false); 
     }
   };
 
   const logout = async () => {
     // Create a logout function to log out a user
+    setLoading(true); 
     await logoutRequest();
     setUser(null);
     setIsAuthenticated(null);
+    setLoading(false); 
   };
+
+  const profile = async () => {
+    // Create a profile function to get the user profile
+    setLoading(true); 
+    try {
+      const res = await profileRequest();
+      setUser(res);
+      setIsAuthenticated(true);
+    } catch (error) {
+      setIsAuthenticated(false);
+    }
+    setLoading(false); 
+  }
 
   useEffect(() => {
     async function checkLogin() {
+      setLoading(true); 
       try {
         const res = await checkAuthRequest();
         if (res) {
@@ -57,14 +77,14 @@ export const AuthProvider = ({ children }) => {
       } catch (error) {
         setIsAuthenticated(false);
       }
+      setLoading(false);
     }
     checkLogin();
   }, []);
 
   return (
-    // Return the AuthContext.Provider with the signup function and user state
     <AuthContext.Provider
-      value={{ signup, signin, logout, user, isAuthenticated, errors }}
+      value={{ signup, signin, logout, profile, user, isAuthenticated, errors, loading }}
     >
       {children}
     </AuthContext.Provider>

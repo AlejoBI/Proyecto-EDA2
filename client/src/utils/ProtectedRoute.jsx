@@ -4,7 +4,7 @@ import { useAuth } from "../context/AuthContext";
 import { CustomSpinner } from "../components/index";
 
 function ProtectedRoute() {
-  const { isAuthenticated, loading, user } = useAuth();
+  const { user, isAuthenticated, loading } = useAuth();
 
   if (loading) {
     return <CustomSpinner />;
@@ -15,15 +15,15 @@ function ProtectedRoute() {
   }
 
   if (isAuthenticated && user.role === "admin") {
-    if (window.location.pathname.startsWith('/admin')) {
+    if (window.location.pathname.startsWith("/admin")) {
       return <Outlet />;
     } else {
       return <Navigate to="/admin/dashboard" replace />;
     }
   }
 
-  if (isAuthenticated && user.role === "user") {
-    if (window.location.pathname.startsWith('/user')) {
+  if (isAuthenticated && user.role === "customer" || user.role === "professional") {
+    if (window.location.pathname.startsWith("/user")) {
       return <Outlet />;
     } else {
       return <Navigate to="/" replace />;

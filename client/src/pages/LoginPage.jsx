@@ -12,7 +12,7 @@ function LoginPage() {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors }
   } = useForm();
   const { signin, isAuthenticated, errors: signinErrors } = useAuth();
   const navigate = useNavigate(); // Create a navigate function to redirect the user
