@@ -1,34 +1,32 @@
 import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form"; // Used for form validation in React
+import { useForm } from "react-hook-form";
 import { useNavigate, Link } from "react-router-dom";
 
 import { Form, Button, Container, Card, Image } from "react-bootstrap";
-import logoImage from "../assets/logo.png"; 
+import logoImage from "../assets/logo.png";
 
-import { useAuth } from "../context/AuthContext"; // Import the useAuth function from the AuthContext file
-import { CustomToast } from "../components/index"; 
+import { useAuth } from "../context/AuthContext";
+import { CustomToast } from "../components/index";
 
 function RegisterPage() {
   const {
     register,
     handleSubmit,
-    formState: { errors }
+    formState: { errors },
   } = useForm();
-  const { signup, isAuthenticated, errors: registerErrors } = useAuth(); // Call the useAuth function to get the signup function
+  const { signup, isAuthenticated, errors: registerErrors } = useAuth();
   const navigate = useNavigate();
-  const [showToast, setShowToast] = useState(false); // Create a state to show the toast message
+  const [showToast, setShowToast] = useState(false);
 
   useEffect(() => {
-    // Redirect to the home page if the user is authenticated
     if (isAuthenticated) navigate("/");
   }, [isAuthenticated]);
 
   const onSubmit = handleSubmit(async (values) => {
-    signup(values); // Call the signup function with the form values
+    signup(values);
   });
 
   useEffect(() => {
-    // Show the toast message if there are errors
     if (registerErrors) {
       setShowToast(true);
     }
@@ -66,7 +64,10 @@ function RegisterPage() {
             />
             <h2 className="h4">Sign up</h2>
             <p>
-              Do you already have an account? <Link to="/login" id="linkText">Login</Link>
+              Do you already have an account?{" "}
+              <Link to="/login" id="linkText">
+                Login
+              </Link>
             </p>
           </div>
 
@@ -129,7 +130,14 @@ function RegisterPage() {
               </Form.Select>
               {errors.role && <p style={{ color: "red" }}>Role is required</p>}
             </Form.Group>
-            <Button variant="primary" type="submit" className="w-100" id="buttonLoginRegister">Register</Button>
+            <Button
+              variant="primary"
+              type="submit"
+              className="w-100"
+              id="buttonLoginRegister"
+            >
+              Register
+            </Button>
           </Form>
         </Card.Body>
       </Card>

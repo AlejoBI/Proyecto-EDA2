@@ -14,10 +14,6 @@ function PublicRoute() {
     return <Navigate to="/admin/dashboard" replace />;
   }
 
-  if (isAuthenticated && user.role === "user") {
-    return <Navigate to="/" replace />;
-  }
-
   // Si no está autenticado, permitir el acceso a las rutas públicas.
   return <Outlet />;
 }
