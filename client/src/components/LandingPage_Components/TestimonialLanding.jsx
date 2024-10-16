@@ -1,7 +1,8 @@
 import React from 'react';
 import { Splide, SplideSlide } from '@splidejs/react-splide';
 import '@splidejs/splide/dist/css/splide.min.css';
-import reviewsData from '../assets/reviewsData';
+import reviewsData from '../../assets/reviewsData';
+
 
 const TestimonialLanding = () => {
   return (

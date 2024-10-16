@@ -1,0 +1,246 @@
+:root {
+    font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+    line-height: 1.5;
+    font-weight: 400;
+  
+    background-color: #ffffff;
+  
+    font-synthesis: none; /* Disable system font synthesis */
+    text-rendering: optimizeLegibility; /* Optimize for readability */
+    -webkit-font-smoothing: antialiased; /* Antialias text */
+    -moz-osx-font-smoothing: grayscale; /* Antialias text */
+  
+    /* Colores de la pagina */
+    --transparente: rgba(255, 255, 255, 0);
+    --blanco: #ffffff;
+    --negro: black;
+    --gris: #f5f5f5;
+  
+    --morado: #8306ad;
+    --moradoclaro: #a5a6f6;
+    --moradooscuro: #520078;
+    --verdeclaro: #63c07c;
+    --naranjaclaro: #f9a86d;
+    --rosaclaro: #f4537c;
+    --verdementa: #7ed2b9;
+  
+    --morado-hover: #6b0490; 
+    --moradoclaro-hover: #8e8fff; 
+    --verdeclaro-hover: #4ca367; 
+    --naranjaclaro-hover: #e58b54; 
+    --rosaclaro-hover: #d14269; 
+    --verdementa-hover: #64b89e; 
+  
+    --morado-hover-light: #a56cd1; 
+    --moradoclaro-hover-light: #c0bffd; 
+    --verdeclaro-hover-light: #89d4a3; 
+    --naranjaclaro-hover-light: #fbc199; 
+    --rosaclaro-hover-light: #fa718d; 
+    --verdementa-hover-light: #a0e5d0; 
+  }
+  
+  body {
+    margin: 0;
+  }
+
+/* Colores cardLanding# */
+#cardLanding1 {
+  color: var(--blanco);
+  background-color: var(--morado);
+  box-shadow: 5px 5px 15px rgba(131, 6, 173, 0.5);
+}
+
+#cardLanding1:hover {
+  background-color: var(--morado-hover);
+}
+
+#cardLanding2 {
+  color: var(--blanco);
+  background-color: var(--moradoclaro);
+  box-shadow: 5px 5px 15px rgba(165, 166, 246, 0.5);
+}
+
+#cardLanding2:hover {
+  background-color: var(--moradoclaro-hover);
+}
+
+#cardLanding3 {
+  color: var(--blanco);
+  background-color: var(--verdeclaro);
+  box-shadow: 5px 5px 15px rgba(99, 192, 124, 0.5);
+}
+
+#cardLanding3:hover {
+  background-color: var(--verdeclaro-hover);
+}
+
+#cardLanding4 {
+  color: var(--blanco);
+  background-color: var(--naranjaclaro);
+  box-shadow: 5px 5px 15px rgba(249, 168, 109, 0.5);
+}
+
+#cardLanding4:hover {
+  background-color: var(--naranjaclaro-hover);
+}
+
+#cardLanding5 {
+  color: var(--blanco);
+  background-color: var(--rosaclaro);
+  box-shadow: 5px 5px 15px rgba(244, 83, 124, 0.5);
+}
+
+#cardLanding5:hover {
+  background-color: var(--rosaclaro-hover);
+}
+
+#cardLanding6 {
+  color: var(--blanco);
+  background-color: var(--verdementa);
+  box-shadow: 5px 5px 15px rgba(126, 210, 185, 0.5);
+}
+
+#cardLanding6:hover {
+  background-color: var(--verdementa-hover);
+}
+
+/* Contenedor de la sección de testimonios */
+.testimonial-container {
+    background-color: #8306AD;
+    padding: 30px 0;
+    border-radius: 40px;
+    text-align: center;
+    width: 100%;
+    height: 5%;
+  }
+  
+  .testimonial-title h1 {
+    color: var(--blanco);
+    font-size: 2rem;
+    margin-bottom: 40px;
+    font-weight: bold;
+  }
+  
+  .slider-container {
+    max-width: 1000px;
+    margin: 40px auto;
+  }
+  
+  .testimonial-card {
+    background: var(--blanco);
+    border-radius: 20px;
+    padding: 20px;
+    text-align: left;
+    width: 300px;
+    height: 270px;
+  }
+  
+  .text {
+    text-align: center;
+  }
+  
+  .testimonial-img-container {
+    display: flex;
+    align-items: flex-start; /* Alinear los elementos al inicio */
+    margin-bottom:0;
+  }
+  
+  .review-img {
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    margin-right: 15px; /* Espacio entre la imagen y el texto */
+  }
+  
+  .user {
+    font-size: 1rem;
+    font-weight: bold;
+    color: var(--negro);
+    margin: 0;
+  }
+  
+  .position {
+    font-size: 1rem;
+    color: var(--negro);
+    margin: 0;
+  }
+  
+  .rating {
+    display: flex; /* Asegurar que las estrellas estén en línea */
+    margin: 0;
+  }
+  
+  .star {
+    color: rgb(255, 225, 0);
+    font-size: 1.3rem;
+    margin-right: 0.2rem;
+  }
+  
+  .star.inactive {
+    color: lightgray;
+  }
+  
+  .text {
+    font-size: 1rem;
+    color: var(--negro);
+    margin-top: 20px;
+  }
+
+/* Positioning for the arrows */
+.splide__arrows {
+  position: absolute;
+  bottom: 4px; /* Adjust this value as needed */
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+
+.splide__arrow {
+  background-color: var(--blanco); /* Set background color for arrows */
+  color: var(--morao);
+  font-size: 20px;
+}
+
+/* Positioning for the pagination dots */
+.splide__pagination {
+  display: flex;
+  justify-content: center;
+  position: relative;
+  margin-top: 40px;
+}
+
+.splide__pagination__page {
+  width: 10px;
+  height: 10px;
+  margin: 0 5px;
+  background: var(--blanco);
+  border-radius: 50%;
+}
+
+/* Become Part section */
+.container-become {
+  background-color: #8306AD;
+  color: #ffffff;
+  padding: 40px 100px;
+  border-radius: 30px;
+  margin: 7% 0% 9% 0%;
+}
+
+.become-buttons {
+  margin-top: 20px;
+}
+
+.become-buttons .btn {
+  padding: 12px 20px;
+  font-size: 1.2rem;
+  border: none;
+}
+
+.btn-primary {
+  background-color: var(--moradooscuro); /* Purple color for buttons */
+}
+
+.btn-primary:hover {
+  background-color: #4b0082; /* Darker purple on hover */
+}
+

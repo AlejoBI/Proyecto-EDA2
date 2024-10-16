@@ -1,8 +1,6 @@
-import { CustomLabelLanding, SearchServiceLanding } from "../components/index";
-
+import { CustomLabelLanding, SearchServiceLanding, TestimonialLanding, BecomePartLanding} from "../components/index";
+import "../assets/css/LandingPage.css";
 import paginaweb from "../assets/paginaweb.jpg";
-import TestimonialLanding from "../components/TestimonialLanding";
-import BecomePartLanding from "../components/BecomePartLanding";
 
 const HomePage = () => {
   return (
@@ -65,6 +63,7 @@ const HomePage = () => {
       <div className="container">
         <TestimonialLanding />
       </div>
+      
 
       <div className="container">
         <BecomePartLanding />

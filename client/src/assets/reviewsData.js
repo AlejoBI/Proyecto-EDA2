@@ -5,7 +5,7 @@ const reviews = [
         'https://images.unsplash.com/photo-1605462863863-10d9e47e15ee?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
       name: 'John Doe',
       text: 'Hiring freelancers from this platform was a game-changer for my business. The quality of work was top-notch, and I received my projects on time without any hassle.',
-      rating: 5,
+      rating: 4,
       position: 'CEO, ABC Corporation',
     },
     {
@@ -54,6 +54,17 @@ const reviews = [
         rating: 3,
         position: 'Designer',
       },
+
+      {
+        id: 7,
+        image:
+          'https://images.unsplash.com/photo-1564564321837-a57b7070ac4f?q=80&w=1776&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+        name: 'Juan Eduardo',
+        text: "This platform has helped me find talented freelancers who deliver quality work consistently. I'm very satisfied with the services I received.",
+        rating: 3,
+        position: 'Business Owner',
+      },
+
   ];
 
     export default reviews;
