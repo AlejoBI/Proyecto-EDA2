@@ -52,6 +52,9 @@ const NavigationMenu = () => {
             }}
           >
             <Nav className="me-auto">
+              <Nav.Link href="/" style={{ color: "white" }}>
+                Home
+              </Nav.Link>
               <Nav.Link href="/freelancers" style={{ color: "white" }}>
                 Freelancers
               </Nav.Link>

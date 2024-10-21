@@ -1,7 +1,7 @@
 import { Container, Image } from "react-bootstrap";
 
-import SearchBar from "./SearchBar";
-import searchImage from "../assets/imageCanva.png";
+import {SearchBar} from "../index";
+import searchImage from "../../assets/imageCanva.png";
 
 const SearchServiceLanding = () => {
   return (
