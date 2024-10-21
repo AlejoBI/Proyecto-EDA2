@@ -1,5 +1,5 @@
 import { Form, InputGroup, Image } from "react-bootstrap";
-import searchImage from "../assets/search.png";
+import searchImage from "../../assets/search.png";
 
 const SearchBar = () => {
   return (

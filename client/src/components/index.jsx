@@ -1,11 +1,13 @@
-export { default as CustomLabelLanding } from "./CustomLabelLanding";
+export {default as CustomLabelLanding} from "./LandingPage_Components/CustomLabelLanding";
 export { default as CustomSpinner } from "./CustomSpinner";
 export { default as CustomToast } from "./CustomToast";
 export { default as Footer } from "./Footer";
 export { default as NavigationMenu } from "./NavigationMenu";
-export { default as SearchBar } from "./SearchBar";
-export { default as SearchServiceLanding } from "./SearchServiceLanding";
+export {default as SearchBar} from "./LandingPage_Components/SearchBar";
+export {default as SearchServiceLanding} from "./LandingPage_Components/SearchServiceLanding";
 export { default as JobsList } from "./jobs/JobsList";
 export { default as CreateJob } from "./jobs/CreateJobModal";
 export { default as EditJob } from "./jobs/EditJobModal";
 export { default as ConfirmModal } from "./ConfirmModal";
+export {default as BecomePartLanding} from "./LandingPage_Components/BecomePartLanding";
+export {default as TestimonialLanding} from "./LandingPage_Components/TestimonialLanding";

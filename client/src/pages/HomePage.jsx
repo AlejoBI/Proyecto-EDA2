@@ -1,5 +1,5 @@
-import { CustomLabelLanding, SearchServiceLanding } from "../components/index";
-
+import { CustomLabelLanding, SearchServiceLanding, TestimonialLanding, BecomePartLanding} from "../components/index";
+import "../assets/css/LandingPage.css";
 import paginaweb from "../assets/paginaweb.jpg";
 
 const HomePage = () => {
@@ -15,7 +15,7 @@ const HomePage = () => {
             display: "flex",
             flexDirection: "row",
             justifyContent: "space-between",
-            margin: "25px auto",
+            margin: "50px auto",
           }}
         >
           <CustomLabelLanding
@@ -49,6 +49,24 @@ const HomePage = () => {
             numLabel="6"
           />
         </div>
+      </div>
+
+      <div className="container d-flex flex-column align-items-center justify-content-center text-center" style={{ height: '35vh', color: '#520078' }}>
+        <h2 className="fw-bold display-6">
+          Discover the right expert for your needs
+        </h2>
+        <p className="fw-bold lead">
+        Make your projects a reality with ease and smart solutions. Let’s bring your vision to life together!
+        </p>
+      </div>
+
+      <div className="container">
+        <TestimonialLanding />
+      </div>
+      
+
+      <div className="container">
+        <BecomePartLanding />
       </div>
     </>
   );
