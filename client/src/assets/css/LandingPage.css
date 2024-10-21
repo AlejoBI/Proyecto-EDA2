@@ -226,21 +226,22 @@
   margin: 7% 0% 9% 0%;
 }
 
-.become-buttons {
-  margin-top: 20px;
-}
-
-.become-buttons .btn {
-  padding: 12px 20px;
+.become-buttons .btn-hire,
+.become-buttons .btn-work {
+  padding: 15px 20px;
   font-size: 1.2rem;
+  background-color: var(--moradooscuro);
+  color: #ffffff;
+  border-radius: 10px;
+  margin: 15px;
   border: none;
 }
 
-.btn-primary {
-  background-color: var(--moradooscuro); /* Purple color for buttons */
-}
-
-.btn-primary:hover {
-  background-color: #4b0082; /* Darker purple on hover */
+.become-buttons .btn-hire:hover,
+.become-buttons .btn-work:hover{
+  background-color: var(--morado-hover-light);
+  color: #ffffff;
+  border-color: var(--morado-hover-light);
+  box-shadow: none;
 }
 

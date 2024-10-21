@@ -1,4 +1,5 @@
 import React from 'react';
+import { Button } from 'react-bootstrap';
 
 const BecomePartLanding = () => {
   return (
@@ -9,8 +10,12 @@ const BecomePartLanding = () => {
         community today and unlock a world full of talent and endless possibilities.
       </p>
       <div className="become-buttons d-flex justify-content-center">
-        <button className="btn btn-primary btn-lg mx-3">Hire a Freelancer</button>
-        <button className="btn btn-primary btn-lg mx-3">Work as a Freelancer</button>
+        <Button href="/freelancers" className="btn-hire mx-2">
+            Hire a Freelancer
+        </Button>
+        <Button href="/jobs" className="btn-work mx-2">
+            Work as a Freelancer
+        </Button>
       </div>
     </div>
   );
