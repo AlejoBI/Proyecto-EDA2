@@ -95,6 +95,23 @@ export const profile = async (req, res) => {
     }
 };
 
+export const getAllUsers = async (req, res) => {
+    try {
+        const usersCollection = doc(fireStore, "users");
+        const usersSnapshot = await getDoc(usersCollection);
+
+        if (!usersSnapshot.exists()) {
+            return res.status(404).json({ message: "Users not found" });
+        }
+
+        const users = usersSnapshot.data();
+
+        return res.json(users);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
 export const checkAuth = async (req, res) => {
     const user = auth.currentUser;
     if (user) {
@@ -115,7 +132,7 @@ export const checkAuth = async (req, res) => {
 };
 
 export const updateProfile = async (req, res) => {
-    const {age, name, lastName, gender, phone, city, country } = req.body;
+    const { age, name, lastName, gender, phone, city, country } = req.body;
 
     try {
         const userDocFound = doc(fireStore, "users", req.user.id);
