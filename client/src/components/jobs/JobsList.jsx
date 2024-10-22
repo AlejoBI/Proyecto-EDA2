@@ -99,15 +99,15 @@ const JobsList = ({ jobs, user }) => {
         )}
       </section>
       <section>
-        <button onClick={handlePreviousPage} disabled={currentPage === 1}>
+        <Button onClick={handlePreviousPage} disabled={currentPage === 1}>
           Anterior
-        </button>
-        <button
+        </Button>
+        <Button
           onClick={handleNextPage}
           disabled={currentPage === Math.ceil(jobs.length / itemsPerPage)}
         >
           Siguiente
-        </button>
+        </Button>
       </section>
       {showEditModal && (
         <EditJob

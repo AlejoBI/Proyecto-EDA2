@@ -5,23 +5,22 @@ import {
   registerRequest,
   loginRequest,
   logoutRequest,
+  getAllUsersRequest,
   profileRequest,
-  updateProfileRequest
-} from "../api/auth"; // Import the request functions from the auth file
+  updateProfileRequest,
+} from "../api/auth";
 
-export const AuthContext = createContext(); 
+export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  // Create a provider to wrap the application
   const [user, setUser] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(null);
   const [errors, setErrors] = useState(null);
   const [loading, setLoading] = useState(true);
 
   const signup = async (user) => {
-    // Create a signup function to register a user
     try {
-      const res = await registerRequest(user); // Call the registerRequest function with the form values
+      const res = await registerRequest(user);
       setUser(res);
       setIsAuthenticated(true);
       setLoading(false);
@@ -31,30 +30,36 @@ export const AuthProvider = ({ children }) => {
   };
 
   const signin = async (user) => {
-    // Create a signin function to log in a user
     try {
-      const res = await loginRequest(user); // Call the loginRequest function with the form values
+      const res = await loginRequest(user);
       setUser(res);
       setIsAuthenticated(true);
       setLoading(false);
     } catch (error) {
       setErrors(error.response ? error.response.data : error.message);
-      setLoading(false); 
+      setLoading(false);
     }
   };
 
   const logout = async () => {
-    // Create a logout function to log out a user
-    setLoading(true); 
+    setLoading(true);
     await logoutRequest();
     setUser(null);
     setIsAuthenticated(null);
-    setLoading(false); 
+    setLoading(false);
+  };
+
+  const getAllUsers = async () => {
+    try {
+      const res = await getAllUsersRequest();
+      return res;
+    } catch (error) {
+      setErrors(error.response ? error.response.data : error.message);
+    }
   };
 
   const profile = async () => {
-    // Create a profile function to get the user profile
-    setLoading(true); 
+    setLoading(true);
     try {
       const res = await profileRequest();
       setUser(res);
@@ -62,12 +67,11 @@ export const AuthProvider = ({ children }) => {
     } catch (error) {
       setIsAuthenticated(false);
     }
-    setLoading(false); 
-  }
+    setLoading(false);
+  };
 
   const updateProfile = async (user) => {
-    // Create a function to update the user profile
-    setLoading(true); 
+    setLoading(true);
     try {
       console.log("Guardado", user);
       const res = await updateProfileRequest(user);
@@ -76,12 +80,12 @@ export const AuthProvider = ({ children }) => {
     } catch (error) {
       setErrors(error.response ? error.response.data : error.message);
     }
-    setLoading(false); 
-  }
+    setLoading(false);
+  };
 
   useEffect(() => {
     async function checkLogin() {
-      setLoading(true); 
+      setLoading(true);
       try {
         const res = await checkAuthRequest();
         if (res) {
@@ -100,7 +104,18 @@ export const AuthProvider = ({ children }) => {
 
   return (
     <AuthContext.Provider
-      value={{ signup, signin, logout, profile, updateProfile, user, isAuthenticated, errors, loading }}
+      value={{
+        signup,
+        signin,
+        logout,
+        getAllUsers,
+        profile,
+        updateProfile,
+        user,
+        isAuthenticated,
+        errors,
+        loading,
+      }}
     >
       {children}
     </AuthContext.Provider>

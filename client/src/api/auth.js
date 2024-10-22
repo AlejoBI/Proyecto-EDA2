@@ -13,6 +13,11 @@ export const loginRequest = async (user) => {
 
 export const logoutRequest = () => axios.post(`/logout`);
 
+export const getAllUsersRequest = async () => {
+    const res = await axios.get(`/allUsers`);
+    return res.data;
+};
+
 export const checkAuthRequest = async () => {
     const res = await axios.get(`/check-auth`);
     return res.data;

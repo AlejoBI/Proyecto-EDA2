@@ -16,3 +16,4 @@ export { default as CountryCitySelector } from "./profile/CountryCitySelector";
 export { default as ProfessionalAreaSelector } from "./profile/ProfessionalAreaSelector";
 export { default as UpdateProfile } from "./profile/UpdateProfile";
 export { default as Chat } from "./Chat";
+export { default as FreelancersList } from "./freelancers/FreelancersList";
