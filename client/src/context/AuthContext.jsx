@@ -4,7 +4,9 @@ import {
   checkAuthRequest,
   registerRequest,
   loginRequest,
-  logoutRequest
+  logoutRequest,
+  profileRequest,
+  updateProfileRequest
 } from "../api/auth"; // Import the request functions from the auth file
 
 export const AuthContext = createContext(); 
@@ -24,7 +26,7 @@ export const AuthProvider = ({ children }) => {
       setIsAuthenticated(true);
       setLoading(false);
     } catch (error) {
-      setErrors(error.response.data);
+      setErrors(error.response ? error.response.data : error.message);
     }
   };
 
@@ -36,7 +38,7 @@ export const AuthProvider = ({ children }) => {
       setIsAuthenticated(true);
       setLoading(false);
     } catch (error) {
-      setErrors(error.response.data);
+      setErrors(error.response ? error.response.data : error.message);
       setLoading(false); 
     }
   };
@@ -63,6 +65,20 @@ export const AuthProvider = ({ children }) => {
     setLoading(false); 
   }
 
+  const updateProfile = async (user) => {
+    // Create a function to update the user profile
+    setLoading(true); 
+    try {
+      console.log("Guardado", user);
+      const res = await updateProfileRequest(user);
+      setUser(res);
+      return "Perfil actualizado";
+    } catch (error) {
+      setErrors(error.response ? error.response.data : error.message);
+    }
+    setLoading(false); 
+  }
+
   useEffect(() => {
     async function checkLogin() {
       setLoading(true); 
@@ -84,7 +100,7 @@ export const AuthProvider = ({ children }) => {
 
   return (
     <AuthContext.Provider
-      value={{ signup, signin, logout, profile, user, isAuthenticated, errors, loading }}
+      value={{ signup, signin, logout, profile, updateProfile, user, isAuthenticated, errors, loading }}
     >
       {children}
     </AuthContext.Provider>

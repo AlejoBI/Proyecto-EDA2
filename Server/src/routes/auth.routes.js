@@ -1,5 +1,9 @@
 import { Router } from 'express';
+<<<<<<< Updated upstream
 import { register, login, logout, profile, getAllUsers, checkAuth } from '../controllers/auth.controller.js';
+=======
+import { register, login, logout, profile, checkAuth, updateProfile } from '../controllers/auth.controller.js';
+>>>>>>> Stashed changes
 import { validateSchema } from '../middlewares/validator.middleware.js';
 import { registerSchema, loginSchema } from '../schemas/auth.schema.js';
 
@@ -13,7 +17,11 @@ router.post('/logout', logout);
 
 router.get('/profile', profile);
 
+<<<<<<< Updated upstream
 router.get('/all', getAllUsers);
+=======
+router.put('/update-profile', updateProfile);
+>>>>>>> Stashed changes
 
 router.get('/check-auth', checkAuth);
 
