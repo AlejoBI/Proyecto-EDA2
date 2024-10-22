@@ -1,7 +1,18 @@
+import React from "react";
+import { FreelancersList } from "../components/index";
+import { Container } from "react-bootstrap";
+
 const FreelancersPage = () => {
   return (
-    <div>FreelancersPage</div>
-  )
-}
+    <>
+      <nav>
+        <h1>Freelancers</h1>
+      </nav>
+      <Container>
+        <FreelancersList />
+      </Container>
+    </>
+  );
+};
 
-export default FreelancersPage
+export default FreelancersPage;

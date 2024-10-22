@@ -13,11 +13,11 @@ router.post('/login', validateSchema(loginSchema), login);
 
 router.post('/logout', logout);
 
-router.get('/profile', profile);
-
-router.get('/all', getAllUsers);
+router.get('/allUsers', getAllUsers);
 
 router.get('/check-auth', checkAuth);
+
+router.get('/profile', profile);
 
 router.put('/update-profile', updateProfile);
 

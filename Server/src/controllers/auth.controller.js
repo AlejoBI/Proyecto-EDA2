@@ -5,7 +5,7 @@ import {
   signInWithEmailAndPassword,
   signOut,
 } from "firebase/auth";
-import { getFirestore, doc, setDoc, getDoc } from "firebase/firestore";
+import { getFirestore, doc, setDoc, getDoc, collection, query, getDocs, } from "firebase/firestore";
 
 const auth = getAuth(appFirebase);
 const fireStore = getFirestore(appFirebase);
@@ -104,20 +104,17 @@ export const profile = async (req, res) => {
 };
 
 export const getAllUsers = async (req, res) => {
-    try {
-        const usersCollection = doc(fireStore, "users");
-        const usersSnapshot = await getDoc(usersCollection);
-
-        if (!usersSnapshot.exists()) {
-            return res.status(404).json({ message: "Users not found" });
-        }
-
-        const users = usersSnapshot.data();
-
-        return res.json(users);
-    } catch (error) {
-        res.status(500).json({ message: error.message });
-    }
+  try {
+    const q = query(collection(fireStore, "users"));
+    const querySnapshot = await getDocs(q);
+    const users = querySnapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+    return res.status(200).json(users);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
 };
 
 export const checkAuth = async (req, res) => {
@@ -135,39 +132,39 @@ export const checkAuth = async (req, res) => {
 };
 
 export const updateProfile = async (req, res) => {
-    const {age, name, lastName, gender, phone, city, country } = req.body;
+  const { age, name, lastName, gender, phone, city, country } = req.body;
 
-    try {
-        const userDocFound = doc(fireStore, "users", req.user.id);
-        if (!userDocFound)
-            return res.status(400).json({ message: "Usuario no encontrado" });
+  try {
+    const userDocFound = doc(fireStore, "users", req.user.id);
+    if (!userDocFound)
+      return res.status(400).json({ message: "Usuario no encontrado" });
 
-        await setDoc(userDocFound, {
-            username: userDocFound.username,
-            email: userDocFound.email,
-            role: userDocFound.role,
-            age: age,
-            name: name,
-            lastName: lastName,
-            gender: gender,
-            phone: phone,
-            city: city,
-            country: country
-        });
+    await setDoc(userDocFound, {
+      username: userDocFound.username,
+      email: userDocFound.email,
+      role: userDocFound.role,
+      age: age,
+      name: name,
+      lastName: lastName,
+      gender: gender,
+      phone: phone,
+      city: city,
+      country: country
+    });
 
-        return res.json({
-            username: userDocFound.username,
-            email: userDocFound.email,
-            role: userDocFound.role,
-            age: age,
-            name: name,
-            lastName: lastName,
-            gender: gender,
-            phone: phone,
-            city: city,
-            country: country
-        });
-    } catch (error) {
-        res.status(500).json({ message: error.message });
-    }
+    return res.json({
+      username: userDocFound.username,
+      email: userDocFound.email,
+      role: userDocFound.role,
+      age: age,
+      name: name,
+      lastName: lastName,
+      gender: gender,
+      phone: phone,
+      city: city,
+      country: country
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
 }
