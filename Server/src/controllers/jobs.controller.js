@@ -7,7 +7,7 @@ const auth = getAuth(appFirebase);
 const fireStore = getFirestore(appFirebase);
 
 export const createJob = async (req, res) => {
-    const { title, description, company, location, salary } = req.body;
+    const { title, description, company, country, city, salary } = req.body;
     const jobId = uuidv4();
     const userId = auth.currentUser ? auth.currentUser.uid : null;
 
@@ -22,13 +22,13 @@ export const createJob = async (req, res) => {
             title: title,
             description: description,
             company: company,
-            location: location,
+            country: country,
+            city: city,
             salary: salary
         });
 
         return res.status(201).json({ message: "Job created successfully" });
     } catch (error) {
-        console.error("Error creating job:", error.message);
         return res.status(500).json({ error: error.message });
     }
 };
@@ -45,7 +45,7 @@ export const getAllJobs = async (req, res) => {
 };
 
 export const updateJob = async (req, res) => {
-    const { id, title, description, company, location, salary } = req.body;
+    const { id, title, description, company, country, city, salary } = req.body;
     const userId = auth.currentUser ? auth.currentUser.uid : null;
 
     try {
@@ -60,7 +60,8 @@ export const updateJob = async (req, res) => {
             title: title,
             description: description,
             company: company,
-            location: location,
+            country: country,
+            city: city,
             salary: salary
         });
 

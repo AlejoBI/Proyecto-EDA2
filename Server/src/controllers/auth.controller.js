@@ -18,7 +18,7 @@ export const register = async (req, res) => {
       auth,
       email,
       password
-    ); // Create a new user with email and password
+    ); 
 
     const docRef = doc(fireStore, "users", userFound.user.uid);
     await setDoc(docRef, {
@@ -50,7 +50,7 @@ export const login = async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    const userFound = await signInWithEmailAndPassword(auth, email, password); // Sign in with email and password
+    const userFound = await signInWithEmailAndPassword(auth, email, password); 
 
     const docRef = doc(fireStore, "users", userFound.user.uid);
     const userDoc = await getDoc(docRef);
@@ -65,7 +65,7 @@ export const login = async (req, res) => {
       id: userFound.user.uid,
       email: user.email,
       username: user.username,
-      role: user.role,
+      role: user.role
     });
   } catch (error) {
     if (error.code === "permission-denied") {
@@ -77,7 +77,7 @@ export const login = async (req, res) => {
 
 export const logout = async (req, res) => {
   try {
-    await signOut(auth); // Sign out the user
+    await signOut(auth); 
     return res.sendStatus(200);
   } catch (error) {
     return res.status(500).json({ message: error.message });
@@ -120,12 +120,11 @@ export const getAllUsers = async (req, res) => {
 export const checkAuth = async (req, res) => {
   const user = auth.currentUser;
   if (user) {
-    // Aquí puedes obtener más información del usuario si es necesario
     const docRef = doc(fireStore, "users", user.uid);
     const userDoc = await getDoc(docRef);
     const userData = userDoc.data();
-
-    return res.json(userData);
+    
+    return res.json({id: user.uid, ...userData});
   } else {
     return res.status(401).json({ message: "No está autenticado" });
   }
