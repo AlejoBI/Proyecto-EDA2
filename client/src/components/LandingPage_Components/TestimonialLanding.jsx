@@ -59,5 +59,4 @@ const TestimonialLanding = () => {
     </section>
   );
 };
-
 export default TestimonialLanding;
