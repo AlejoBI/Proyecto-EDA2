@@ -1,28 +1,71 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useJobs } from "../../context/JobsContext";
+import { useAuth } from "../../context/AuthContext";
 import { EditJob, ConfirmModal, CustomToast } from "../index";
-import { Container, Button } from "react-bootstrap";
+import { Container, Button, Dropdown, Row, Col } from "react-bootstrap";
+import useParentComponentData from "../../hooks/useParentComponentData";
 
-const JobsList = ({ jobs, user }) => {
+const JobsList = () => {
+  const { countriesAndCities } = useParentComponentData();
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
   const [toastColor, setToastColor] = useState("green");
   const [currentJob, setCurrentJob] = useState(null);
-  const { deleteJob } = useJobs();
+  const { user } = useAuth(); // Obtener el usuario autenticado
+  const { jobs, deleteJob } = useJobs(); // Obtener los trabajos del contexto
+
   const userId = user ? user.id : null;
 
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(10); // Número de elementos por página
 
-  // Calcular los índices de inicio y fin
+  // Estado para los filtros
+  const [selectedCountry, setSelectedCountry] = useState("All");
+  const [selectedCity, setSelectedCity] = useState("All");
+  const [filteredJobs, setFilteredJobs] = useState(jobs);
+
+  // Calcular los índices de inicio y fin para la paginación
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = jobs.slice(indexOfFirstItem, indexOfLastItem);
+  const currentItems = filteredJobs.slice(indexOfFirstItem, indexOfLastItem);
+
+  useEffect(() => {
+    applyFilters();
+  }, [selectedCountry, selectedCity, jobs]); // Aplicar filtros cuando cambian los datos
+
+  const applyFilters = () => {
+    let updatedList = jobs;
+
+    if (selectedCountry !== "All") {
+      updatedList = updatedList.filter(
+        (job) => job.location && job.location.country === selectedCountry
+      );
+    }
+
+    if (selectedCity !== "All") {
+      updatedList = updatedList.filter(
+        (job) => job.location && job.location.city === selectedCity
+      );
+    }
+
+    setFilteredJobs(updatedList);
+    setCurrentPage(1); // Reiniciar a la primera página después de aplicar los filtros
+  };
+
+  // Funciones para manejar los cambios de los dropdowns
+  const handleCountryChange = (country) => {
+    setSelectedCountry(country);
+    setSelectedCity("All"); // Resetear ciudad al cambiar de país
+  };
+
+  const handleCityChange = (city) => {
+    setSelectedCity(city);
+  };
 
   const handleNextPage = () => {
-    if (currentPage < Math.ceil(jobs.length / itemsPerPage)) {
+    if (currentPage < Math.ceil(filteredJobs.length / itemsPerPage)) {
       setCurrentPage(currentPage + 1);
     }
   };
@@ -61,11 +104,49 @@ const JobsList = ({ jobs, user }) => {
     }
   };
 
-  return ( 
+  return (
     <Container>
-      <h1>List</h1>
+      <h1>List of Jobs</h1>
+
+      {/* Filtros */}
+      <Row className="mb-3">
+        <Col>
+          <Dropdown onSelect={handleCountryChange}>
+            <Dropdown.Toggle variant="secondary">
+              {selectedCountry === "All" ? "Select Country" : selectedCountry}
+            </Dropdown.Toggle>
+            <Dropdown.Menu>
+              <Dropdown.Item eventKey="All">All</Dropdown.Item>
+              {Object.keys(countriesAndCities).map((country, index) => (
+                <Dropdown.Item key={index} eventKey={country}>
+                  {country}
+                </Dropdown.Item>
+              ))}
+            </Dropdown.Menu>
+          </Dropdown>
+        </Col>
+        <Col>
+          <Dropdown onSelect={handleCityChange}>
+            <Dropdown.Toggle variant="secondary">
+              {selectedCity === "All" ? "Select City" : selectedCity}
+            </Dropdown.Toggle>
+            <Dropdown.Menu>
+              <Dropdown.Item eventKey="All">All</Dropdown.Item>
+              {selectedCountry === "All"
+                ? null
+                : countriesAndCities[selectedCountry]?.map((city, index) => (
+                    <Dropdown.Item key={index} eventKey={city}>
+                      {city}
+                    </Dropdown.Item>
+                  ))}
+            </Dropdown.Menu>
+          </Dropdown>
+        </Col>
+      </Row>
+
+      {/* Lista de Trabajos */}
       <section>
-        {!jobs.length ? (
+        {!filteredJobs.length ? (
           <p>No jobs available</p>
         ) : (
           currentItems.map((job) => (
@@ -75,7 +156,8 @@ const JobsList = ({ jobs, user }) => {
                 <strong>Company:</strong> {job.company}
               </div>
               <div>
-                <strong>Location:</strong> {job.location}
+                <strong>Location:</strong> {job.city},{" "}
+                {job.country}
               </div>
               <div>
                 <strong>Salary:</strong> {job.salary}
@@ -84,7 +166,7 @@ const JobsList = ({ jobs, user }) => {
                 <summary>Details</summary>
                 <p>{job.description}</p>
               </details>
-              {job.id_user === userId && (
+              {userId && job.id_user === userId && (
                 <div className="m-1">
                   <Button variant="primary" onClick={() => handleEdit(job)}>
                     Edit
@@ -98,17 +180,22 @@ const JobsList = ({ jobs, user }) => {
           ))
         )}
       </section>
+
+      {/* Paginación */}
       <section>
-        <button onClick={handlePreviousPage} disabled={currentPage === 1}>
-          Anterior
-        </button>
-        <button
+        <Button onClick={handlePreviousPage} disabled={currentPage === 1}>
+          Previous
+        </Button>
+        <Button
           onClick={handleNextPage}
-          disabled={currentPage === Math.ceil(jobs.length / itemsPerPage)}
+          disabled={
+            currentPage === Math.ceil(filteredJobs.length / itemsPerPage)
+          }
         >
-          Siguiente
-        </button>
+          Next
+        </Button>
       </section>
+
       {showEditModal && (
         <EditJob
           show={showEditModal}

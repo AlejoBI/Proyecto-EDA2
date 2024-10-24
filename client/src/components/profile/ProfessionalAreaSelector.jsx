@@ -1,15 +1,8 @@
 import React, { useState } from "react";
+import useParentComponentData from "../../hooks/useParentComponentData";
 
 const ProfessionalAreaSelector = ({ register, setValue }) => {
-  const professionalAreas = [
-    "Technology and Programming",
-    "Graphic Design",
-    "Video and Animation",
-    "Writing and Translation",
-    "Digital Marketing",
-    "Music and Audio",
-  ];
-
+  const { professionalAreas } = useParentComponentData();
   const [selectedArea, setSelectedArea] = useState("");
 
   return (
