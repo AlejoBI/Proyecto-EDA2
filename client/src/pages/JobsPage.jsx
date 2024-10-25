@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { JobsList, CreateJob } from "../components/index";
 import { Button, Container } from "react-bootstrap";
+import "../assets/css/JobsPage.css";
 
 const JobsPage = () => {
   const [showModal, setShowModal] = useState(false);
