@@ -2,8 +2,9 @@ import React, { useState, useEffect } from "react";
 import { useJobs } from "../../context/JobsContext";
 import { useAuth } from "../../context/AuthContext";
 import { EditJob, ConfirmModal, CustomToast } from "../index";
-import { Container, Button, Dropdown, Row, Col } from "react-bootstrap";
+import { Container, Button, Dropdown, Row, Col, Image } from "react-bootstrap";
 import useParentComponentData from "../../hooks/useParentComponentData";
+import logo from "../../assets/logo.png";
 
 const JobsList = () => {
   const { countriesAndCities } = useParentComponentData();
@@ -19,7 +20,7 @@ const JobsList = () => {
   const userId = user ? user.id : null;
 
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage] = useState(10); // Número de elementos por página
+  const [itemsPerPage] = useState(8); // Número de elementos por página
 
   // Estado para los filtros
   const [selectedCountry, setSelectedCountry] = useState("All");
@@ -105,120 +106,171 @@ const JobsList = () => {
   };
 
   return (
-    <Container>
-      <h1>List of Jobs</h1>
+    <Container className="jobs-container">
+      <div className="jobs-filter">
+        <Image
+          src={logo}
+          alt="Logo"
+          height="80"
+          width="80"
+          className="d-inline-block align-center d-block mx-auto"
+        />
+        {/* Filtros */}
+        <h3 className="job-text">Filter</h3>
+        <Row className="mb-3">
+          <Col>
+            <Dropdown onSelect={handleCountryChange}>
+              <Dropdown.Toggle
+                className="country-selector"
+                style={{
+                  backgroundColor: "var(--morado)",
+                  border: "none",
+                  width: "90%",
+                }}
+              >
+                {selectedCountry === "All" ? "Select Country" : selectedCountry}
+              </Dropdown.Toggle>
+              <Dropdown.Menu>
+                <Dropdown.Item eventKey="All">All</Dropdown.Item>
+                {Object.keys(countriesAndCities).map((country, index) => (
+                  <Dropdown.Item key={index} eventKey={country}>
+                    {country}
+                  </Dropdown.Item>
+                ))}
+              </Dropdown.Menu>
+            </Dropdown>
+          </Col>
+          <Col>
+            <Dropdown onSelect={handleCityChange}>
+              <Dropdown.Toggle
+                className="city-selector"
+                style={{
+                  backgroundColor: "var(--morado)",
+                  border: "none",
+                  width: "90%",
+                }}
+              >
+                {selectedCity === "All" ? "Select City" : selectedCity}
+              </Dropdown.Toggle>
+              <Dropdown.Menu>
+                <Dropdown.Item eventKey="All">All</Dropdown.Item>
+                {selectedCountry === "All"
+                  ? null
+                  : countriesAndCities[selectedCountry]?.map((city, index) => (
+                      <Dropdown.Item key={index} eventKey={city}>
+                        {city}
+                      </Dropdown.Item>
+                    ))}
+              </Dropdown.Menu>
+            </Dropdown>
+          </Col>
+        </Row>
+      </div>
 
-      {/* Filtros */}
-      <Row className="mb-3">
-        <Col>
-          <Dropdown onSelect={handleCountryChange}>
-            <Dropdown.Toggle variant="secondary">
-              {selectedCountry === "All" ? "Select Country" : selectedCountry}
-            </Dropdown.Toggle>
-            <Dropdown.Menu>
-              <Dropdown.Item eventKey="All">All</Dropdown.Item>
-              {Object.keys(countriesAndCities).map((country, index) => (
-                <Dropdown.Item key={index} eventKey={country}>
-                  {country}
-                </Dropdown.Item>
-              ))}
-            </Dropdown.Menu>
-          </Dropdown>
-        </Col>
-        <Col>
-          <Dropdown onSelect={handleCityChange}>
-            <Dropdown.Toggle variant="secondary">
-              {selectedCity === "All" ? "Select City" : selectedCity}
-            </Dropdown.Toggle>
-            <Dropdown.Menu>
-              <Dropdown.Item eventKey="All">All</Dropdown.Item>
-              {selectedCountry === "All"
-                ? null
-                : countriesAndCities[selectedCountry]?.map((city, index) => (
-                    <Dropdown.Item key={index} eventKey={city}>
-                      {city}
-                    </Dropdown.Item>
-                  ))}
-            </Dropdown.Menu>
-          </Dropdown>
-        </Col>
-      </Row>
-
-      {/* Lista de Trabajos */}
-      <section>
-        {!filteredJobs.length ? (
-          <p>No jobs available</p>
-        ) : (
-          currentItems.map((job) => (
-            <div key={job.id} className="p-2">
-              <h4>{job.title}</h4>
-              <div>
-                <strong>Company:</strong> {job.company}
-              </div>
-              <div>
-                <strong>Location:</strong> {job.city},{" "}
-                {job.country}
-              </div>
-              <div>
-                <strong>Salary:</strong> {job.salary}
-              </div>
-              <details>
-                <summary>Details</summary>
-                <p>{job.description}</p>
-              </details>
-              {userId && job.id_user === userId && (
-                <div className="m-1">
-                  <Button variant="primary" onClick={() => handleEdit(job)}>
-                    Edit
-                  </Button>
-                  <Button variant="danger" onClick={() => handleDelete(job.id)}>
-                    Delete
-                  </Button>
+      <div className="jobs-list">
+        <h1>List of Jobs</h1>
+        {/* Lista de Trabajos */}
+        <section className="job">
+          {!filteredJobs.length ? (
+            <p>No jobs available</p>
+          ) : (
+            currentItems.map((job) => (
+              <div key={job.id} className="job-card p-2">
+                <h4 className="job-title job-text">{job.title}</h4>
+                <p className="line"></p>
+                <div>
+                  <strong className="job-text">Company:</strong> {job.company}
                 </div>
-              )}
-            </div>
-          ))
+                <div>
+                  <strong className="job-text">Location:</strong> {job.city},{" "}
+                  {job.country}
+                </div>
+                <div>
+                  <strong className="job-text">Salary:</strong> {job.salary}
+                </div>
+                <details className="details-job">
+                  <summary className="job-text">Details</summary>
+                  <p className="job-text">{job.description}</p>
+                </details>
+                {userId && job.id_user === userId && (
+                  <div className="m-1">
+                    <Button
+                      className="m-2"
+                      style={{
+                        backgroundColor: "var(--morado)",
+                        border: "none",
+                        width: "10%",
+                      }}
+                      variant="primary"
+                      onClick={() => handleEdit(job)}
+                    >
+                      Edit
+                    </Button>
+                    <Button
+                      className="m-2"
+                      style={{
+                        backgroundColor: "var(--morado)",
+                        border: "none",
+                        width: "10%",
+                      }}
+                      variant="danger"
+                      onClick={() => handleDelete(job.id)}
+                    >
+                      Delete
+                    </Button>
+                  </div>
+                )}
+              </div>
+            ))
+          )}
+        </section>
+
+        {/* Paginación */}
+        <section>
+          <Button
+            className="nextPrevButtons m-2"
+            style={{ backgroundColor: "var(--morado)", border: "none" }}
+            onClick={handlePreviousPage}
+            disabled={currentPage === 1}
+          >
+            Previous
+          </Button>
+          <Button
+            className="nextPrevButtons m-2"
+            style={{ backgroundColor: "var(--morado)", border: "none" }}
+            onClick={handleNextPage}
+            disabled={
+              currentPage === Math.ceil(filteredJobs.length / itemsPerPage)
+            }
+          >
+            Next
+          </Button>
+        </section>
+
+        {showEditModal && (
+          <EditJob
+            show={showEditModal}
+            onHide={() => setShowEditModal(false)}
+            job={currentJob}
+          />
         )}
-      </section>
-
-      {/* Paginación */}
-      <section>
-        <Button onClick={handlePreviousPage} disabled={currentPage === 1}>
-          Previous
-        </Button>
-        <Button
-          onClick={handleNextPage}
-          disabled={
-            currentPage === Math.ceil(filteredJobs.length / itemsPerPage)
-          }
-        >
-          Next
-        </Button>
-      </section>
-
-      {showEditModal && (
-        <EditJob
-          show={showEditModal}
-          onHide={() => setShowEditModal(false)}
-          job={currentJob}
-        />
-      )}
-      {showDeleteConfirm && (
-        <ConfirmModal
-          show={showDeleteConfirm}
-          onHide={() => setShowDeleteConfirm(false)}
-          onConfirm={confirmDelete}
-          message="Are you sure you want to delete this job?"
-        />
-      )}
-      {showToast && (
-        <CustomToast
-          show={showToast}
-          onClose={() => setShowToast(false)}
-          message={toastMessage}
-          color={toastColor}
-        />
-      )}
+        {showDeleteConfirm && (
+          <ConfirmModal
+            show={showDeleteConfirm}
+            onHide={() => setShowDeleteConfirm(false)}
+            onConfirm={confirmDelete}
+            message="Are you sure you want to delete this job?"
+          />
+        )}
+        {showToast && (
+          <CustomToast
+            show={showToast}
+            onClose={() => setShowToast(false)}
+            message={toastMessage}
+            color={toastColor}
+          />
+        )}
+      </div>
     </Container>
   );
 };
