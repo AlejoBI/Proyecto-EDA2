@@ -1,25 +1,28 @@
 import React, { useState, useEffect } from "react";
-import { set, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { useJobs } from "../../context/JobsContext";
 import { useAuth } from "../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
-import { CustomToast, ConfirmModal } from "../index";
-import { Modal, Button } from "react-bootstrap";
+import { ConfirmModal } from "../index";
+import { Modal, Button, Dropdown } from "react-bootstrap";
+import useParentComponentData from "../../hooks/useParentComponentData";
 
 const CreateJob = ({ show, handleClose }) => {
+  const { countriesAndCities } = useParentComponentData();
+
   const {
     register,
     handleSubmit,
     formState: { errors },
+    setValue, // Para establecer valores del formulario
   } = useForm();
 
-  const { createJob, errors: jobsErrors } = useJobs();
+  const { createJob } = useJobs();
   const { isAuthenticated } = useAuth();
-  const [showToast, setShowToast] = useState(false);
-  const [toastMessage, setToastMessage] = useState("");
-  const [toastColor, setToastColor] = useState("green");
   const [showConfirm, setShowConfirm] = useState(false); // Estado para el modal de confirmación
   const [pendingAction, setPendingAction] = useState(null); // Acción pendiente de confirmar
+  const [selectedCountry, setSelectedCountry] = useState("");
+  const [selectedCity, setSelectedCity] = useState("");
 
   const navigate = useNavigate();
 
@@ -30,6 +33,11 @@ const CreateJob = ({ show, handleClose }) => {
   }, [isAuthenticated, navigate]);
 
   const onSubmit = handleSubmit(async (data) => {
+    if (!selectedCountry || !selectedCity) {
+      return; // Detener el envío si no se seleccionan país o ciudad
+    }
+    data.country = selectedCountry;
+    data.city = selectedCity;
     setPendingAction(() => () => handleCreateJob(data)); // Guardar acción pendiente
     setShowConfirm(true);
   });
@@ -38,17 +46,10 @@ const CreateJob = ({ show, handleClose }) => {
     try {
       const res = await createJob(data);
       if (res && res.message) {
-        setShowToast(true);
-        setToastMessage(res.message);
-        setToastColor("green");
         handleClose();
       }
     } catch (error) {
-      setToastMessage(
-        "Error: " + (error.response?.data?.error || error.message)
-      );
-      setToastColor("red");
-      setShowToast(true);
+      console.error("Error creating job:", error);
     }
   };
 
@@ -59,15 +60,6 @@ const CreateJob = ({ show, handleClose }) => {
 
   return (
     <>
-      <CustomToast
-        show={showToast}
-        message={toastMessage}
-        position={{ top: "0", right: "0" }}
-        color={toastColor}
-        duration={3000}
-        onClose={() => setShowToast(false)}
-      />
-
       <Modal show={show} onHide={handleCancel} animation={false}>
         <Modal.Header closeButton>
           <Modal.Title>Create Job</Modal.Title>
@@ -80,13 +72,8 @@ const CreateJob = ({ show, handleClose }) => {
 
             <h4>Description</h4>
             <textarea
-              typeof="text"
               {...register("description", { required: true })}
               style={{ resize: "none", overflow: "hidden" }}
-              onInput={(e) => {
-                e.target.style.height = "auto";
-                e.target.style.height = `${e.target.scrollHeight}px`;
-              }}
             ></textarea>
             {errors.description && (
               <p className="text-danger">Description is required</p>
@@ -98,10 +85,46 @@ const CreateJob = ({ show, handleClose }) => {
               <p className="text-danger">Company is required</p>
             )}
 
-            <h4>Location</h4>
-            <input type="text" {...register("location", { required: true })} />
-            {errors.location && (
-              <p className="text-danger">Location is required</p>
+            <h4>Country</h4>
+            <Dropdown
+              onSelect={(country) => {
+                setSelectedCountry(country);
+                setSelectedCity(""); // Resetear ciudad al cambiar de país
+              }}
+            >
+              <Dropdown.Toggle variant="secondary">
+                {selectedCountry || "Select Country"}
+              </Dropdown.Toggle>
+              <Dropdown.Menu>
+                {Object.keys(countriesAndCities).map((country, index) => (
+                  <Dropdown.Item key={index} eventKey={country}>
+                    {country}
+                  </Dropdown.Item>
+                ))}
+              </Dropdown.Menu>
+            </Dropdown>
+            {errors.country && (
+              <p className="text-danger">Country is required</p>
+            )}
+
+            <h4>City</h4>
+            <Dropdown onSelect={setSelectedCity}>
+              <Dropdown.Toggle variant="secondary">
+                {selectedCity || "Select City"}
+              </Dropdown.Toggle>
+              <Dropdown.Menu>
+                {selectedCountry
+                  ? countriesAndCities[selectedCountry]?.map((city, index) => (
+                      <Dropdown.Item key={index} eventKey={city}>
+                        {city}
+                      </Dropdown.Item>
+                    ))
+                  : null}
+              </Dropdown.Menu>
+            </Dropdown>
+            {errors.city && <p className="text-danger">City is required</p>}
+            {(!selectedCountry || !selectedCity) && (
+              <p className="text-danger">Both country and city are required</p>
             )}
 
             <h4>Salary</h4>

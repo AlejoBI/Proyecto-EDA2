@@ -1,13 +1,10 @@
 import React, { useState } from "react";
 import { JobsList, CreateJob } from "../components/index";
 import { Button, Container } from "react-bootstrap";
-import { useJobs } from "../context/JobsContext";
-import { useAuth } from "../context/AuthContext";
+import "../assets/css/JobsPage.css";
 
 const JobsPage = () => {
   const [showModal, setShowModal] = useState(false);
-  const { jobs, errors } = useJobs();
-  const { user } = useAuth();
 
   const toggleModal = () => {
     setShowModal(!showModal);
@@ -21,7 +18,7 @@ const JobsPage = () => {
       </nav>
       <Container className="d-flex">
         <div className="ml-20-px f-1">
-          <JobsList jobs={jobs} errors={errors} user={user} />
+          <JobsList />
         </div>
       </Container>
 

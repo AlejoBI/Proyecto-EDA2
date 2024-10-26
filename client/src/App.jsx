@@ -12,7 +12,8 @@ import {
   HomePage,
   LoginPage,
   RegisterPage,
-  ProfilePage
+  ProfilePage,
+  ChatPage
 } from "./pages/index.jsx";
 
 import ProtectedRoute from "./utils/ProtectedRoute";
@@ -76,6 +77,14 @@ function App() {
                 element={
                   <Layout>
                     <ProfilePage />
+                  </Layout>
+                }
+              />
+              <Route
+                path="/user/chat"
+                element={
+                  <Layout>
+                    <ChatPage />
                   </Layout>
                 }
               />
