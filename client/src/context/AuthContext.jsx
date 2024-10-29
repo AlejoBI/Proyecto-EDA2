@@ -76,7 +76,6 @@ export const AuthProvider = ({ children }) => {
       console.log("Guardado", user);
       const res = await updateProfileRequest(user);
       setUser(res);
-      return "Perfil actualizado";
     } catch (error) {
       setErrors(error.response ? error.response.data : error.message);
     }
