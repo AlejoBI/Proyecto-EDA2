@@ -70,7 +70,7 @@ const NavigationMenu = () => {
                   <NavDropdown.Item href="/user/profile">
                     Profile
                   </NavDropdown.Item>
-                  <NavDropdown.Item href="/user/settings">Settings</NavDropdown.Item>
+                  <NavDropdown.Item href="/user/chat">Chats</NavDropdown.Item>
                   <NavDropdown.Divider />
                   <NavDropdown.Item
                     href="/"

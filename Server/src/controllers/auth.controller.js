@@ -18,7 +18,7 @@ export const register = async (req, res) => {
       auth,
       email,
       password
-    ); 
+    );
 
     const docRef = doc(fireStore, "users", userFound.user.uid);
     await setDoc(docRef, {
@@ -50,7 +50,7 @@ export const login = async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    const userFound = await signInWithEmailAndPassword(auth, email, password); 
+    const userFound = await signInWithEmailAndPassword(auth, email, password);
 
     const docRef = doc(fireStore, "users", userFound.user.uid);
     const userDoc = await getDoc(docRef);
@@ -77,7 +77,7 @@ export const login = async (req, res) => {
 
 export const logout = async (req, res) => {
   try {
-    await signOut(auth); 
+    await signOut(auth);
     return res.sendStatus(200);
   } catch (error) {
     return res.status(500).json({ message: error.message });
@@ -123,45 +123,53 @@ export const checkAuth = async (req, res) => {
     const docRef = doc(fireStore, "users", user.uid);
     const userDoc = await getDoc(docRef);
     const userData = userDoc.data();
-    
-    return res.json({id: user.uid, ...userData});
+
+    return res.json({ id: user.uid, ...userData });
   } else {
     return res.status(401).json({ message: "No está autenticado" });
   }
 };
 
 export const updateProfile = async (req, res) => {
-  const { age, name, lastName, gender, phone, city, country } = req.body;
+  const { age, name, lastName, gender, phone, city, country, professionalArea } = req.body;
+  const user = auth.currentUser;
 
   try {
-    const userDocFound = doc(fireStore, "users", req.user.id);
-    if (!userDocFound)
-      return res.status(400).json({ message: "Usuario no encontrado" });
+    const userDocRef = doc(fireStore, "users", user.uid);
+    const userDocSnap = await getDoc(userDocRef);
 
-    await setDoc(userDocFound, {
-      username: userDocFound.username,
-      email: userDocFound.email,
-      role: userDocFound.role,
+    if (!userDocSnap.exists()) {
+      return res.status(400).json({ message: "Usuario no encontrado" });
+    }
+
+    const userDocData = userDocSnap.data();
+    await setDoc(userDocRef, {
+      username: userDocData.username,
+      email: userDocData.email,
+      role: userDocData.role,
       age: age,
       name: name,
       lastName: lastName,
       gender: gender,
       phone: phone,
       city: city,
-      country: country
+      country: country,
+      professionalArea: professionalArea
     });
 
+
     return res.json({
-      username: userDocFound.username,
-      email: userDocFound.email,
-      role: userDocFound.role,
+      username: userDocData.username,
+      email: userDocData.email,
+      role: userDocData.role,
       age: age,
       name: name,
       lastName: lastName,
       gender: gender,
       phone: phone,
       city: city,
-      country: country
+      country: country,
+      professionalArea: professionalArea
     });
   } catch (error) {
     res.status(500).json({ message: error.message });
