@@ -5,6 +5,7 @@ import logo from "../../assets/logo.png";
 import { CountryCitySelector, ProfessionalAreaSelector } from "../index";
 import { useAuth } from "../../context/AuthContext";
 import { useState, useEffect } from "react";
+import { CustomToast } from "../index";
 
 const UpdateProfile = () => {
   const { user, updateProfile } = useAuth();
@@ -26,8 +27,6 @@ const UpdateProfile = () => {
       role: user.role,
     },
   });
-
-  const [updateInformation, setUpdateInformation] = useState(false);
 
   useEffect(() => {
     setValue("name", user.name);
@@ -60,6 +59,14 @@ const UpdateProfile = () => {
 
   return (
     <>
+      <CustomToast
+        show={showToast}
+        message={toastMessage}
+        position={{ top: "0", right: "0" }}
+        color={toastColor}
+        duration={3000}
+        onClose={() => setShowToast(false)}
+      />
       {user.role === "customer" ? (
         <>
           <Container className="d-flex align-items-center justify-content-center">

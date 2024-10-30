@@ -3,8 +3,10 @@ import { useAuth } from "../../context/AuthContext";
 import { Container, Button, Dropdown, Row, Col } from "react-bootstrap";
 import useParentComponentData from "../../hooks/useParentComponentData";
 
+import { createChatRequest } from "../../api/chat";
+
 const FreelancersList = () => {
-  const { getAllUsers } = useAuth();
+  const { getAllUsers, user, isAuthenticated } = useAuth();
   const [users, setUsers] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(10); // Número de elementos por página
@@ -102,6 +104,21 @@ const FreelancersList = () => {
     }
   };
 
+  const handleStartChat = async (participantId) => {
+    if (!isAuthenticated) return;
+    try {
+      const response = await createChatRequest({
+        userId: user.id,
+        participantId,
+      });
+      console.log("Chat iniciado con ID:", response.chatId);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const currentUserId = user ? user.id : null;
+
   return (
     <Container>
       <h1>Freelancers</h1>
@@ -182,6 +199,14 @@ const FreelancersList = () => {
               <p>
                 <strong>Area:</strong> {user.professionalArea}
               </p>
+              {isAuthenticated && user.id !== currentUserId && (
+                <Button
+                  variant="primary"
+                  onClick={() => handleStartChat(user.id)}
+                >
+                  Iniciar Chat
+                </Button>
+              )}
             </li>
           ))}
         </ul>
