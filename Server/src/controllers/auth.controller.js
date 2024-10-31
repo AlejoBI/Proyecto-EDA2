@@ -41,6 +41,14 @@ export const register = async (req, res) => {
       return res.status(400).json({ message: "Email already in use" });
     } else if (error.code === "permission-denied") {
       return res.status(403).json({ message: "Insufficient permissions" });
+    } else if (error.code === "auth/weak-password") {
+      return res.status(400).json({ message: "Weak password" });
+    } else if (error.code === "auth/invalid-email") {
+      return res.status(400).json({ message: "Invalid email" });
+    } else if (error.code === "auth/invalid-credential") {
+      return res.status(400).json({ message: "Invalid credential" });
+    } else if (error.code === "auth/operation-not-allowed") {
+      return res.status(400).json({ message: "Operation not allowed" });
     }
     res.status(500).json({ message: error.message });
   }
@@ -70,6 +78,18 @@ export const login = async (req, res) => {
   } catch (error) {
     if (error.code === "permission-denied") {
       return res.status(403).json({ message: "Insufficient permissions" });
+    }
+    if (error.code === "auth/user-not-found") {
+      return res.status(404).json({ message: "User not found" });
+    }
+    if (error.code === "auth/wrong-password") {
+      return res.status(400).json({ message: "Wrong password" });
+    }
+    if (error.code === "auth/invalid-email") {
+      return res.status(400).json({ message: "Invalid email" });
+    }
+    if (error.code === "auth/invalid-credential") {
+      return res.status(400).json({ message: "Invalid credential" });
     }
     res.status(500).json({ message: error.message });
   }
