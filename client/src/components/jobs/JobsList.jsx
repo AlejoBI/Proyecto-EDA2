@@ -10,7 +10,6 @@ const JobsList = () => {
   const { countriesAndCities } = useParentComponentData();
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
-  const [toast, setToast] = useState({ show: false, message: "", color: "" });
 
   const {
     currentPage,
@@ -27,20 +26,21 @@ const JobsList = () => {
     handleDelete,
     confirmDelete,
     setCurrentJob,
+    handleStartChat,
+    toggleModal,
+    showModal,
+    showToast,
+    setShowToast,
+    toastMessage,
+    toastType,
   } = useJobsList();
 
-  const { user } = useAuth();
+  const { user, isAuthenticated } = useAuth();
   const userId = user ? user.id : null;
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentItems = filteredJobs.slice(indexOfFirstItem, indexOfLastItem);
-
-  const [showModal, setShowModal] = useState(false);
-
-  const toggleModal = () => {
-    setShowModal(!showModal);
-  };
 
   return (
     <Container className="jobs-container">
@@ -101,22 +101,24 @@ const JobsList = () => {
               </Dropdown.Menu>
             </Dropdown>
           </Col>
-          <Col>
-            <Button
-              className="city-selector"
-              style={{
-                backgroundColor: "var(--morado)",
-                border: "none",
-                width: "90%",
-              }}
-              onClick={toggleModal}
-            >
-              Create Job
-            </Button>
-            {showModal && (
-              <CreateJob show={showModal} handleClose={toggleModal} />
-            )}
-          </Col>
+          {user.role === "customer" && (
+            <Col>
+              <Button
+                className="city-selector"
+                style={{
+                  backgroundColor: "var(--morado)",
+                  border: "none",
+                  width: "90%",
+                }}
+                onClick={toggleModal}
+              >
+                Create Job
+              </Button>
+              {showModal && (
+                <CreateJob show={showModal} handleClose={toggleModal} />
+              )}
+            </Col>
+          )}
         </Row>
       </div>
       <div className="jobs-list">
@@ -144,7 +146,15 @@ const JobsList = () => {
                   <summary className="job-text">Details</summary>
                   <p className="job-text">{job.description}</p>
                 </details>
-                {userId && job.id_user === userId && (
+                {isAuthenticated && user.role === "professional" && (
+                  <Button
+                    variant="primary"
+                    onClick={() => handleStartChat(job.id_user)}
+                  >
+                    Iniciar Chat
+                  </Button>
+                )}
+                {userId && (job.id_user === userId || user.role === "admin") && (
                   <div className="m-1">
                     <Button
                       className="m-2"
@@ -225,15 +235,16 @@ const JobsList = () => {
             message="Are you sure you want to delete this job?"
           />
         )}
-        {toast.show && (
-          <CustomToast
-            show={toast.show}
-            onClose={() => setToast((prev) => ({ ...prev, show: false }))}
-            message={toast.message}
-            color={toast.color}
-          />
-        )}
       </div>
+
+      <CustomToast
+        show={showToast}
+        message={toastMessage}
+        backgroundColor={toastType === "success" ? "green" : "red"}
+        color="white"
+        duration={3000}
+        onClose={() => setShowToast(false)}
+      />
     </Container>
   );
 };
