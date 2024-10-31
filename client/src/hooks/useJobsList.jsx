@@ -1,8 +1,12 @@
 import { useState, useEffect } from "react";
 import { useJobs } from "../context/JobsContext";
+import { useAuth } from "../context/AuthContext";
+import { createChatRequest } from "../api/chat";
+import { useNavigate } from "react-router-dom";
 
 const useJobsList = () => {
   const { jobs, deleteJob } = useJobs();
+  const { user } = useAuth();
 
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(8);
@@ -10,6 +14,15 @@ const useJobsList = () => {
   const [selectedCity, setSelectedCity] = useState("All");
   const [filteredJobs, setFilteredJobs] = useState(jobs);
   const [currentJob, setCurrentJob] = useState(null);
+  const [showModal, setShowModal] = useState(false);
+  const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState("");
+  const [toastType, setToastType] = useState("success");
+  const navigate = useNavigate();
+
+  const toggleModal = () => {
+    setShowModal((prev) => !prev);
+  };
 
   useEffect(() => {
     applyFilters();
@@ -79,6 +92,25 @@ const useJobsList = () => {
     }
   };
 
+  const handleStartChat = async (participantId) => {
+    try {
+      const response = await createChatRequest({
+        userId: user.id,
+        participantId,
+      });
+      setToastMessage("Chat iniciado con éxito, redirigiendo...");
+      setToastType("success");
+      setTimeout(() => {
+        navigate("/user/chat");
+      }, 3000);
+    } catch (error) {
+      setToastMessage("Error al iniciar el chat");
+      setToastType("error");
+    } finally {
+      setShowToast(true);
+    }
+  };
+
   return {
     currentPage,
     itemsPerPage,
@@ -94,6 +126,13 @@ const useJobsList = () => {
     handleDelete,
     confirmDelete,
     setCurrentJob,
+    handleStartChat,
+    toggleModal,
+    showModal,
+    showToast,
+    setShowToast,
+    toastMessage,
+    toastType,
   };
 };
 

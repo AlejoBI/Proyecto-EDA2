@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Container, Button, Dropdown, Row, Col } from "react-bootstrap";
 import useParentComponentData from "../../hooks/useParentComponentData";
 import useFreelancersList from "../../hooks/useFreelancersList";
-import CustomToast from "../CustomToast";
+import { CustomToast } from "../index";
 
 const FreelancersList = () => {
   const navigate = useNavigate();
@@ -56,7 +56,7 @@ const FreelancersList = () => {
     }
   };
 
-  const currenUserId = user.id;
+  const currenUserId = user ? user.id : null;
 
   return (
     <Container>
