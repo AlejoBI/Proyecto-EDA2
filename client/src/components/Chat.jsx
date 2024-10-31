@@ -1,69 +1,56 @@
 import React, { useState, useEffect } from "react";
-import {
-  getUserChatsRequest,
-  sendMessageRequest,
-  getMessagesRequest,
-} from "../api/chat";
-import { useAuth } from "../context/AuthContext";
+import useChat from "../hooks/useChat";
+import { CustomToast } from "./index";
 import "../assets/css/Chat.css";
 
 const ChatApp = () => {
-  const [chats, setChats] = useState([]);
-  const [activeChat, setActiveChat] = useState(null);
-  const [messages, setMessages] = useState([]);
-  const [newMessage, setNewMessage] = useState("");
-  const [error, setError] = useState("");
-  const { user } = useAuth();
-  const currentUserId = user ? user.id : null;
+  const {
+    chats,
+    filteredChats,
+    activeChat,
+    messages,
+    newMessage,
+    searchTerm,
+    error,
+    user,
+    setActiveChat,
+    setNewMessage,
+    setSearchTerm,
+    handleSendMessage,
+  } = useChat();
+
+  const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState("");
+  const [toastColor, setToastColor] = useState("green");
 
   useEffect(() => {
-    const fetchChats = async () => {
-      try {
-        setError("");
-        const fetchedChats = await getUserChatsRequest(currentUserId);
-        setChats(fetchedChats);
-      } catch (err) {
-        setError("Failed to load chats. Please try again later.");
-      }
-    };
-    fetchChats();
-  }, [currentUserId]);
-
-  useEffect(() => {
-    if (activeChat) {
-      const fetchMessages = async () => {
-        try {
-          setError("");
-          const fetchedMessages = await getMessagesRequest(activeChat);
-          setMessages(fetchedMessages);
-        } catch (err) {
-          setError("Failed to load messages. Please try again later.");
-        }
-      };
-
-      fetchMessages();
-
-      const intervalId = setInterval(fetchMessages, 5000);
-
-      return () => clearInterval(intervalId);
+    if (error) {
+      handleShowToast(error, "red");
     }
-  }, [activeChat]);
+  }, [error]);
 
-  const handleSendMessage = async () => {
-    if (newMessage.trim() && activeChat) {
-      try {
-        setError("");
-        await sendMessageRequest({
-          chatId: activeChat,
-          senderId: currentUserId,
-          message: newMessage,
-        });
-        setNewMessage("");
-      } catch (err) {
-        setError("Failed to send message. Please try again.");
-      }
+  const handleShowToast = (message, color) => {
+    setToastMessage(message);
+    setToastColor(color);
+    setShowToast(true);
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === "Escape" && activeChat) {
+      setActiveChat(null); // Desactiva el chat activo
+      setNewMessage(""); // Limpia el campo de nuevo mensaje
     }
   };
+
+  useEffect(() => {
+    // Añadir el event listener al montar el componente
+    window.addEventListener("keydown", handleKeyDown);
+
+    // Limpiar el event listener al desmontar el componente
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [activeChat]); // Solo se ejecuta cuando activeChat cambia
 
   return (
     <div className="chat-app">
@@ -75,11 +62,13 @@ const ChatApp = () => {
           <input
             type="text"
             placeholder="Search Chat"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
             className="chat-search"
           />
         </div>
         <div className="chat-list">
-          {chats.map((chat) => (
+          {filteredChats.map((chat) => (
             <div
               key={chat.id}
               className="chat-item"
@@ -92,7 +81,7 @@ const ChatApp = () => {
               />
               <div className="chat-info">
                 <span className="chat-name">
-                  {chat.users.filter((u) => u !== currentUserId).join(", ")}
+                  {chat.usernames.filter((u) => u !== user.username).join(", ")}
                 </span>
                 <span className="chat-time">Last message</span>
               </div>
@@ -113,28 +102,31 @@ const ChatApp = () => {
             {activeChat
               ? chats
                   .find((chat) => chat.id === activeChat)
-                  .users.filter((u) => u !== currentUserId)
+                  .usernames.filter((u) => u !== user.username)
                   .join(", ")
               : "Select a chat"}
           </span>
         </div>
 
         <div className="chat-messages">
-          {messages.map((msg, index) => (
-            <div
-              key={index}
-              className={`message ${
-                msg.senderId === currentUserId ? "self" : "other"
-              }`}
-            >
-              <div className="message-content">{msg.message}</div>
-              <span className="message-time">
-                {msg.timestamp
-                  ? new Date(msg.timestamp.seconds * 1000).toLocaleString()
-                  : "Loading..."}
-              </span>
-            </div>
-          ))}
+          {activeChat &&
+            messages.map((msg, index) => (
+              <div
+                key={index}
+                className={`message ${
+                  msg.senderId === user.id ? "self" : "other"
+                }`}
+              >
+                <div className="message-content">{msg.message}</div>
+                <span className="message-time">
+                  {msg.timestamp
+                    ? new Date(
+                        msg.timestamp.seconds * 1000
+                      ).toLocaleTimeString()
+                    : "Loading..."}
+                </span>
+              </div>
+            ))}
         </div>
 
         {activeChat && (
@@ -147,12 +139,25 @@ const ChatApp = () => {
               onKeyPress={(e) => e.key === "Enter" && handleSendMessage()}
               className="chat-input"
             />
-            <button onClick={handleSendMessage} className="send-button">
+            <button
+              onClick={handleSendMessage}
+              className="send-button"
+              disabled={!newMessage.trim()}
+            >
               Send
             </button>
           </div>
         )}
       </div>
+
+      <CustomToast
+        show={showToast}
+        message={toastMessage}
+        color={toastColor}
+        position={{ top: "0", right: "0" }}
+        duration={3000}
+        onClose={() => setShowToast(false)}
+      />
     </div>
   );
 };

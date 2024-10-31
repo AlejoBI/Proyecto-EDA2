@@ -1,87 +1,39 @@
-import React, { useState, useEffect } from "react";
-import { useAuth } from "../../context/AuthContext";
+import React from "react";
+import { useNavigate } from "react-router-dom";
 import { Container, Button, Dropdown, Row, Col } from "react-bootstrap";
 import useParentComponentData from "../../hooks/useParentComponentData";
-
-import { createChatRequest } from "../../api/chat";
+import useFreelancersList from "../../hooks/useFreelancersList";
+import CustomToast from "../CustomToast";
 
 const FreelancersList = () => {
-  const { getAllUsers, user, isAuthenticated } = useAuth();
-  const [users, setUsers] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage] = useState(10); // Número de elementos por página
-  const [filteredUsers, setFilteredUsers] = useState([]); // Lista de freelancers filtrados
-  const [selectedCountry, setSelectedCountry] = useState("All");
-  const [selectedCity, setSelectedCity] = useState("All");
-  const [selectedArea, setSelectedArea] = useState("All");
+  const navigate = useNavigate();
+  const {
+    users,
+    user,
+    isAuthenticated,
+    currentPage,
+    itemsPerPage,
+    filteredUsers,
+    selectedCountry,
+    setSelectedCountry,
+    selectedCity,
+    setSelectedCity,
+    selectedArea,
+    setSelectedArea,
+    showToast,
+    setShowToast,
+    toastMessage,
+    toastType,
+    currentItems,
+    handleStartChat,
+    setCurrentPage,
+  } = useFreelancersList(navigate);
 
   const { countriesAndCities, professionalAreas } = useParentComponentData();
 
-  const [cities, setCities] = useState([]);
-
-  useEffect(() => {
-    const fetchUsers = async () => {
-      const res = await getAllUsers();
-      const professionals = res.filter((user) => user.role === "professional");
-
-      // Filtrar los usuarios que tienen todas las propiedades requeridas
-      const validProfessionals = professionals.filter(
-        (user) =>
-          user.username?.trim() &&
-          user.email?.trim() &&
-          user.city?.trim() &&
-          user.country?.trim() &&
-          user.professionalArea?.trim()
-      );
-
-      // Extraer valores únicos para los filtros
-      const uniqueCountries = [
-        "All",
-        ...new Set(validProfessionals.map((user) => user.country)),
-      ];
-
-      setUsers(validProfessionals);
-      setFilteredUsers(validProfessionals); // Inicialmente mostrar todos
-      setCities(uniqueCountries); // Cambié esto para ajustar correctamente las ciudades
-    };
-    fetchUsers();
-  }, []);
-
-  useEffect(() => {
-    applyFilters();
-  }, [selectedCountry, selectedCity, selectedArea]);
-
-  // Calcular los índices de inicio y fin para la paginación
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = filteredUsers.slice(indexOfFirstItem, indexOfLastItem);
-
-  const applyFilters = () => {
-    let updatedList = users;
-
-    if (selectedCountry !== "All") {
-      updatedList = updatedList.filter(
-        (user) => user.country === selectedCountry
-      );
-    }
-
-    if (selectedCity !== "All") {
-      updatedList = updatedList.filter((user) => user.city === selectedCity);
-    }
-
-    if (selectedArea !== "All") {
-      updatedList = updatedList.filter(
-        (user) => user.professionalArea === selectedArea
-      );
-    }
-
-    setFilteredUsers(updatedList);
-  };
-
-  // Funciones para manejar los cambios de los dropdowns
   const handleCountryChange = (country) => {
     setSelectedCountry(country);
-    setSelectedCity("All"); // Resetear ciudad al cambiar de país
+    setSelectedCity("All");
   };
 
   const handleCityChange = (city) => {
@@ -104,25 +56,11 @@ const FreelancersList = () => {
     }
   };
 
-  const handleStartChat = async (participantId) => {
-    if (!isAuthenticated) return;
-    try {
-      const response = await createChatRequest({
-        userId: user.id,
-        participantId,
-      });
-      console.log("Chat iniciado con ID:", response.chatId);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  const currentUserId = user ? user.id : null;
+  const currenUserId = user.id;
 
   return (
     <Container>
       <h1>Freelancers</h1>
-      {/* Filtros */}
       <Row className="mb-3">
         <Col>
           <Dropdown onSelect={handleCountryChange}>
@@ -177,32 +115,31 @@ const FreelancersList = () => {
         </Col>
       </Row>
 
-      {/* Lista de Freelancers */}
       {!filteredUsers.length ? (
         <p>No freelancers available</p>
       ) : (
         <ul>
-          {currentItems.map((user) => (
-            <li key={user.id}>
+          {currentItems.map((userJ) => (
+            <li key={userJ.id}>
               <p>
-                <strong>Username:</strong> {user.username}
+                <strong>Username:</strong> {userJ.username}
               </p>
               <p>
-                <strong>Email:</strong> {user.email}
+                <strong>Email:</strong> {userJ.email}
               </p>
               <p>
-                <strong>City:</strong> {user.city}
+                <strong>City:</strong> {userJ.city}
               </p>
               <p>
-                <strong>Country:</strong> {user.country}
+                <strong>Country:</strong> {userJ.country}
               </p>
               <p>
-                <strong>Area:</strong> {user.professionalArea}
+                <strong>Area:</strong> {userJ.professionalArea}
               </p>
-              {isAuthenticated && user.id !== currentUserId && (
+              {isAuthenticated && userJ.id !== currenUserId && (
                 <Button
                   variant="primary"
-                  onClick={() => handleStartChat(user.id)}
+                  onClick={() => handleStartChat(userJ.id)}
                 >
                   Iniciar Chat
                 </Button>
@@ -212,7 +149,6 @@ const FreelancersList = () => {
         </ul>
       )}
 
-      {/* Paginación */}
       <section>
         <Button onClick={handlePreviousPage} disabled={currentPage === 1}>
           Previous
@@ -226,6 +162,15 @@ const FreelancersList = () => {
           Next
         </Button>
       </section>
+
+      <CustomToast
+        show={showToast}
+        message={toastMessage}
+        backgroundColor={toastType === "success" ? "green" : "red"}
+        color="white"
+        duration={3000}
+        onClose={() => setShowToast(false)}
+      />
     </Container>
   );
 };
