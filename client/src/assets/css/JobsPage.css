@@ -72,14 +72,12 @@
 }
 
 .dropdown-toggle {
-  width: 100%;
   text-align: left;
   margin: 5px;
   background-color: var(--morado);
 }
 
 .dropdown-menu {
-  width: 100%;
   background-color: var(--morado);
 }
 

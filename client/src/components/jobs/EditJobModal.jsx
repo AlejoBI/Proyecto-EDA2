@@ -3,8 +3,9 @@ import { useForm } from "react-hook-form";
 import { useJobs } from "../../context/JobsContext";
 import { useAuth } from "../../context/AuthContext";
 import { CustomToast, ConfirmModal } from "../index";
-import { Modal, Button } from "react-bootstrap";
+import { Modal, Button, Dropdown } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
+import useParentComponentData from "../../hooks/useParentComponentData";
 
 const EditJob = ({ show, handleClose, job }) => {
   const {
@@ -15,11 +16,14 @@ const EditJob = ({ show, handleClose, job }) => {
   } = useForm();
   const { updateJob } = useJobs();
   const { isAuthenticated } = useAuth();
+  const { countriesAndCities } = useParentComponentData();
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
   const [toastColor, setToastColor] = useState("green");
   const [showConfirm, setShowConfirm] = useState(false);
   const [pendingAction, setPendingAction] = useState(null);
+  const [selectedCountry, setSelectedCountry] = useState("");
+  const [selectedCity, setSelectedCity] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -29,24 +33,38 @@ const EditJob = ({ show, handleClose, job }) => {
   }, [isAuthenticated, navigate]);
 
   useEffect(() => {
-    setValue("title", job.title);
-    setValue("description", job.description);
-    setValue("company", job.company);
-    setValue("location", job.location);
-    setValue("salary", job.salary);
+    if (job) {
+      setValue("title", job.title);
+      setValue("description", job.description);
+      setValue("company", job.company);
+      setValue("salary", job.salary);
+      setSelectedCountry(job.country || "");
+      setSelectedCity(job.city || "");
+    }
   }, [job, setValue]);
 
   const onSubmit = handleSubmit(async (data) => {
-    setPendingAction(() => () => handleUpdateJob(data));
+    if (!selectedCountry || !selectedCity) {
+      setToastMessage("Please select both country and city.");
+      setToastColor("red");
+      setShowToast(true);
+      return;
+    }
+
+    const updatedJobData = {
+      ...data,
+      country: selectedCountry,
+      city: selectedCity,
+      id: job.id,
+    };
+
+    setPendingAction(() => () => handleUpdateJob(updatedJobData));
     setShowConfirm(true);
   });
 
   const handleUpdateJob = async (data) => {
     try {
-      // Incluimos el id del trabajo en el cuerpo de la solicitud
-      const updatedJobData = { ...data, id: job.id };
-
-      const res = await updateJob(updatedJobData);
+      const res = await updateJob(data);
       if (res && res.message) {
         setToastMessage(res.message);
         setToastColor("green");
@@ -108,10 +126,41 @@ const EditJob = ({ show, handleClose, job }) => {
               <p className="text-danger">Company is required</p>
             )}
 
-            <h4>Location</h4>
-            <input type="text" {...register("location", { required: true })} />
-            {errors.location && (
-              <p className="text-danger">Location is required</p>
+            <h4>Country</h4>
+            <Dropdown
+              onSelect={(country) => {
+                setSelectedCountry(country);
+                setSelectedCity("");
+              }}
+            >
+              <Dropdown.Toggle variant="secondary">
+                {selectedCountry || "Select Country"}
+              </Dropdown.Toggle>
+              <Dropdown.Menu>
+                {Object.keys(countriesAndCities).map((country, index) => (
+                  <Dropdown.Item key={index} eventKey={country}>
+                    {country}
+                  </Dropdown.Item>
+                ))}
+              </Dropdown.Menu>
+            </Dropdown>
+
+            <h4>City</h4>
+            <Dropdown onSelect={setSelectedCity}>
+              <Dropdown.Toggle variant="secondary">
+                {selectedCity || "Select City"}
+              </Dropdown.Toggle>
+              <Dropdown.Menu>
+                {selectedCountry &&
+                  countriesAndCities[selectedCountry]?.map((city, index) => (
+                    <Dropdown.Item key={index} eventKey={city}>
+                      {city}
+                    </Dropdown.Item>
+                  ))}
+              </Dropdown.Menu>
+            </Dropdown>
+            {(!selectedCountry || !selectedCity) && (
+              <p className="text-danger">Both country and city are required</p>
             )}
 
             <h4>Salary</h4>

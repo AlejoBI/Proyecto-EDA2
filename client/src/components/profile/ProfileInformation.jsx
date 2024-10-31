@@ -1,17 +1,23 @@
 import React, { useState, useEffect } from "react";
-import { Card, Col, Container, Row, Image, Button } from "react-bootstrap";
+import {
+  Card,
+  Col,
+  Container,
+  Row,
+  Image,
+  Button,
+  Modal,
+} from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import { useAuth } from "../../context/AuthContext";
-import profileImage from "../../assets/logo.png"; 
+import profileImage from "../../assets/logo.png";
 import { capitalizeFirstLetter } from "../../hooks/CapitalizeFirstLetter";
-import { CustomToast, UpdateProfile } from "../index";
-import "../../assets/css/ProfilePage.css"; 
+import { UpdateProfile } from "../index";
+import "../../assets/css/ProfilePage.css";
 
 const ProfileInformation = () => {
-  const { user, updateProfile } = useAuth();
-  const [showToast, setShowToast] = useState(false);
-  const [toastMessage, setToastMessage] = useState("");
-  const [toastColor, setToastColor] = useState("green");
+  const { user } = useAuth();
+  const [showModal, setShowModal] = useState(false);
 
   const { register, handleSubmit, setValue } = useForm({
     defaultValues: {
@@ -37,6 +43,17 @@ const ProfileInformation = () => {
     setValue("city", user.city || "");
     setValue("country", user.country || "");
     setValue("gender", user.gender || "");
+
+    if (
+      user.role === "professional" &&
+      (!user.name ||
+        !user.lastName ||
+        !user.phone ||
+        !user.city ||
+        !user.country)
+    ) {
+      setShowModal(true);
+    }
   }, [user, setValue]);
 
   return (
@@ -44,14 +61,6 @@ const ProfileInformation = () => {
       {!updateInformation ? (
         <>
           <Container className="d-flex align-items-center justify-content-center">
-            <CustomToast
-              show={showToast}
-              message={toastMessage}
-              position={{ top: "0", right: "0" }}
-              color={toastColor}
-              duration={3000}
-              onClose={() => setShowToast(false)}
-            />
             <Card className="profile-card shadow-lg rounded-5">
               <Card.Body>
                 <Container className="d-flex flex-column align-items-center">
@@ -109,6 +118,23 @@ const ProfileInformation = () => {
               </Card.Body>
             </Card>
           </Container>
+
+          <Modal show={showModal} onHide={() => setShowModal(false)}>
+            <Modal.Header closeButton>
+              <Modal.Title>Complete Your Profile</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <p>
+                To be eligible for job offers, please ensure all your profile
+                information is filled out completely.
+              </p>
+            </Modal.Body>
+            <Modal.Footer>
+              <Button variant="secondary" onClick={() => setShowModal(false)}>
+                Close
+              </Button>
+            </Modal.Footer>
+          </Modal>
         </>
       ) : (
         <>

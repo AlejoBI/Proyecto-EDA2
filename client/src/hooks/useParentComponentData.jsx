@@ -1,5 +1,3 @@
-import React, { useState } from "react";
-
 const useParentComponentData = () => {
   const professionalAreas = [
     "Technology and Programming",

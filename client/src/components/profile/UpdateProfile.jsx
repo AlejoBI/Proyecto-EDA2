@@ -1,17 +1,15 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { Card, Container, Row, Col, Image } from "react-bootstrap";
 import logo from "../../assets/logo.png";
-import { CountryCitySelector, ProfessionalAreaSelector } from "../index";
 import { useAuth } from "../../context/AuthContext";
-import { useState, useEffect } from "react";
-import { CustomToast } from "../index";
+import { CountryCitySelector, ProfessionalAreaSelector, CustomToast } from "../index";
 
 const UpdateProfile = () => {
   const { user, updateProfile } = useAuth();
-  const [showToast, setShowToast] = React.useState(false);
-  const [toastMessage, setToastMessage] = React.useState("");
-  const [toastColor, setToastColor] = React.useState("green");
+  const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState("");
+  const [toastColor, setToastColor] = useState("green");
 
   const { register, handleSubmit, setValue, watch } = useForm({
     defaultValues: {

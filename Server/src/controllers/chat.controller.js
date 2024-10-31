@@ -22,9 +22,23 @@ export const createChat = async (req, res) => {
             return res.status(200).json({ chatId: existingChat.id });
         }
 
+        // Obtener los nombres de usuario de los participantes
+        const userRef = doc(fireStore, "users", userId);
+        const participantRef = doc(fireStore, "users", participantId);
+
+        const [userDoc, participantDoc] = await Promise.all([getDoc(userRef), getDoc(participantRef)]);
+
+        if (!userDoc.exists() || !participantDoc.exists()) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        const userName = userDoc.data().username;
+        const participantName = participantDoc.data().username;
+
         // Crear un nuevo chat si no existe
         const newChat = await addDoc(collection(fireStore, "chats"), {
             users: [userId, participantId],
+            usernames: [userName, participantName],
             createdAt: new Date()
         });
 

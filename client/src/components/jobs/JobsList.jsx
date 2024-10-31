@@ -1,108 +1,45 @@
-import React, { useState, useEffect } from "react";
-import { useJobs } from "../../context/JobsContext";
+import React, { useState } from "react";
 import { useAuth } from "../../context/AuthContext";
-import { EditJob, ConfirmModal, CustomToast } from "../index";
+import { CreateJob, EditJob, ConfirmModal, CustomToast } from "../index";
 import { Container, Button, Dropdown, Row, Col, Image } from "react-bootstrap";
 import useParentComponentData from "../../hooks/useParentComponentData";
+import useJobsList from "../../hooks/useJobsList";
 import logo from "../../assets/logo.png";
 
 const JobsList = () => {
   const { countriesAndCities } = useParentComponentData();
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
-  const [showToast, setShowToast] = useState(false);
-  const [toastMessage, setToastMessage] = useState("");
-  const [toastColor, setToastColor] = useState("green");
-  const [currentJob, setCurrentJob] = useState(null);
-  const { user } = useAuth(); // Obtener el usuario autenticado
-  const { jobs, deleteJob } = useJobs(); // Obtener los trabajos del contexto
+  const [toast, setToast] = useState({ show: false, message: "", color: "" });
 
+  const {
+    currentPage,
+    itemsPerPage,
+    selectedCountry,
+    selectedCity,
+    filteredJobs,
+    currentJob,
+    handleCountryChange,
+    handleCityChange,
+    handleNextPage,
+    handlePreviousPage,
+    handleEdit,
+    handleDelete,
+    confirmDelete,
+    setCurrentJob,
+  } = useJobsList();
+
+  const { user } = useAuth();
   const userId = user ? user.id : null;
 
-  const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage] = useState(8); // Número de elementos por página
-
-  // Estado para los filtros
-  const [selectedCountry, setSelectedCountry] = useState("All");
-  const [selectedCity, setSelectedCity] = useState("All");
-  const [filteredJobs, setFilteredJobs] = useState(jobs);
-
-  // Calcular los índices de inicio y fin para la paginación
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentItems = filteredJobs.slice(indexOfFirstItem, indexOfLastItem);
 
-  useEffect(() => {
-    applyFilters();
-  }, [selectedCountry, selectedCity, jobs]); // Aplicar filtros cuando cambian los datos
+  const [showModal, setShowModal] = useState(false);
 
-  const applyFilters = () => {
-    let updatedList = jobs;
-
-    if (selectedCountry !== "All") {
-      updatedList = updatedList.filter(
-        (job) => job.location && job.location.country === selectedCountry
-      );
-    }
-
-    if (selectedCity !== "All") {
-      updatedList = updatedList.filter(
-        (job) => job.location && job.location.city === selectedCity
-      );
-    }
-
-    setFilteredJobs(updatedList);
-    setCurrentPage(1); // Reiniciar a la primera página después de aplicar los filtros
-  };
-
-  // Funciones para manejar los cambios de los dropdowns
-  const handleCountryChange = (country) => {
-    setSelectedCountry(country);
-    setSelectedCity("All"); // Resetear ciudad al cambiar de país
-  };
-
-  const handleCityChange = (city) => {
-    setSelectedCity(city);
-  };
-
-  const handleNextPage = () => {
-    if (currentPage < Math.ceil(filteredJobs.length / itemsPerPage)) {
-      setCurrentPage(currentPage + 1);
-    }
-  };
-
-  const handlePreviousPage = () => {
-    if (currentPage > 1) {
-      setCurrentPage(currentPage - 1);
-    }
-  };
-
-  const handleEdit = (job) => {
-    setCurrentJob(job); // Establecer el trabajo actual
-    setShowEditModal(true); // Mostrar el modal de edición
-  };
-
-  const handleDelete = (jobId) => {
-    setCurrentJob({ id: jobId }); // Establecer el trabajo actual con solo su ID
-    setShowDeleteConfirm(true); // Mostrar el modal de confirmación de eliminación
-  };
-
-  const confirmDelete = async () => {
-    try {
-      const res = await deleteJob(currentJob);
-      if (res && res.message) {
-        setToastColor("green");
-        setToastMessage(res.message);
-        setShowToast(true);
-        setShowDeleteConfirm(false);
-      }
-    } catch (error) {
-      setToastMessage(
-        "Error: " + (error.response?.data?.error || error.message)
-      );
-      setToastColor("red");
-      setShowToast(true);
-    }
+  const toggleModal = () => {
+    setShowModal(!showModal);
   };
 
   return (
@@ -115,8 +52,8 @@ const JobsList = () => {
           width="80"
           className="d-inline-block align-center d-block mx-auto"
         />
-        {/* Filtros */}
         <h3 className="job-text">Filter</h3>
+        {/* Filtros */}
         <Row className="mb-3">
           <Col>
             <Dropdown onSelect={handleCountryChange}>
@@ -164,9 +101,24 @@ const JobsList = () => {
               </Dropdown.Menu>
             </Dropdown>
           </Col>
+          <Col>
+            <Button
+              className="city-selector"
+              style={{
+                backgroundColor: "var(--morado)",
+                border: "none",
+                width: "90%",
+              }}
+              onClick={toggleModal}
+            >
+              Create Job
+            </Button>
+            {showModal && (
+              <CreateJob show={showModal} handleClose={toggleModal} />
+            )}
+          </Col>
         </Row>
       </div>
-
       <div className="jobs-list">
         <h1>List of Jobs</h1>
         {/* Lista de Trabajos */}
@@ -202,7 +154,10 @@ const JobsList = () => {
                         width: "10%",
                       }}
                       variant="primary"
-                      onClick={() => handleEdit(job)}
+                      onClick={() => {
+                        handleEdit(job);
+                        setShowEditModal(true);
+                      }}
                     >
                       Edit
                     </Button>
@@ -214,7 +169,10 @@ const JobsList = () => {
                         width: "10%",
                       }}
                       variant="danger"
-                      onClick={() => handleDelete(job.id)}
+                      onClick={() => {
+                        handleDelete(job.id);
+                        setShowDeleteConfirm(true);
+                      }}
                     >
                       Delete
                     </Button>
@@ -250,24 +208,29 @@ const JobsList = () => {
         {showEditModal && (
           <EditJob
             show={showEditModal}
-            onHide={() => setShowEditModal(false)}
+            handleClose={() => {
+              setShowEditModal(false);
+              setCurrentJob(null); // Limpiar el trabajo actual al cerrar
+            }}
             job={currentJob}
           />
         )}
         {showDeleteConfirm && (
           <ConfirmModal
             show={showDeleteConfirm}
-            onHide={() => setShowDeleteConfirm(false)}
-            onConfirm={confirmDelete}
+            handleClose={() => setShowDeleteConfirm(false)}
+            onConfirm={() => {
+              confirmDelete(setToast, setShowDeleteConfirm);
+            }}
             message="Are you sure you want to delete this job?"
           />
         )}
-        {showToast && (
+        {toast.show && (
           <CustomToast
-            show={showToast}
-            onClose={() => setShowToast(false)}
-            message={toastMessage}
-            color={toastColor}
+            show={toast.show}
+            onClose={() => setToast((prev) => ({ ...prev, show: false }))}
+            message={toast.message}
+            color={toast.color}
           />
         )}
       </div>
