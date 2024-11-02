@@ -8,6 +8,7 @@ const useFreelancersList = (navigate) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(8);
   const [filteredUsers, setFilteredUsers] = useState([]);
+  const [freelancersCount, setFreelancersCount] = useState(0);
   const [selectedCountry, setSelectedCountry] = useState("All");
   const [selectedCity, setSelectedCity] = useState("All");
   const [selectedArea, setSelectedArea] = useState("All");
@@ -29,6 +30,7 @@ const useFreelancersList = (navigate) => {
       );
       setUsers(validProfessionals);
       setFilteredUsers(validProfessionals);
+      setFreelancersCount(validProfessionals.length);
     };
     fetchUsers();
   }, [getAllUsers]);
@@ -100,6 +102,7 @@ const useFreelancersList = (navigate) => {
     currentItems,
     handleStartChat,
     setCurrentPage,
+    freelancersCount,
   };
 };
 

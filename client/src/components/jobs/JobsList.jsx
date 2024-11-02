@@ -4,7 +4,10 @@ import { CreateJob, EditJob, ConfirmModal, CustomToast } from "../index";
 import { Container, Button, Dropdown, Row, Col, Image } from "react-bootstrap";
 import useParentComponentData from "../../hooks/useParentComponentData";
 import useJobsList from "../../hooks/useJobsList";
+import "bootstrap/dist/css/bootstrap.min.css";
+import styles from "../../assets/css/JobsPage.module.css";
 import logo from "../../assets/logo.png";
+import jobsicon from "../../assets/images/jobsicon.png";
 
 const JobsList = () => {
   const { countriesAndCities } = useParentComponentData();
@@ -33,6 +36,8 @@ const JobsList = () => {
     setShowToast,
     toastMessage,
     toastType,
+    JobsCount,
+    usersJobsCount,
   } = useJobsList();
 
   const { user, isAuthenticated } = useAuth();
@@ -43,8 +48,8 @@ const JobsList = () => {
   const currentItems = filteredJobs.slice(indexOfFirstItem, indexOfLastItem);
 
   return (
-    <Container className="jobs-container">
-      <div className="jobs-filter">
+    <Container className={styles.jobs_container}>
+      <div className={styles.jobs_filter}>
         <Image
           src={logo}
           alt="Logo"
@@ -52,19 +57,12 @@ const JobsList = () => {
           width="80"
           className="d-inline-block align-center d-block mx-auto"
         />
-        <h3 className="job-text">Filter</h3>
+        <h3 className={styles.job_text2}>Filter</h3>
         {/* Filtros */}
         <Row className="mb-3">
           <Col>
             <Dropdown onSelect={handleCountryChange}>
-              <Dropdown.Toggle
-                className="country-selector"
-                style={{
-                  backgroundColor: "var(--morado)",
-                  border: "none",
-                  width: "90%",
-                }}
-              >
+              <Dropdown.Toggle className={styles.job_toggle}>
                 {selectedCountry === "All" ? "Select Country" : selectedCountry}
               </Dropdown.Toggle>
               <Dropdown.Menu>
@@ -79,14 +77,7 @@ const JobsList = () => {
           </Col>
           <Col>
             <Dropdown onSelect={handleCityChange}>
-              <Dropdown.Toggle
-                className="city-selector"
-                style={{
-                  backgroundColor: "var(--morado)",
-                  border: "none",
-                  width: "90%",
-                }}
-              >
+              <Dropdown.Toggle className={styles.job_toggle}>
                 {selectedCity === "All" ? "Select City" : selectedCity}
               </Dropdown.Toggle>
               <Dropdown.Menu>
@@ -101,15 +92,10 @@ const JobsList = () => {
               </Dropdown.Menu>
             </Dropdown>
           </Col>
-          {user.role === "customer" && (
+          {userId && user.role === "customer" && (
             <Col>
               <Button
-                className="city-selector"
-                style={{
-                  backgroundColor: "var(--morado)",
-                  border: "none",
-                  width: "90%",
-                }}
+                className={styles.job_toggle}
                 onClick={toggleModal}
               >
                 Create Job
@@ -121,73 +107,95 @@ const JobsList = () => {
           )}
         </Row>
       </div>
-      <div className="jobs-list">
-        <h1>List of Jobs</h1>
+      <div className={styles.jobs_list}>
+        <div>
+          <h4>
+            Hello {user ? user.username : "new user"} 👋🏼, here you can find all
+            the jobs or people you need.
+          </h4>
+          <div className={styles.jobs_header}>
+            <Image
+              src={jobsicon}
+              alt="Jobs Icon"
+              height="80"
+              width="80"
+              className="d-inline-block align-center d-block"
+            />
+            <h4 className={styles.text_job}>
+              Total Publications: {JobsCount}{" "}
+            </h4>
+            <Image
+              src={jobsicon}
+              alt="Jobs Icon"
+              height="80"
+              width="80"
+              className="d-inline-block align-center d-block"
+            />
+            <h4 className={styles.text_job}>
+              Publishers: {usersJobsCount.length}
+            </h4>
+          </div>
+        </div>
         {/* Lista de Trabajos */}
-        <section className="job">
+        <section className={styles.job}>
           {!filteredJobs.length ? (
             <p>No jobs available</p>
           ) : (
             currentItems.map((job) => (
-              <div key={job.id} className="job-card p-2">
-                <h4 className="job-title job-text">{job.title}</h4>
-                <p className="line"></p>
+              <div key={job.id} className={styles.job_card}>
+                <h4 className={styles.job_title + styles.job_text}>
+                  {job.title}
+                </h4>
+                <p className={styles.line}></p>
                 <div>
-                  <strong className="job-text">Company:</strong> {job.company}
+                  <strong className={styles.job_text}>Company:</strong>{" "}
+                  {job.company}
                 </div>
                 <div>
-                  <strong className="job-text">Location:</strong> {job.city},{" "}
-                  {job.country}
+                  <strong className={styles.job_text}>Location:</strong>{" "}
+                  {job.city}, {job.country}
                 </div>
                 <div>
-                  <strong className="job-text">Salary:</strong> {job.salary}
+                  <strong className={styles.job_text}>Salary:</strong>{" "}
+                  {job.salary}
                 </div>
-                <details className="details-job">
-                  <summary className="job-text">Details</summary>
-                  <p className="job-text">{job.description}</p>
+                <details className={styles.details_job}>
+                  <summary className={styles.job_text}>Details</summary>
+                  <p className={styles.job_text}>{job.description}</p>
                 </details>
-                {isAuthenticated && user.role === "professional" && (
-                  <Button
-                    variant="primary"
-                    onClick={() => handleStartChat(job.id_user)}
-                  >
-                    Iniciar Chat
-                  </Button>
-                )}
-                {userId && (job.id_user === userId || user.role === "admin") && (
-                  <div className="m-1">
+                {isAuthenticated &&
+                  user.role === "professional" &&
+                  userId !== job.id_user && (
                     <Button
-                      className="m-2"
-                      style={{
-                        backgroundColor: "var(--morado)",
-                        border: "none",
-                        width: "10%",
-                      }}
-                      variant="primary"
-                      onClick={() => {
-                        handleEdit(job);
-                        setShowEditModal(true);
-                      }}
+                    className={styles.job_button}
+                      onClick={() => handleStartChat(job.id_user)}
                     >
-                      Edit
+                      Iniciar Chat
                     </Button>
-                    <Button
-                      className="m-2"
-                      style={{
-                        backgroundColor: "var(--morado)",
-                        border: "none",
-                        width: "10%",
-                      }}
-                      variant="danger"
-                      onClick={() => {
-                        handleDelete(job.id);
-                        setShowDeleteConfirm(true);
-                      }}
-                    >
-                      Delete
-                    </Button>
-                  </div>
-                )}
+                  )}
+                {userId &&
+                  (job.id_user === userId || user.role === "admin") && (
+                    <div className="m-1">
+                      <Button
+                        className={styles.job_button}
+                        onClick={() => {
+                          handleEdit(job);
+                          setShowEditModal(true);
+                        }}
+                      >
+                        Edit
+                      </Button>
+                      <Button
+                        className={styles.job_button}
+                        onClick={() => {
+                          handleDelete(job.id);
+                          setShowDeleteConfirm(true);
+                        }}
+                      >
+                        Delete
+                      </Button>
+                    </div>
+                  )}
               </div>
             ))
           )}
@@ -196,16 +204,14 @@ const JobsList = () => {
         {/* Paginación */}
         <section>
           <Button
-            className="nextPrevButtons m-2"
-            style={{ backgroundColor: "var(--morado)", border: "none" }}
+            className={styles.job_button}
             onClick={handlePreviousPage}
             disabled={currentPage === 1}
           >
             Previous
           </Button>
           <Button
-            className="nextPrevButtons m-2"
-            style={{ backgroundColor: "var(--morado)", border: "none" }}
+            className={styles.job_button}
             onClick={handleNextPage}
             disabled={
               currentPage === Math.ceil(filteredJobs.length / itemsPerPage)

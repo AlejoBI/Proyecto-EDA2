@@ -1,9 +1,14 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { Container, Button, Dropdown, Row, Col } from "react-bootstrap";
+import { Container, Button, Dropdown, Row, Col, Image } from "react-bootstrap";
 import useParentComponentData from "../../hooks/useParentComponentData";
 import useFreelancersList from "../../hooks/useFreelancersList";
 import { CustomToast } from "../index";
+import logo from "../../assets/logo.png";
+import "bootstrap/dist/css/bootstrap.min.css";
+import styles from "../../assets/css/FreelancerPage.module.css";
+import freeicon from "../../assets/images/freeicon.png";
+import skillsicon from "../../assets/images/skillsicon.png";
 
 const FreelancersList = () => {
   const navigate = useNavigate();
@@ -27,6 +32,7 @@ const FreelancersList = () => {
     currentItems,
     handleStartChat,
     setCurrentPage,
+    freelancersCount,
   } = useFreelancersList(navigate);
 
   const { countriesAndCities, professionalAreas } = useParentComponentData();
@@ -59,109 +65,160 @@ const FreelancersList = () => {
   const currenUserId = user ? user.id : null;
 
   return (
-    <Container>
-      <h1>Freelancers</h1>
-      <Row className="mb-3">
-        <Col>
-          <Dropdown onSelect={handleCountryChange}>
-            <Dropdown.Toggle variant="secondary">
-              {selectedCountry === "All" ? "Select Country" : selectedCountry}
-            </Dropdown.Toggle>
-            <Dropdown.Menu>
-              <Dropdown.Item eventKey="All">All</Dropdown.Item>
-              {Object.keys(countriesAndCities).map((country, index) => (
-                <Dropdown.Item key={index} eventKey={country}>
-                  {country}
-                </Dropdown.Item>
-              ))}
-            </Dropdown.Menu>
-          </Dropdown>
-        </Col>
-        <Col>
-          <Dropdown onSelect={handleCityChange}>
-            <Dropdown.Toggle variant="secondary">
-              {selectedCity === "All" ? "Select City" : selectedCity}
-            </Dropdown.Toggle>
-            <Dropdown.Menu>
-              <Dropdown.Item eventKey="All">All</Dropdown.Item>
-              {selectedCountry === "All" ? (
-                <Dropdown.Item disabled>No cities available</Dropdown.Item>
-              ) : countriesAndCities[selectedCountry]?.length > 0 ? (
-                countriesAndCities[selectedCountry].map((city, index) => (
-                  <Dropdown.Item key={index} eventKey={city}>
-                    {city}
+    <Container className={styles.freelancers_container}>
+      <div className={styles.freelancers_filter}>
+        <Image
+          src={logo}
+          alt="Logo"
+          height="80"
+          width="80"
+          className="d-inline-block align-center d-block mx-auto"
+        />
+        <h3 className={styles.freelancer_text2}>Filter</h3>
+        <Row className="mb-3">
+          <Col>
+            <Dropdown onSelect={handleCountryChange}>
+              <Dropdown.Toggle className={styles.freelancer_toggle}>
+                {selectedCountry === "All" ? "Select Country" : selectedCountry}
+              </Dropdown.Toggle>
+              <Dropdown.Menu>
+                <Dropdown.Item eventKey="All">All</Dropdown.Item>
+                {Object.keys(countriesAndCities).map((country, index) => (
+                  <Dropdown.Item key={index} eventKey={country}>
+                    {country}
                   </Dropdown.Item>
-                ))
-              ) : (
-                <Dropdown.Item disabled>No cities available</Dropdown.Item>
-              )}
-            </Dropdown.Menu>
-          </Dropdown>
-        </Col>
-        <Col>
-          <Dropdown onSelect={handleAreaChange}>
-            <Dropdown.Toggle variant="secondary">
-              {selectedArea === "All" ? "Select Area" : selectedArea}
-            </Dropdown.Toggle>
-            <Dropdown.Menu>
-              <Dropdown.Item eventKey="All">All</Dropdown.Item>
-              {professionalAreas.map((area, index) => (
-                <Dropdown.Item key={index} eventKey={area}>
-                  {area}
-                </Dropdown.Item>
-              ))}
-            </Dropdown.Menu>
-          </Dropdown>
-        </Col>
-      </Row>
-
-      {!filteredUsers.length ? (
-        <p>No freelancers available</p>
-      ) : (
-        <ul>
-          {currentItems.map((userJ) => (
-            <li key={userJ.id}>
-              <p>
-                <strong>Username:</strong> {userJ.username}
-              </p>
-              <p>
-                <strong>Email:</strong> {userJ.email}
-              </p>
-              <p>
-                <strong>City:</strong> {userJ.city}
-              </p>
-              <p>
-                <strong>Country:</strong> {userJ.country}
-              </p>
-              <p>
-                <strong>Area:</strong> {userJ.professionalArea}
-              </p>
-              {isAuthenticated && userJ.id !== currenUserId && (
-                <Button
-                  variant="primary"
-                  onClick={() => handleStartChat(userJ.id)}
+                ))}
+              </Dropdown.Menu>
+            </Dropdown>
+          </Col>
+          <Col>
+            <Dropdown onSelect={handleCityChange}>
+              <Dropdown.Toggle className={styles.freelancer_toggle}>
+                {selectedCity === "All" ? "Select City" : selectedCity}
+              </Dropdown.Toggle>
+              <Dropdown.Menu>
+                <Dropdown.Item eventKey="All">All</Dropdown.Item>
+                {selectedCountry === "All" ? (
+                  <Dropdown.Item disabled>No cities available</Dropdown.Item>
+                ) : countriesAndCities[selectedCountry]?.length > 0 ? (
+                  countriesAndCities[selectedCountry].map((city, index) => (
+                    <Dropdown.Item key={index} eventKey={city}>
+                      {city}
+                    </Dropdown.Item>
+                  ))
+                ) : (
+                  <Dropdown.Item disabled>No cities available</Dropdown.Item>
+                )}
+              </Dropdown.Menu>
+            </Dropdown>
+          </Col>
+          <Col>
+            <Dropdown onSelect={handleAreaChange}>
+              <Dropdown.Toggle className={styles.freelancer_toggle}>
+                {selectedArea === "All" ? "Select Area" : selectedArea}
+              </Dropdown.Toggle>
+              <Dropdown.Menu>
+                <Dropdown.Item eventKey="All">All</Dropdown.Item>
+                {professionalAreas.map((area, index) => (
+                  <Dropdown.Item key={index} eventKey={area}>
+                    {area}
+                  </Dropdown.Item>
+                ))}
+              </Dropdown.Menu>
+            </Dropdown>
+          </Col>
+        </Row>
+      </div>
+      <div className={styles.freelancers_list}>
+        <div>
+          <h4>
+            Hello {user ? user.username : "new user"} 👋🏼, here you can find all
+            the jobs or people you need.
+          </h4>
+          <div className={styles.freelancers_header}>
+            <Image
+              src={freeicon}
+              alt="Freelancer Icon"
+              height="80"
+              width="80"
+              className="d-inline-block align-center d-block"
+            />
+            <h4 className={styles.text_freelancer}>
+              Freelancers: {freelancersCount}{" "}
+            </h4>
+            <Image
+              src={skillsicon}
+              alt="Skills Icon"
+              height="80"
+              width="80"
+              className="d-inline-block align-center d-block"
+            />
+            <h4 className={styles.text_freelancer}>
+              Skills: {/*skillsFreelancersCount.length*/}
+            </h4>
+          </div>
+        </div>
+        <section className={styles.freelancer}>
+          {!filteredUsers.length ? (
+            <p>No freelancers available</p>
+          ) : (
+            currentItems.map((userJ) => (
+              <div key={userJ.id} className={styles.freelancer_card}>
+                <h4
+                  className={styles.freelancer_title + styles.freelancer_text}
                 >
-                  Iniciar Chat
-                </Button>
-              )}
-            </li>
-          ))}
-        </ul>
-      )}
+                  {userJ.username}
+                </h4>
+                <p className={styles.line}></p>
+                <div>
+                  <strong className={styles.freelancer_text}>Email:</strong>{" "}
+                  {userJ.email}
+                </div>
+                <div>
+                  <strong className={styles.freelancer_text}>City:</strong>{" "}
+                  {userJ.city}
+                </div>
+                <div>
+                  <strong className={styles.freelancer_text}>Country:</strong>{" "}
+                  {userJ.country}
+                </div>
+                <div>
+                  <strong className={styles.freelancer_text}>Area:</strong>{" "}
+                  {userJ.professionalArea}
+                </div>
 
-      <section>
-        <Button onClick={handlePreviousPage} disabled={currentPage === 1}>
-          Previous
-        </Button>
-        <Button
-          onClick={handleNextPage}
-          disabled={
-            currentPage === Math.ceil(filteredUsers.length / itemsPerPage)
-          }
-        >
-          Next
-        </Button>
-      </section>
+                {isAuthenticated && userJ.id !== currenUserId && (
+                  <Button
+                    className={styles.freelancer_button}
+                    onClick={() => handleStartChat(userJ.id)}
+                  >
+                    Iniciar Chat
+                  </Button>
+                )}
+              </div>
+            ))
+          )}
+        </section>
+
+        <section>
+          <Button
+            className={styles.freelancer_button}
+            onClick={handlePreviousPage}
+            disabled={currentPage === 1}
+          >
+            Previous
+          </Button>
+          <Button
+            className={styles.freelancer_button}
+            onClick={handleNextPage}
+            disabled={
+              currentPage === Math.ceil(filteredUsers.length / itemsPerPage)
+            }
+          >
+            Next
+          </Button>
+        </section>
+      </div>
 
       <CustomToast
         show={showToast}

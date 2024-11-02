@@ -13,6 +13,8 @@ const useJobsList = () => {
   const [selectedCountry, setSelectedCountry] = useState("All");
   const [selectedCity, setSelectedCity] = useState("All");
   const [filteredJobs, setFilteredJobs] = useState(jobs);
+  const [JobsCount, setJobsCount] = useState(jobs ? jobs.length : 0);
+  const [usersJobsCount, setUsersJobsCount] = useState([]);
   const [currentJob, setCurrentJob] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [showToast, setShowToast] = useState(false);
@@ -26,6 +28,17 @@ const useJobsList = () => {
 
   useEffect(() => {
     applyFilters();
+    setJobsCount(jobs.length);
+
+    const uniqueCustomerIds = [];
+
+    jobs.forEach((job) => {
+      if (!uniqueCustomerIds.includes(job.id_user)) {
+        uniqueCustomerIds.push(job.id_user);
+      }
+    });
+
+    setUsersJobsCount(uniqueCustomerIds);
   }, [selectedCountry, selectedCity, jobs]);
 
   const applyFilters = () => {
@@ -133,6 +146,9 @@ const useJobsList = () => {
     setShowToast,
     toastMessage,
     toastType,
+    JobsCount,
+    setJobsCount,
+    usersJobsCount,
   };
 };
 

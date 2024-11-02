@@ -8,6 +8,46 @@ const useParentComponentData = () => {
     "Music and Audio",
   ];
 
+  const tableData = [
+    {
+      categories: "Technology and Programming",
+      help: "Help and Support",
+      community: "Academy",
+      company: "About Us",
+    },
+    {
+      categories: "Graphic Design",
+      help: "Trust and Security",
+      community: "Blog",
+      company: "Careers",
+    },
+    {
+      categories: "Video and Animation",
+      help: "Quality Guide",
+      community: "Themes",
+      company: "FAQs",
+    },
+    {
+      categories: "Writing and Translation",
+      help: "Taskeria Guides",
+      community: "Hosting",
+      company: "Teams",
+    },
+    {
+      categories: "Digital Marketing",
+      help: "",
+      community: "Developers",
+      company: "Contact Us",
+    },
+    {
+      categories: "Music and Audio",
+      help: "",
+      community: "Support",
+      company: "",
+    },
+  ];
+  
+
   const countriesAndCities = {
     Argentina: [
       "Buenos Aires",
@@ -167,6 +207,7 @@ const useParentComponentData = () => {
   return {
     countriesAndCities,
     professionalAreas,
+    tableData,
   };
 };
 

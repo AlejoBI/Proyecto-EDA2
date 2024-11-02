@@ -1,11 +1,11 @@
-.jobs-container {
+.freelancers_container {
   display: flex;
   flex-direction: row;
   width: 100%;
   padding: 20px;
 }
 
-.jobs-filter {
+.freelancers_filter {
   display: flex;
   flex-direction: column;
   width: 35%;
@@ -17,23 +17,18 @@
   border-radius: 10px;
 }
 
-.jobs-list {
+.freelancers_list {
   width: 100%;
   padding: 20px;
 }
 
-.job {
+.freelancer {
   width: 200%;
   margin: 10px 0;
   border-radius: 10px;
 }
 
-.details-job {
-  width: 100%;
-  border-radius: 10px;
-}
-
-.job-card {
+.freelancer_card {
   width: 1000px;
   margin: 20px 0;
   padding: 20px;
@@ -43,13 +38,18 @@
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-.job-title {
+.freelancer_title {
   font-size: 1.5rem;
   font-weight: bold;
   color: black;
 }
 
-.job-text {
+.freelancer_text {
+  margin: 10px 10px 10px 5px;
+  color: black;
+}
+
+.freelancer_text2 {
   margin: 30px;
   color: black;
 }
@@ -60,33 +60,50 @@
   background-color: #e0e0e0;
 }
 
-.nextPrevButtons {
-  display: flex;
-  justify-content: space-between;
+.freelancers_header {
+  width: 1000px;
   margin: 20px 0;
-  background-color: var(--morado);   
+  padding: 40px;
+  border: 1px solid #e0e0e0;
+  border-radius: 10px;
+  background-color: #ffffff;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-.nextPrevButtons button {
-  width: 48%;
+.text_freelancer {
+  margin: auto;
 }
 
-.dropdown-toggle {
-  text-align: left;
+.freelancer_button {
   margin: 5px;
   background-color: var(--morado);
+  color: white;
+  cursor: pointer;
+  border: none;
+  width: 15%;
 }
 
-.dropdown-menu {
+
+.freelancer_button:hover {
+  background-color: var(--morado-hover);
+}
+
+.freelancer_button:disabled {
   background-color: var(--morado);
 }
 
-.country-selector {
-  width: 100%;
+.freelancer_toggle {
+  width: 90%;
+  text-align: center;
   margin: 10px;
+  background-color: var(--morado);
+  border: none;
 }
 
-.city-selector {
-  width: 100%;
-  margin: 10px;
+.freelancer_toggle:hover {
+  background-color: var(--morado-hover);
 }
+

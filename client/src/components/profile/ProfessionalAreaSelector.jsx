@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import useParentComponentData from "../../hooks/useParentComponentData";
+import styles from "../../assets/css/ProfilePage.module.css";
 
 const ProfessionalAreaSelector = ({ register, setValue }) => {
   const { professionalAreas } = useParentComponentData();
@@ -8,7 +9,7 @@ const ProfessionalAreaSelector = ({ register, setValue }) => {
   return (
     <>
       {/* Selector de Área Profesional */}
-      <p className="title-custom">Professional Area</p>
+      <p className={styles.title_custom}>Professional Area</p>
       <select
         className="form-select"
         {...register("professionalArea")}

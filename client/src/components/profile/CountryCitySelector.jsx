@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import useParentComponentData from "../../hooks/useParentComponentData";
+import styles from "../../assets/css/ProfilePage.module.css";
 
 const CountryCitySelector = ({ register, setValue }) => {
   const { countriesAndCities } = useParentComponentData();
@@ -19,7 +20,7 @@ const CountryCitySelector = ({ register, setValue }) => {
   return (
     <>
       {/* Selector de País */}
-      <p className="title-custom">Country</p>
+      <p className={styles.title_custom}>Country</p>
       <select
         className="form-select"
         {...register("country")}
@@ -39,7 +40,7 @@ const CountryCitySelector = ({ register, setValue }) => {
       </select>
 
       {/* Selector de Ciudad */}
-      <p className="title-custom">City</p>
+      <p className={styles.title_custom}>City</p>
       <select
         className="form-select"
         {...register("city")}
