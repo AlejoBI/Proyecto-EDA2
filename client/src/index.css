@@ -116,23 +116,3 @@ body {
 .image-search {
   margin: 2%;
 }
-/* Estilos del footer */
-.footer-custom{
-  color: var(--blanco);
-  background: var(--morado);
-  border-radius: 50px 50px 0 0;
-  flex-direction: column;
-}
-
-/* Tabla del footer */
-#style-table {
-  border: none;
-  background: var(--transparente);
-  color: var(--blanco);
-  font-size: 14px;
-}
-
-#style-table2 {
-  color: var(--blanco);
-  text-decoration: none;
-}

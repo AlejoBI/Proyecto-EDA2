@@ -1,6 +1,5 @@
 import { JobsList } from "../components/index";
 import { Container } from "react-bootstrap";
-import "../assets/css/JobsPage.css";
 
 const JobsPage = () => {
   return (

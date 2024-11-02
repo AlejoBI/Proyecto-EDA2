@@ -1,19 +1,11 @@
 import React, { useState, useEffect } from "react";
-import {
-  Card,
-  Col,
-  Container,
-  Row,
-  Image,
-  Button,
-  Modal,
-} from "react-bootstrap";
+import { Card, Col, Container, Row, Image, Button, Modal } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import { useAuth } from "../../context/AuthContext";
 import profileImage from "../../assets/logo.png";
 import { capitalizeFirstLetter } from "../../hooks/CapitalizeFirstLetter";
 import { UpdateProfile } from "../index";
-import "../../assets/css/ProfilePage.css";
+import styles from "../../assets/css/ProfilePage.module.css";
 
 const ProfileInformation = () => {
   const { user } = useAuth();
@@ -61,34 +53,27 @@ const ProfileInformation = () => {
       {!updateInformation ? (
         <>
           <Container className="d-flex align-items-center justify-content-center">
-            <Card className="profile-card shadow-lg rounded-5">
+            <Card className={styles.profile_card}>
               <Card.Body>
                 <Container className="d-flex flex-column align-items-center">
                   <Image
                     src={profileImage}
                     roundedCircle
-                    className="profile-image mb-3"
+                    className={styles.profile_image}
                   />
-                  <h2 className="profile-name">{`${user.username}, ${
+                  <h2 className={styles.profile_name}>{`${user.username}, ${
                     user.age ?? 0
                   }`}</h2>
-                  <h5 className="profile-role text-muted">
+                  <h5 className={styles.profile_role}>
                     {capitalizeFirstLetter(user.role)}
                   </h5>
-                  <p className="profile-location">{`${user.city ?? "City"}, ${
+                  <p className={styles.profile_location}>{`${user.city ?? "City"}, ${
                     user.country ?? "Country"
                   }`}</p>
 
                   {/* Botones de acción */}
                   <Row className="my-3">
                     <Col className="text-center">
-                      <Button
-                        variant="primary"
-                        className="me-2"
-                        id="buttonLoginRegister"
-                      >
-                        Jobs
-                      </Button>
                       <Button
                         className="outline-primary"
                         id="buttonLoginRegister"
@@ -100,7 +85,7 @@ const ProfileInformation = () => {
                   </Row>
 
                   {/* Información adicional */}
-                  <div className="profile-details">
+                  <div className={styles.profile_details}>
                     <p>
                       <strong>Full Name:</strong>{" "}
                       {`${user.name} ${user.lastName}`}

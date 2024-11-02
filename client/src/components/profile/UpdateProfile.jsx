@@ -3,7 +3,12 @@ import { useForm } from "react-hook-form";
 import { Card, Container, Row, Col, Image } from "react-bootstrap";
 import logo from "../../assets/logo.png";
 import { useAuth } from "../../context/AuthContext";
-import { CountryCitySelector, ProfessionalAreaSelector, CustomToast } from "../index";
+import {
+  CountryCitySelector,
+  ProfessionalAreaSelector,
+  CustomToast,
+} from "../index";
+import styles from "../../assets/css/ProfilePage.module.css";
 
 const UpdateProfile = () => {
   const { user, updateProfile } = useAuth();
@@ -68,24 +73,21 @@ const UpdateProfile = () => {
       {user.role === "customer" ? (
         <>
           <Container className="d-flex align-items-center justify-content-center">
-            <Card className="shadow-lg rounded-5 profile-card-custom2">
+            <Card className={styles - profile_card_custom2}>
               <Card.Body className="mx-3 my-5">
                 <form onSubmit={handleSubmit(onSubmit)}>
                   <Container className="d-flex justify-content-center align-items-center">
                     <Row className="w-100">
-                      <Col
-                        md={3}
-                        className="d-flex flex-column align-items-end info-profile-left"
-                      >
-                        <p className="title-custom">Name</p>
+                      <Col md={3} className={styles.info_profile_left}>
+                        <p className={styles.title_custom}>Name</p>
                         <input
                           type="text"
                           className="form-control"
                           {...register("name")}
                         />
-                        <p className="title-custom">Gender</p>
-                        <div className="radio-custom">
-                          <label className="radio">
+                        <p className={styles.title_custom}>Gender</p>
+                        <div className={styles.radio_custom}>
+                          <label className={styles.radio}>
                             <input
                               type="radio"
                               value="Male"
@@ -94,7 +96,7 @@ const UpdateProfile = () => {
                             />
                             {""} Male
                           </label>
-                          <label className="radio">
+                          <label className={styles.radio}>
                             <input
                               type="radio"
                               value="Female"
@@ -106,17 +108,14 @@ const UpdateProfile = () => {
                         </div>
                         <CountryCitySelector register={register} />
                       </Col>
-                      <Col
-                        md={3}
-                        className="d-flex flex-column align-items-end info-profile-center"
-                      >
-                        <p className="title-custom">Lastname</p>
+                      <Col md={3} className={styles.info_profile_center}>
+                        <p className={styles.title_custom}>Lastname</p>
                         <input
                           type="text"
                           className="form-control"
                           {...register("lastName")}
                         />
-                        <p className="title-custom">Age</p>
+                        <p className={styles.title_custom}>Age</p>
                         <input
                           type="number"
                           min="18"
@@ -125,13 +124,13 @@ const UpdateProfile = () => {
                           className="form-control"
                           {...register("age")}
                         />
-                        <p className="title-custom">Phone</p>
+                        <p className={styles.title_custom}>Phone</p>
                         <input
                           type="text"
                           className="form-control"
                           {...register("phone")}
                         />
-                        <p className="title-custom">E-mail</p>
+                        <p className={styles.title_custom}>E-mail</p>
                         <input
                           type="text"
                           className="form-control"
@@ -139,10 +138,7 @@ const UpdateProfile = () => {
                           readOnly
                         />
                       </Col>
-                      <Col
-                        md={3}
-                        className="d-flex flex-column info-profile-right"
-                      >
+                      <Col md={3} className={styles.info_profile_right}>
                         <Image src={logo} className="img-fluid" />
                         <p>{watch("username")}</p>
                         <button
@@ -163,24 +159,21 @@ const UpdateProfile = () => {
       ) : (
         <>
           <Container className="d-flex align-items-center justify-content-center">
-            <Card className="shadow-lg rounded-5 profile-card-custom2">
+            <Card className={styles.profile_card_custom2}>
               <Card.Body className="mx-3 my-5">
                 <form onSubmit={handleSubmit(onSubmit)}>
                   <Container className="d-flex justify-content-center align-items-center">
                     <Row className="w-100">
-                      <Col
-                        md={3}
-                        className="d-flex flex-column align-items-end info-profile-left"
-                      >
-                        <p className="title-custom">Name</p>
+                      <Col md={3} className={styles.info_profile_left}>
+                        <p className={styles.title_custom}>Name</p>
                         <input
                           type="text"
                           className="form-control"
                           {...register("name")}
                         />
-                        <p className="title-custom">Gender</p>
-                        <div className="radio-custom">
-                          <label className="radio">
+                        <p className={styles.title_custom}>Gender</p>
+                        <div className={styles.radio_custom}>
+                          <label className={styles.radio}>
                             <input
                               type="radio"
                               value="Male"
@@ -189,7 +182,7 @@ const UpdateProfile = () => {
                             />
                             {""} Male
                           </label>
-                          <label className="radio">
+                          <label className={styles.radio}>
                             <input
                               type="radio"
                               value="Female"
@@ -205,17 +198,14 @@ const UpdateProfile = () => {
                         />
                         <CountryCitySelector register={register} />
                       </Col>
-                      <Col
-                        md={3}
-                        className="d-flex flex-column align-items-end info-profile-center"
-                      >
-                        <p className="title-custom">Lastname</p>
+                      <Col md={3} className={styles.info_profile_center}>
+                        <p className={styles.title_custom}>Lastname</p>
                         <input
                           type="text"
                           className="form-control"
                           {...register("lastName")}
                         />
-                        <p className="title-custom">Age</p>
+                        <p className={styles.title_custom}>Age</p>
                         <input
                           type="number"
                           min="18"
@@ -224,13 +214,13 @@ const UpdateProfile = () => {
                           className="form-control"
                           {...register("age")}
                         />
-                        <p className="title-custom">Phone</p>
+                        <p className={styles.title_custom}>Phone</p>
                         <input
                           type="text"
                           className="form-control"
                           {...register("phone")}
                         />
-                        <p className="title-custom">E-mail</p>
+                        <p className={styles.title_custom}>E-mail</p>
                         <input
                           type="text"
                           className="form-control"
@@ -238,12 +228,9 @@ const UpdateProfile = () => {
                           readOnly
                         />
                       </Col>
-                      <Col
-                        md={3}
-                        className="d-flex flex-column info-profile-right"
-                      >
+                      <Col md={3} className={styles.info_profile_right}>
                         <Image src={logo} className="img-fluid" />
-                        <p>{watch("username")}</p>
+                        <p className={styles.p_custom}>{watch("username")}</p>
                         <button
                           className="btn btn-primary"
                           id="buttonLoginRegister"
