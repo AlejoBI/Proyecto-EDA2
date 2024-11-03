@@ -21,6 +21,7 @@
   --morado: #8306ad;
   --morado2: #74557e;
   --moradoclaro: #a5a6f6;
+  --moradogradiente: linear-gradient(90deg, rgba(107,4,144,1) 0%, rgba(131,6,173,1) 100%);
   --verdeclaro: #63c07c;
   --naranjaclaro: #f9a86d;
   --rosaclaro: #f4537c;

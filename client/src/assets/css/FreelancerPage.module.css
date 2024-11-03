@@ -79,7 +79,7 @@
 
 .freelancer_button {
   margin: 5px;
-  background-color: var(--morado);
+  background: var(--moradogradiente);
   color: white;
   cursor: pointer;
   border: none;
@@ -99,7 +99,7 @@
   width: 90%;
   text-align: center;
   margin: 10px;
-  background-color: var(--morado);
+  background: var(--moradogradiente);
   border: none;
 }
 
@@ -107,3 +107,19 @@
   background-color: var(--morado-hover);
 }
 
+.skill_label {
+  margin: 10px;
+  padding: 5px;
+  display: flex;
+}
+
+.skill_freelancer {
+  margin: 5px;
+  padding: 15px;
+  border: none;
+  border-radius: 35px;
+  background: var(--moradogradiente);
+  color: var(--blanco);
+  box-shadow: 0 0 2px var(--negro);
+  align-content: center;
+}
