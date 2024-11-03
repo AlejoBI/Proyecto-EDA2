@@ -68,11 +68,11 @@
 .dropdown_toggle {
   text-align: left;
   margin: 5px;
-  background-color: var(--morado);
+  background: var(--moradogradiente);
 }
 
 .dropdown_menu {
-  background-color: var(--morado);
+  background: var(--moradogradiente);
 }
 
 .jobs_header {
@@ -81,7 +81,7 @@
   padding: 40px;
   border: 1px solid #e0e0e0;
   border-radius: 10px;
-  background-color: #ffffff;
+  background-color: var(--blanco);
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   display: flex;
   justify-content: center;
@@ -107,14 +107,14 @@
 }
 
 .job_button:disabled {
-  background-color: var(--morado);
+  background: var(--moradogradiente);
 }
 
 .job_toggle {
   width: 90%;
   text-align: center;
   margin: 10px;
-  background-color: var(--morado);
+  background: var(--moradogradiente);
   border: none;
 }
 

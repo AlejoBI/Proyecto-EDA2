@@ -186,6 +186,13 @@ const FreelancersList = () => {
                   <strong className={styles.freelancer_text}>Area:</strong>{" "}
                   {userJ.professionalArea}
                 </div>
+                <div>
+                  <label className={styles.skill_label}>
+                    <h6 className={styles.skill_freelancer}>Teamwork</h6>
+                    <h6 className={styles.skill_freelancer}>Responsability</h6>
+                    <h6 className={styles.skill_freelancer}>Copywriting</h6>
+                  </label>
+                </div>
 
                 {isAuthenticated && userJ.id !== currenUserId && (
                   <Button
