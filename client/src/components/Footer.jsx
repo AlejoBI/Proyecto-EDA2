@@ -12,14 +12,11 @@ const Footer = () => {
   return (
     <div className={styles.footer_custom}>
       <div style={{ padding: "2% 7%" }}>
-        <Table
-          className={styles.style_table}
-          collapse
-        >
+        <Table className={styles.style_table}>
           <thead>
             <tr>
               <th>
-                <div onClick={ScrollToTop} className={styles.image_footer} style={{ cursor: "pointer" }}>
+                <div onClick={ScrollToTop} className={styles.image_footer}>
                   <Image
                     src={logoImage}
                     className={styles.logo_footer}
@@ -71,9 +68,7 @@ const Footer = () => {
           </tbody>
         </Table>
       </div>
-      <div
-        className={styles.footer_bottom}
-      >
+      <div className={styles.footer_bottom}>
         <div className={styles.bottom_left}>
           <p className="px-3">Privacy Policy</p>
           <p className="px-3">Terms of Use</p>

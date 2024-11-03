@@ -143,6 +143,28 @@
   width: 100%;
 }
 
+.skill_container {
+  margin-top: 10px;
+}
+
+.skill_input {
+  width: 50%;
+  height: auto;
+  margin-right: 10px;
+  border-radius: 5px;
+  font-size: 15px;
+}
+
+.skill_button {
+  width: 15%;
+  height: auto;
+  justify-self: center;
+  background: var(--moradogradiente);
+  color: var(--blanco);
+  border: none;
+  border-radius: 5px;
+}
+
 /* Botones de acción */
 button.btn-primary {
   background-color: #007bff;

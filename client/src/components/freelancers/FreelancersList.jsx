@@ -186,22 +186,23 @@ const FreelancersList = () => {
                   <strong className={styles.freelancer_text}>Area:</strong>{" "}
                   {userJ.professionalArea}
                 </div>
-                <div>
-                  <label className={styles.skill_label}>
-                    <h6 className={styles.skill_freelancer}>Teamwork</h6>
-                    <h6 className={styles.skill_freelancer}>Responsability</h6>
-                    <h6 className={styles.skill_freelancer}>Copywriting</h6>
-                  </label>
-                </div>
-
-                {isAuthenticated && userJ.id !== currenUserId && (
-                  <Button
-                    className={styles.freelancer_button}
-                    onClick={() => handleStartChat(userJ.id)}
-                  >
-                    Iniciar Chat
-                  </Button>
+                {userJ.skill && (
+                  <div>
+                    <label className={styles.skill_label}>
+                      <h6 className={styles.skill_freelancer}>{userJ.skill}</h6>
+                    </label>
+                  </div>
                 )}
+                {isAuthenticated &&
+                  userJ.id !== currenUserId &&
+                  userJ.role === "customer" && (
+                    <Button
+                      className={styles.freelancer_button}
+                      onClick={() => handleStartChat(userJ.id)}
+                    >
+                      Send a Message
+                    </Button>
+                  )}
               </div>
             ))
           )}
