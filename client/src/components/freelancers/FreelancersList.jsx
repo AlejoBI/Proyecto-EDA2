@@ -193,15 +193,16 @@ const FreelancersList = () => {
                     </label>
                   </div>
                 )}
-
-                {isAuthenticated && userJ.id !== currenUserId && (
-                  <Button
-                    className={styles.freelancer_button}
-                    onClick={() => handleStartChat(userJ.id)}
-                  >
-                    Iniciar Chat
-                  </Button>
-                )}
+                {isAuthenticated &&
+                  userJ.id !== currenUserId &&
+                  userJ.role === "customer" && (
+                    <Button
+                      className={styles.freelancer_button}
+                      onClick={() => handleStartChat(userJ.id)}
+                    >
+                      Send a Message
+                    </Button>
+                  )}
               </div>
             ))
           )}

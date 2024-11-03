@@ -170,7 +170,7 @@ const JobsList = () => {
                     className={styles.job_button}
                       onClick={() => handleStartChat(job.id_user)}
                     >
-                      Iniciar Chat
+                      Send a Message
                     </Button>
                   )}
                 {userId &&
