@@ -27,6 +27,7 @@ const UpdateProfile = () => {
       country: user.country || "",
       gender: user.gender || "",
       professionalArea: user.professionalArea || "",
+      skill: user.skill || "",
       role: user.role,
     },
   });
@@ -41,6 +42,7 @@ const UpdateProfile = () => {
     setValue("country", user.country || "");
     setValue("gender", user.gender || "");
     setValue("professionalArea", user.professionalArea || "");
+    setValue("skill", user.skill || "");
   }, [user, setValue]);
 
   const onSubmit = async (data) => {
@@ -73,7 +75,7 @@ const UpdateProfile = () => {
       {user.role === "customer" ? (
         <>
           <Container className="d-flex align-items-center justify-content-center">
-            <Card className={styles - profile_card_custom2}>
+            <Card className={styles.profile_card_custom2}>
               <Card.Body className="mx-3 my-5">
                 <form onSubmit={handleSubmit(onSubmit)}>
                   <Container className="d-flex justify-content-center align-items-center">
@@ -171,6 +173,19 @@ const UpdateProfile = () => {
                           className="form-control"
                           {...register("name")}
                         />
+                        <ProfessionalAreaSelector
+                          register={register}
+                          setValue={setValue}
+                        />
+                        <CountryCitySelector register={register} />
+                      </Col>
+                      <Col md={3} className={styles.info_profile_center}>
+                        <p className={styles.title_custom}>Lastname</p>
+                        <input
+                          type="text"
+                          className="form-control"
+                          {...register("lastName")}
+                        />
                         <p className={styles.title_custom}>Gender</p>
                         <div className={styles.radio_custom}>
                           <label className={styles.radio}>
@@ -192,19 +207,6 @@ const UpdateProfile = () => {
                             {""} Female
                           </label>
                         </div>
-                        <ProfessionalAreaSelector
-                          register={register}
-                          setValue={setValue}
-                        />
-                        <CountryCitySelector register={register} />
-                      </Col>
-                      <Col md={3} className={styles.info_profile_center}>
-                        <p className={styles.title_custom}>Lastname</p>
-                        <input
-                          type="text"
-                          className="form-control"
-                          {...register("lastName")}
-                        />
                         <p className={styles.title_custom}>Age</p>
                         <input
                           type="number"

@@ -13,7 +13,6 @@
 .style_table {
   color: var(--blanco);
   font-size: 14px;
-  border-collapse: collapse;
   width: 100%;
   background-color: var(--transparente);
 }

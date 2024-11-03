@@ -8,6 +8,75 @@ const useParentComponentData = () => {
     "Music and Audio",
   ];
 
+  const professionalAreasAndSkills = {
+    "Technology and Programming": [
+      "Web Development",
+      "Mobile App Development",
+      "Data Science",
+      "Machine Learning",
+      "Cloud Computing",
+      "Cybersecurity",
+      "Blockchain",
+      "DevOps",
+      "Game Development"
+    ],
+    "Graphic Design": [
+      "Logo Design",
+      "Branding",
+      "UI/UX Design",
+      "Illustration",
+      "Photoshop",
+      "3D Modeling",
+      "Animation",
+      "Packaging Design",
+      "Typography"
+    ],
+    "Video and Animation": [
+      "Video Editing",
+      "2D Animation",
+      "3D Animation",
+      "Motion Graphics",
+      "Visual Effects (VFX)",
+      "Script Writing",
+      "Voice Over",
+      "Storyboarding",
+      "Film Production"
+    ],
+    "Writing and Translation": [
+      "Content Writing",
+      "Copywriting",
+      "Blog Writing",
+      "Technical Writing",
+      "Proofreading",
+      "Editing",
+      "Translation",
+      "Transcription",
+      "Creative Writing"
+    ],
+    "Digital Marketing": [
+      "Social Media Marketing",
+      "SEO",
+      "Email Marketing",
+      "Content Marketing",
+      "Pay-Per-Click (PPC)",
+      "Affiliate Marketing",
+      "Influencer Marketing",
+      "Marketing Strategy",
+      "Brand Strategy"
+    ],
+    "Music and Audio": [
+      "Music Production",
+      "Audio Engineering",
+      "Sound Design",
+      "Voice Over",
+      "Podcast Production",
+      "Mixing and Mastering",
+      "Composition",
+      "Audio Editing",
+      "DJing"
+    ]
+  };  
+
   const tableData = [
     {
       categories: "Technology and Programming",
@@ -207,6 +276,7 @@ const useParentComponentData = () => {
   return {
     countriesAndCities,
     professionalAreas,
+    professionalAreasAndSkills,
     tableData,
   };
 };
