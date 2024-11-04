@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Card, Col, Container, Row, Image, Button, Modal } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import { useAuth } from "../../context/AuthContext";
-import profileImage from "../../assets/logo.png";
+import logo from "../../assets/logo.png";
 import { capitalizeFirstLetter } from "../../hooks/CapitalizeFirstLetter";
 import { UpdateProfile } from "../index";
 import styles from "../../assets/css/ProfilePage.module.css";
@@ -21,6 +21,7 @@ const ProfileInformation = () => {
       city: user.city || "",
       country: user.country || "",
       gender: user.gender || "",
+      profileImage: user.profileImage || logo,
     },
   });
 
@@ -57,7 +58,7 @@ const ProfileInformation = () => {
               <Card.Body>
                 <Container className="d-flex flex-column align-items-center">
                   <Image
-                    src={profileImage}
+                    src={user.profileImage || logo}
                     roundedCircle
                     className={styles.profile_image}
                   />
