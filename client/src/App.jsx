@@ -1,6 +1,7 @@
 import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext";
 import { JobsProvider } from "./context/JobsContext";
+import { AdminProvider } from "./context/AdminContext";
 
 import { NavigationMenu, Footer } from "./components/index.jsx";
 
@@ -89,7 +90,7 @@ function App() {
                 }
               />
               <Route
-                path="/admin/AdminDashboard"
+                path="/admin/dashboard"
                 element={<AdminDashboard />}
               />
             </Route>

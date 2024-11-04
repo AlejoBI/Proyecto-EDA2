@@ -1,0 +1,184 @@
+/* AdminDashBoard */
+:root {
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+  background-color: #ffffff;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  /* Colores de la pagina */
+  --transparente: rgba(255, 255, 255, 0);
+  --blanco: #ffffff;
+  --negro: black;
+  --gris: #f5f5f5;
+
+  --morado: #8306ad;
+  --moradoclaro: #a5a6f6;
+  --moradooscuro: #520078;
+  --verdeclaro: #63c07c;
+  --naranjaclaro: #f9a86d;
+  --rosaclaro: #f4537c;
+
+  --morado-hover: #6b0490; 
+  --moradoclaro-hover: #8e8fff; 
+  --verdeclaro-hover: #4ca367; 
+  --naranjaclaro-hover: #e58b54; 
+  --rosaclaro-hover: #d14269; 
+
+  --morado-hover-light: #a56cd1; 
+  --moradoclaro-hover-light: #c0bffd; 
+  --verdeclaro-hover-light: #89d4a3; 
+  --naranjaclaro-hover-light: #fbc199; 
+  --rosaclaro-hover-light: #fa718d; 
+}
+
+/* sidebar */
+.sidebar {
+  background-color: var(--moradooscuro);
+  color: var(--blanco);
+  height: 100vh;
+  padding: 20px;
+}
+
+.sidebar h4 {
+  color: var(--blanco);
+  margin-bottom: 20px;
+  font-weight: bold;
+  text-align: center;
+}
+
+.sidebar button {
+  width: 100%;
+  margin-bottom: 10px;
+  transition: background-color 0.2s ease;
+}
+
+.sidebar .active {
+  background-color: var(--moradoclaro);
+}
+
+.links {
+  margin: 15px 10px;
+}
+
+.links ul .span {
+  text-transform: uppercase;
+  color: gray;
+  margin: 10px 0px 5px;
+  font-size: 50px;
+}
+
+.links ul li {
+  display: flex;
+  align-items: center;
+  margin-left: 10px;
+  color: white;
+  padding: 5px 10px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 15px;
+}
+
+/* search-bar */
+.search-bar {
+  max-width: 300px;
+  margin-bottom: 20px;
+  margin-top: 20px;
+}
+
+/* UserList */
+.userContainer {
+  padding: 20px;
+}
+
+.userHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.userHeading {
+  margin: 0;
+}
+
+.userCard {
+  border: 1px solid var(--gris);
+  border-radius: 5px;
+  padding: 15px;
+  margin-bottom: 20px;
+  background-color: var(--blanco);
+  transition: box-shadow 0.3s ease; 
+}
+
+.userCard:hover {
+  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.2); 
+}
+
+.userInfo {
+  cursor: pointer;
+}
+
+.userName {
+  margin: 0;
+}
+
+.detailsButton {
+  background-color: transparent; 
+  border: none; 
+  color: var(--morado); 
+  cursor: pointer; 
+  text-decoration: underline; 
+  transition: color 0.2s ease; 
+}
+
+.detailsButton:hover {
+  color: var(--morado-hover); 
+}
+
+.userActions {
+  display: flex; 
+  gap: 10px; 
+  margin-top: 10px;
+}
+
+.userDetails {
+  margin-top: 10px;
+}
+
+.userActions button {
+  background-color: var(--morado);
+  color: var(--blanco);
+  border: none; 
+  padding: 10px 15px;
+  border-radius: 5px; 
+  cursor: pointer; 
+  transition: background-color 0.2s ease; 
+}
+
+.userActions button:hover {
+  background-color: var(--morado-hover);
+}
+
+.statsHeader {
+  display: flex;
+  gap: 20px;
+  justify-content: space-around;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.statItem {
+  text-align: center;
+}
+
+.textStat {
+  margin-top: 10px;
+  font-size: 18px;
+  font-weight: bold;
+  color: var(--moradooscuro); /* Ajusta el color según prefieras */
+}
