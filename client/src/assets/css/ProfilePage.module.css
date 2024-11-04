@@ -13,7 +13,8 @@
   background: var(--blanco);
   border-radius: 50px;
   color: var(--negro);
-  width: 70%;
+  width: 90%;
+  height: 700px;
   margin: 5% auto;
   padding: 20px;
   box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.1);
@@ -40,13 +41,21 @@
 .info_profile_left {
   text-align: left; /* Alinea a la derecha */
   margin: auto;
-  width: 35%;
+  width: 25%;
+  height: 700px;
 }
 
 .info_profile_center {
   text-align: center;
   margin: auto;
-  width: 35%;
+  width: 25%;
+  height: 700px;
+}
+.info_profile_center_right {
+  text-align: center;
+  margin: auto;
+  width: 25%;
+  height: 700px;
 }
 
 .info_profile_right {
@@ -55,7 +64,8 @@
   display: flex;
   align-items: center;
   margin: auto;
-  width: 30%;
+  width: 25%;
+  height: 700px;
   font-size: 20px;
 }
 
@@ -179,4 +189,20 @@ button.btn-outline-primary {
 button.btn-outline-primary:hover {
   background-color: #007bff;
   color: #fff;
+}
+
+.circular_image_container {
+  width: 100px; /* Ajusta el tamaño según sea necesario */
+  height: 100px; /* El mismo tamaño para crear un cuadrado */
+  border-radius: 50%; /* Hace que el contenedor sea circular */
+  overflow: hidden; /* Oculta la parte de la imagen que se desborda */
+  display: flex; /* Para centrar la imagen dentro del contenedor */
+  justify-content: center; /* Centra horizontalmente */
+  align-items: center; /* Centra verticalmente */
+}
+
+.circular_image {
+  width: 100%; /* Asegura que la imagen ocupe todo el contenedor */
+  height: 100%; /* Asegura que la imagen ocupe todo el contenedor */
+  object-fit: cover; /* Mantiene la proporción y recorta el exceso */
 }

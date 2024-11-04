@@ -186,11 +186,15 @@ const FreelancersList = () => {
                   <strong className={styles.freelancer_text}>Area:</strong>{" "}
                   {userJ.professionalArea}
                 </div>
-                {userJ.skill && (
-                  <div>
-                    <label className={styles.skill_label}>
-                      <h6 className={styles.skill_freelancer}>{userJ.skill}</h6>
-                    </label>
+                {userJ.skills && userJ.skills.length > 0 && (
+                  <div className={styles.skill_container}>
+                    {userJ.skills.map((skill, index) => (
+                      <div key={index}>
+                        <label className={styles.skill_label}>
+                          <h6 className={styles.skill_freelancer}>{skill}</h6>
+                        </label>
+                      </div>
+                    ))}
                   </div>
                 )}
                 {isAuthenticated &&
