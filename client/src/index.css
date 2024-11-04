@@ -19,7 +19,9 @@
   --grisnegro: #333;
 
   --morado: #8306ad;
+  --morado2: #74557e;
   --moradoclaro: #a5a6f6;
+  --moradogradiente: linear-gradient(90deg, rgba(107,4,144,1) 0%, rgba(131,6,173,1) 100%);
   --verdeclaro: #63c07c;
   --naranjaclaro: #f9a86d;
   --rosaclaro: #f4537c;
@@ -114,24 +116,4 @@ body {
 
 .image-search {
   margin: 2%;
-}
-/* Estilos del footer */
-.footer-custom{
-  color: var(--blanco);
-  background: var(--morado);
-  border-radius: 50px 50px 0 0;
-  flex-direction: column;
-}
-
-/* Tabla del footer */
-#style-table {
-  border: none;
-  background: var(--transparente);
-  color: var(--blanco);
-  font-size: 14px;
-}
-
-#style-table2 {
-  color: var(--blanco);
-  text-decoration: none;
 }

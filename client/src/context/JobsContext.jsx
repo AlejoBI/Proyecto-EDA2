@@ -41,8 +41,8 @@ export const JobsProvider = ({ children }) => {
 
   const deleteJob = async (job) => {
     try {
-      const res = await deleteJobRequest(job);
-      return res;
+      const res = await deleteJobRequest(job.id); 
+      return res; 
     } catch (error) {
       setErrors(error.response ? error.response.data : error.message);
     }

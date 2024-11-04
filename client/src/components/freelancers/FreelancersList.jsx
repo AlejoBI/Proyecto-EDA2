@@ -1,87 +1,45 @@
-import React, { useState, useEffect } from "react";
-import { useAuth } from "../../context/AuthContext";
-import { Container, Button, Dropdown, Row, Col } from "react-bootstrap";
+import React from "react";
+import { useNavigate } from "react-router-dom";
+import { Container, Button, Dropdown, Row, Col, Image } from "react-bootstrap";
 import useParentComponentData from "../../hooks/useParentComponentData";
-
-import { createChatRequest } from "../../api/chat";
+import useFreelancersList from "../../hooks/useFreelancersList";
+import { CustomToast } from "../index";
+import logo from "../../assets/logo.png";
+import "bootstrap/dist/css/bootstrap.min.css";
+import styles from "../../assets/css/FreelancerPage.module.css";
+import freeicon from "../../assets/images/freeicon.png";
+import skillsicon from "../../assets/images/skillsicon.png";
 
 const FreelancersList = () => {
-  const { getAllUsers, user, isAuthenticated } = useAuth();
-  const [users, setUsers] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage] = useState(10); // Número de elementos por página
-  const [filteredUsers, setFilteredUsers] = useState([]); // Lista de freelancers filtrados
-  const [selectedCountry, setSelectedCountry] = useState("All");
-  const [selectedCity, setSelectedCity] = useState("All");
-  const [selectedArea, setSelectedArea] = useState("All");
+  const navigate = useNavigate();
+  const {
+    users,
+    user,
+    isAuthenticated,
+    currentPage,
+    itemsPerPage,
+    filteredUsers,
+    selectedCountry,
+    setSelectedCountry,
+    selectedCity,
+    setSelectedCity,
+    selectedArea,
+    setSelectedArea,
+    showToast,
+    setShowToast,
+    toastMessage,
+    toastType,
+    currentItems,
+    handleStartChat,
+    setCurrentPage,
+    freelancersCount,
+  } = useFreelancersList(navigate);
 
   const { countriesAndCities, professionalAreas } = useParentComponentData();
 
-  const [cities, setCities] = useState([]);
-
-  useEffect(() => {
-    const fetchUsers = async () => {
-      const res = await getAllUsers();
-      const professionals = res.filter((user) => user.role === "professional");
-
-      // Filtrar los usuarios que tienen todas las propiedades requeridas
-      const validProfessionals = professionals.filter(
-        (user) =>
-          user.username?.trim() &&
-          user.email?.trim() &&
-          user.city?.trim() &&
-          user.country?.trim() &&
-          user.professionalArea?.trim()
-      );
-
-      // Extraer valores únicos para los filtros
-      const uniqueCountries = [
-        "All",
-        ...new Set(validProfessionals.map((user) => user.country)),
-      ];
-
-      setUsers(validProfessionals);
-      setFilteredUsers(validProfessionals); // Inicialmente mostrar todos
-      setCities(uniqueCountries); // Cambié esto para ajustar correctamente las ciudades
-    };
-    fetchUsers();
-  }, []);
-
-  useEffect(() => {
-    applyFilters();
-  }, [selectedCountry, selectedCity, selectedArea]);
-
-  // Calcular los índices de inicio y fin para la paginación
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = filteredUsers.slice(indexOfFirstItem, indexOfLastItem);
-
-  const applyFilters = () => {
-    let updatedList = users;
-
-    if (selectedCountry !== "All") {
-      updatedList = updatedList.filter(
-        (user) => user.country === selectedCountry
-      );
-    }
-
-    if (selectedCity !== "All") {
-      updatedList = updatedList.filter((user) => user.city === selectedCity);
-    }
-
-    if (selectedArea !== "All") {
-      updatedList = updatedList.filter(
-        (user) => user.professionalArea === selectedArea
-      );
-    }
-
-    setFilteredUsers(updatedList);
-  };
-
-  // Funciones para manejar los cambios de los dropdowns
   const handleCountryChange = (country) => {
     setSelectedCountry(country);
-    setSelectedCity("All"); // Resetear ciudad al cambiar de país
+    setSelectedCity("All");
   };
 
   const handleCityChange = (city) => {
@@ -104,128 +62,180 @@ const FreelancersList = () => {
     }
   };
 
-  const handleStartChat = async (participantId) => {
-    if (!isAuthenticated) return;
-    try {
-      const response = await createChatRequest({
-        userId: user.id,
-        participantId,
-      });
-      console.log("Chat iniciado con ID:", response.chatId);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  const currentUserId = user ? user.id : null;
+  const currenUserId = user ? user.id : null;
 
   return (
-    <Container>
-      <h1>Freelancers</h1>
-      {/* Filtros */}
-      <Row className="mb-3">
-        <Col>
-          <Dropdown onSelect={handleCountryChange}>
-            <Dropdown.Toggle variant="secondary">
-              {selectedCountry === "All" ? "Select Country" : selectedCountry}
-            </Dropdown.Toggle>
-            <Dropdown.Menu>
-              <Dropdown.Item eventKey="All">All</Dropdown.Item>
-              {Object.keys(countriesAndCities).map((country, index) => (
-                <Dropdown.Item key={index} eventKey={country}>
-                  {country}
-                </Dropdown.Item>
-              ))}
-            </Dropdown.Menu>
-          </Dropdown>
-        </Col>
-        <Col>
-          <Dropdown onSelect={handleCityChange}>
-            <Dropdown.Toggle variant="secondary">
-              {selectedCity === "All" ? "Select City" : selectedCity}
-            </Dropdown.Toggle>
-            <Dropdown.Menu>
-              <Dropdown.Item eventKey="All">All</Dropdown.Item>
-              {selectedCountry === "All" ? (
-                <Dropdown.Item disabled>No cities available</Dropdown.Item>
-              ) : countriesAndCities[selectedCountry]?.length > 0 ? (
-                countriesAndCities[selectedCountry].map((city, index) => (
-                  <Dropdown.Item key={index} eventKey={city}>
-                    {city}
+    <Container className={styles.freelancers_container}>
+      <div className={styles.freelancers_filter}>
+        <Image
+          src={logo}
+          alt="Logo"
+          height="80"
+          width="80"
+          className="d-inline-block align-center d-block mx-auto"
+        />
+        <h3 className={styles.freelancer_text2}>Filter</h3>
+        <Row className="mb-3">
+          <Col>
+            <Dropdown onSelect={handleCountryChange}>
+              <Dropdown.Toggle className={styles.freelancer_toggle}>
+                {selectedCountry === "All" ? "Select Country" : selectedCountry}
+              </Dropdown.Toggle>
+              <Dropdown.Menu>
+                <Dropdown.Item eventKey="All">All</Dropdown.Item>
+                {Object.keys(countriesAndCities).map((country, index) => (
+                  <Dropdown.Item key={index} eventKey={country}>
+                    {country}
                   </Dropdown.Item>
-                ))
-              ) : (
-                <Dropdown.Item disabled>No cities available</Dropdown.Item>
-              )}
-            </Dropdown.Menu>
-          </Dropdown>
-        </Col>
-        <Col>
-          <Dropdown onSelect={handleAreaChange}>
-            <Dropdown.Toggle variant="secondary">
-              {selectedArea === "All" ? "Select Area" : selectedArea}
-            </Dropdown.Toggle>
-            <Dropdown.Menu>
-              <Dropdown.Item eventKey="All">All</Dropdown.Item>
-              {professionalAreas.map((area, index) => (
-                <Dropdown.Item key={index} eventKey={area}>
-                  {area}
-                </Dropdown.Item>
-              ))}
-            </Dropdown.Menu>
-          </Dropdown>
-        </Col>
-      </Row>
-
-      {/* Lista de Freelancers */}
-      {!filteredUsers.length ? (
-        <p>No freelancers available</p>
-      ) : (
-        <ul>
-          {currentItems.map((user) => (
-            <li key={user.id}>
-              <p>
-                <strong>Username:</strong> {user.username}
-              </p>
-              <p>
-                <strong>Email:</strong> {user.email}
-              </p>
-              <p>
-                <strong>City:</strong> {user.city}
-              </p>
-              <p>
-                <strong>Country:</strong> {user.country}
-              </p>
-              <p>
-                <strong>Area:</strong> {user.professionalArea}
-              </p>
-              {isAuthenticated && user.id !== currentUserId && (
-                <Button
-                  variant="primary"
-                  onClick={() => handleStartChat(user.id)}
+                ))}
+              </Dropdown.Menu>
+            </Dropdown>
+          </Col>
+          <Col>
+            <Dropdown onSelect={handleCityChange}>
+              <Dropdown.Toggle className={styles.freelancer_toggle}>
+                {selectedCity === "All" ? "Select City" : selectedCity}
+              </Dropdown.Toggle>
+              <Dropdown.Menu>
+                <Dropdown.Item eventKey="All">All</Dropdown.Item>
+                {selectedCountry === "All" ? (
+                  <Dropdown.Item disabled>No cities available</Dropdown.Item>
+                ) : countriesAndCities[selectedCountry]?.length > 0 ? (
+                  countriesAndCities[selectedCountry].map((city, index) => (
+                    <Dropdown.Item key={index} eventKey={city}>
+                      {city}
+                    </Dropdown.Item>
+                  ))
+                ) : (
+                  <Dropdown.Item disabled>No cities available</Dropdown.Item>
+                )}
+              </Dropdown.Menu>
+            </Dropdown>
+          </Col>
+          <Col>
+            <Dropdown onSelect={handleAreaChange}>
+              <Dropdown.Toggle className={styles.freelancer_toggle}>
+                {selectedArea === "All" ? "Select Area" : selectedArea}
+              </Dropdown.Toggle>
+              <Dropdown.Menu>
+                <Dropdown.Item eventKey="All">All</Dropdown.Item>
+                {professionalAreas.map((area, index) => (
+                  <Dropdown.Item key={index} eventKey={area}>
+                    {area}
+                  </Dropdown.Item>
+                ))}
+              </Dropdown.Menu>
+            </Dropdown>
+          </Col>
+        </Row>
+      </div>
+      <div className={styles.freelancers_list}>
+        <div>
+          <h4>
+            Hello {user ? user.username : "new user"} 👋🏼, here you can find all
+            the jobs or people you need.
+          </h4>
+          <div className={styles.freelancers_header}>
+            <Image
+              src={freeicon}
+              alt="Freelancer Icon"
+              height="80"
+              width="80"
+              className="d-inline-block align-center d-block"
+            />
+            <h4 className={styles.text_freelancer}>
+              Freelancers: {freelancersCount}{" "}
+            </h4>
+            <Image
+              src={skillsicon}
+              alt="Skills Icon"
+              height="80"
+              width="80"
+              className="d-inline-block align-center d-block"
+            />
+            <h4 className={styles.text_freelancer}>
+              Skills: {/*skillsFreelancersCount.length*/}
+            </h4>
+          </div>
+        </div>
+        <section className={styles.freelancer}>
+          {!filteredUsers.length ? (
+            <p>No freelancers available</p>
+          ) : (
+            currentItems.map((userJ) => (
+              <div key={userJ.id} className={styles.freelancer_card}>
+                <h4
+                  className={styles.freelancer_title + styles.freelancer_text}
                 >
-                  Iniciar Chat
-                </Button>
-              )}
-            </li>
-          ))}
-        </ul>
-      )}
+                  {userJ.username}
+                </h4>
+                <p className={styles.line}></p>
+                <div>
+                  <strong className={styles.freelancer_text}>Email:</strong>{" "}
+                  {userJ.email}
+                </div>
+                <div>
+                  <strong className={styles.freelancer_text}>City:</strong>{" "}
+                  {userJ.city}
+                </div>
+                <div>
+                  <strong className={styles.freelancer_text}>Country:</strong>{" "}
+                  {userJ.country}
+                </div>
+                <div>
+                  <strong className={styles.freelancer_text}>Area:</strong>{" "}
+                  {userJ.professionalArea}
+                </div>
+                {userJ.skill && (
+                  <div>
+                    <label className={styles.skill_label}>
+                      <h6 className={styles.skill_freelancer}>{userJ.skill}</h6>
+                    </label>
+                  </div>
+                )}
+                {isAuthenticated &&
+                  userJ.id !== currenUserId &&
+                  userJ.role === "customer" && (
+                    <Button
+                      className={styles.freelancer_button}
+                      onClick={() => handleStartChat(userJ.id)}
+                    >
+                      Send a Message
+                    </Button>
+                  )}
+              </div>
+            ))
+          )}
+        </section>
 
-      {/* Paginación */}
-      <section>
-        <Button onClick={handlePreviousPage} disabled={currentPage === 1}>
-          Previous
-        </Button>
-        <Button
-          onClick={handleNextPage}
-          disabled={
-            currentPage === Math.ceil(filteredUsers.length / itemsPerPage)
-          }
-        >
-          Next
-        </Button>
-      </section>
+        <section>
+          <Button
+            className={styles.freelancer_button}
+            onClick={handlePreviousPage}
+            disabled={currentPage === 1}
+          >
+            Previous
+          </Button>
+          <Button
+            className={styles.freelancer_button}
+            onClick={handleNextPage}
+            disabled={
+              currentPage === Math.ceil(filteredUsers.length / itemsPerPage)
+            }
+          >
+            Next
+          </Button>
+        </section>
+      </div>
+
+      <CustomToast
+        show={showToast}
+        message={toastMessage}
+        backgroundColor={toastType === "success" ? "green" : "red"}
+        color="white"
+        duration={3000}
+        onClose={() => setShowToast(false)}
+      />
     </Container>
   );
 };

@@ -1,0 +1,66 @@
+.footer_custom {
+  color: var(--blanco);
+  background: var(--morado);
+  border-radius: 50px 50px 0 0;
+  flex-direction: column;
+  width: 100%;
+  height: auto;
+  display: flex;
+  justify-content: center;
+}
+
+/* Tabla del footer */
+.style_table {
+  color: var(--blanco);
+  font-size: 14px;
+  width: 100%;
+  background-color: var(--transparente);
+}
+
+.style_table td,
+.style_table th {
+  background-color: var(--transparente);
+  border: none;
+}
+
+.style_table2 {
+  color: var(--blanco);
+  text-decoration: none;
+}
+
+.text_table {
+  color: var(--blanco) !important;
+  font-size: 16px;
+  text-decoration: none;
+}
+
+.footer_bottom {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.bottom_left {
+  display: flex;
+  justify-content: start;
+}
+
+.bottom_right {
+  display: flex;
+  justify-content: end;
+}
+
+.image_footer {
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+}
+
+.logo_footer {
+  width: 80px;
+  height: 80px;
+  color: var(--blanco);
+}

@@ -4,17 +4,21 @@ import { Toast } from "react-bootstrap";
 const CustomToast = ({
   show,
   message,
-  position,
-  backgroundColor,
-  color,
-  duration,
+  position = { top: "20px", right: "20px" },
+  backgroundColor = "red",
+  color = "white",
+  duration = 3000,
   onClose,
 }) => {
   const toastStyle = {
-    position: "absolute",
+    position: "fixed",
+    zIndex: 9999,
     ...position,
-    backgroundColor: backgroundColor || "red",
-    color: color || "white",
+    backgroundColor,
+    color,
+    padding: "8px 16px",
+    borderRadius: "8px",
+    boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.2)",
   };
 
   useEffect(() => {

@@ -1,99 +1,106 @@
 /* Estilos del profile */
-.profile-card-custom {
+.profile_card_custom {
   background: var(--blanco);
   border-radius: 50px;
   color: var(--negro);
   width: 70%;
   margin: 5% auto;
   padding: 20px;
+  box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.1);
 }
 
-.profile-card-custom2 {
+.profile_card_custom2 {
   background: var(--blanco);
   border-radius: 50px;
   color: var(--negro);
   width: 70%;
   margin: 5% auto;
   padding: 20px;
+  box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.1);
 }
 
-.container-profile-custom {
+.container_profile_custom {
   display: flex;
   flex-direction: column;
   align-self: center;
 }
 
-.img-custom {
+.img_custom {
   width: 150px; /* Ajusta según el tamaño que prefieras */
   height: 150px;
   border-radius: 50%;
   translate: -20%;
 }
 
-.info-profile-left,
-.info-profile-right {
+.info_profile_left,
+.info_profile_right {
   color: var(--negro);
 }
 
-.info-profile-left {
+.info_profile_left {
   text-align: left; /* Alinea a la derecha */
   margin: auto;
   width: 35%;
 }
 
-.info-profile-center {
+.info_profile_center {
   text-align: center;
   margin: auto;
   width: 35%;
 }
 
-.info-profile-right {
-  align-content: end;
+.info_profile_right {
+  color: var(--negro);
+  flex-direction: column;
+  display: flex;
   align-items: center;
   margin: auto;
   width: 30%;
+  font-size: 20px;
 }
 
-.radio {
-  padding: 10px;
-  margin: auto;
-}
-
-.radio-custom {
+.radio_custom {
   display: flex;
   flex-direction: row;
   align-items: center;
 }
 
-.title-custom {
+.radio input[type="radio"] {
+  appearance: none;
+  background-color: #fff;
+  border: 2px solid var(--morado2);
+  margin: 5px;
+}
+
+.radio input[type="radio"]:checked {
+  background-color: var(--morado-hover);
+  box-shadow: 0 0 5px 2px var(--morado);
+}
+
+.title_custom {
   margin-top: 10px;
   text-align: left;
 }
 
-.container-profile-custom2 {
+.container_profile_custom2 {
   display: flex;
   flex-direction: column;
 }
 
-.profile-left {
+.profile_left {
   text-align: left;
   width: 33.3%;
 }
 
-.profile-center {
-  width: 33.3%;
-}
-
-
-.profile-right {
+.profile_center,
+.profile_right {
   width: 33.3%;
 }
 
 /* Estilo general de la tarjeta de perfil */
-.profile-card {
+.profile_card {
   width: 100%;
   max-width: 600px;
-  border-radius: 15px;
   padding: 30px;
   background: var(--blanco);
   box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.1);
@@ -101,7 +108,7 @@
 }
 
 /* Imagen de perfil redondeada */
-.profile-image {
+.profile_image {
   width: 150px;
   height: 150px;
   object-fit: cover;
@@ -110,40 +117,52 @@
 }
 
 /* Nombre del usuario */
-.profile-name {
+.profile_name {
   font-size: 24px;
   font-weight: 600;
   color: var(--grisnegro);
 }
 
 /* Rol del usuario (se muestra debajo del nombre) */
-.profile-role {
+.profile_role {
   font-size: 18px;
   color: #888;
   margin-bottom: 10px;
 }
 
 /* Ubicación del usuario */
-.profile-location {
+.profile_location {
   font-size: 16px;
   color: #555;
 }
 
 /* Estilo de los detalles del perfil */
-.profile-details {
+.profile_details {
   margin-top: 20px;
   text-align: left;
   width: 100%;
 }
 
-.profile-details p {
-  font-size: 16px;
-  color: #444;
-  margin: 5px 0;
+.skill_container {
+  margin-top: 10px;
 }
 
-.profile-details p strong {
-  color: #333;
+.skill_input {
+  width: 50%;
+  height: auto;
+  margin-right: 10px;
+  border-radius: 5px;
+  font-size: 15px;
+}
+
+.skill_button {
+  width: 15%;
+  height: auto;
+  justify-self: center;
+  background: var(--moradogradiente);
+  color: var(--blanco);
+  border: none;
+  border-radius: 5px;
 }
 
 /* Botones de acción */

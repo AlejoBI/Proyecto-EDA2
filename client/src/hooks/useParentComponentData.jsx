@@ -1,5 +1,3 @@
-import React, { useState } from "react";
-
 const useParentComponentData = () => {
   const professionalAreas = [
     "Technology and Programming",
@@ -9,6 +7,115 @@ const useParentComponentData = () => {
     "Digital Marketing",
     "Music and Audio",
   ];
+
+  const professionalAreasAndSkills = {
+    "Technology and Programming": [
+      "Web Development",
+      "Mobile App Development",
+      "Data Science",
+      "Machine Learning",
+      "Cloud Computing",
+      "Cybersecurity",
+      "Blockchain",
+      "DevOps",
+      "Game Development"
+    ],
+    "Graphic Design": [
+      "Logo Design",
+      "Branding",
+      "UI/UX Design",
+      "Illustration",
+      "Photoshop",
+      "3D Modeling",
+      "Animation",
+      "Packaging Design",
+      "Typography"
+    ],
+    "Video and Animation": [
+      "Video Editing",
+      "2D Animation",
+      "3D Animation",
+      "Motion Graphics",
+      "Visual Effects (VFX)",
+      "Script Writing",
+      "Voice Over",
+      "Storyboarding",
+      "Film Production"
+    ],
+    "Writing and Translation": [
+      "Content Writing",
+      "Copywriting",
+      "Blog Writing",
+      "Technical Writing",
+      "Proofreading",
+      "Editing",
+      "Translation",
+      "Transcription",
+      "Creative Writing"
+    ],
+    "Digital Marketing": [
+      "Social Media Marketing",
+      "SEO",
+      "Email Marketing",
+      "Content Marketing",
+      "Pay-Per-Click (PPC)",
+      "Affiliate Marketing",
+      "Influencer Marketing",
+      "Marketing Strategy",
+      "Brand Strategy"
+    ],
+    "Music and Audio": [
+      "Music Production",
+      "Audio Engineering",
+      "Sound Design",
+      "Voice Over",
+      "Podcast Production",
+      "Mixing and Mastering",
+      "Composition",
+      "Audio Editing",
+      "DJing"
+    ]
+  };  
+
+  const tableData = [
+    {
+      categories: "Technology and Programming",
+      help: "Help and Support",
+      community: "Academy",
+      company: "About Us",
+    },
+    {
+      categories: "Graphic Design",
+      help: "Trust and Security",
+      community: "Blog",
+      company: "Careers",
+    },
+    {
+      categories: "Video and Animation",
+      help: "Quality Guide",
+      community: "Themes",
+      company: "FAQs",
+    },
+    {
+      categories: "Writing and Translation",
+      help: "Taskeria Guides",
+      community: "Hosting",
+      company: "Teams",
+    },
+    {
+      categories: "Digital Marketing",
+      help: "",
+      community: "Developers",
+      company: "Contact Us",
+    },
+    {
+      categories: "Music and Audio",
+      help: "",
+      community: "Support",
+      company: "",
+    },
+  ];
+  
 
   const countriesAndCities = {
     Argentina: [
@@ -169,6 +276,8 @@ const useParentComponentData = () => {
   return {
     countriesAndCities,
     professionalAreas,
+    professionalAreasAndSkills,
+    tableData,
   };
 };
 
