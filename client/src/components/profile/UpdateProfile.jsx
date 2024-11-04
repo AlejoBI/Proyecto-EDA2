@@ -15,8 +15,9 @@ const UpdateProfile = () => {
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
   const [toastColor, setToastColor] = useState("green");
+  const [profileImage, setProfileImage] = useState(user.profileImage || logo);
 
-  const { register, handleSubmit, setValue, watch } = useForm({
+  const { register, handleSubmit, setValue, watch, getValues } = useForm({
     defaultValues: {
       username: user.username,
       lastName: user.lastName || "",
@@ -27,8 +28,9 @@ const UpdateProfile = () => {
       country: user.country || "",
       gender: user.gender || "",
       professionalArea: user.professionalArea || "",
-      skill: user.skill || "",
+      skills: user.skills || [],
       role: user.role,
+      profileImage: user.profileImage || logo,
     },
   });
 
@@ -42,12 +44,15 @@ const UpdateProfile = () => {
     setValue("country", user.country || "");
     setValue("gender", user.gender || "");
     setValue("professionalArea", user.professionalArea || "");
-    setValue("skill", user.skill || "");
+    setValue("skills", user.skills || []);
+    setValue("profileImage", user.profileImage || logo);
   }, [user, setValue]);
 
   const onSubmit = async (data) => {
     try {
-      const res = await updateProfile(data);
+      // Incluye la nueva URL de la imagen en los datos enviados
+      const updatedData = { ...data, profileImage };
+      const res = await updateProfile(updatedData);
       if (res && res.message) {
         setToastMessage(res.message);
         setToastColor("green");
@@ -59,6 +64,26 @@ const UpdateProfile = () => {
       );
       setToastColor("red");
       setShowToast(true);
+    }
+  };
+
+  const handleImageChange = async (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      // Aquí deberías subir la imagen a tu servidor o servicio de almacenamiento
+      const formData = new FormData();
+      formData.append("image", file);
+
+      // Supón que tienes una función para subir la imagen
+      // const imageUrl = await uploadImage(formData);
+      // setProfileImage(imageUrl);
+
+      // Para demostración, simplemente se mostrará la imagen seleccionada
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setProfileImage(reader.result);
+      };
+      reader.readAsDataURL(file);
     }
   };
 
@@ -75,7 +100,7 @@ const UpdateProfile = () => {
       {user.role === "customer" ? (
         <>
           <Container className="d-flex align-items-center justify-content-center">
-            <Card className={styles.profile_card_custom2}>
+            <Card className={styles.profile_card_custom}>
               <Card.Body className="mx-3 my-5">
                 <form onSubmit={handleSubmit(onSubmit)}>
                   <Container className="d-flex justify-content-center align-items-center">
@@ -141,7 +166,23 @@ const UpdateProfile = () => {
                         />
                       </Col>
                       <Col md={3} className={styles.info_profile_right}>
-                        <Image src={logo} className="img-fluid" />
+                        <div className={styles.circular_image_container}>
+                          <Image
+                            src={profileImage}
+                            className={styles.circular_image} // Clase circular
+                            style={{ cursor: "pointer" }}
+                            onClick={() =>
+                              document.getElementById("imageUpload").click()
+                            }
+                          />
+                        </div>
+                        <input
+                          type="file"
+                          id="imageUpload"
+                          accept="image/*"
+                          style={{ display: "none" }}
+                          onChange={handleImageChange}
+                        />
                         <p>{watch("username")}</p>
                         <button
                           className="btn btn-primary"
@@ -173,19 +214,7 @@ const UpdateProfile = () => {
                           className="form-control"
                           {...register("name")}
                         />
-                        <ProfessionalAreaSelector
-                          register={register}
-                          setValue={setValue}
-                        />
                         <CountryCitySelector register={register} />
-                      </Col>
-                      <Col md={3} className={styles.info_profile_center}>
-                        <p className={styles.title_custom}>Lastname</p>
-                        <input
-                          type="text"
-                          className="form-control"
-                          {...register("lastName")}
-                        />
                         <p className={styles.title_custom}>Gender</p>
                         <div className={styles.radio_custom}>
                           <label className={styles.radio}>
@@ -207,6 +236,14 @@ const UpdateProfile = () => {
                             {""} Female
                           </label>
                         </div>
+                      </Col>
+                      <Col md={3} className={styles.info_profile_center}>
+                        <p className={styles.title_custom}>Lastname</p>
+                        <input
+                          type="text"
+                          className="form-control"
+                          {...register("lastName")}
+                        />
                         <p className={styles.title_custom}>Age</p>
                         <input
                           type="number"
@@ -230,9 +267,32 @@ const UpdateProfile = () => {
                           readOnly
                         />
                       </Col>
+                      <Col className={styles.info_profile_center_right}>
+                        <ProfessionalAreaSelector
+                          register={register}
+                          setValue={setValue}
+                          getValues={getValues} // Pass getValues here
+                        />
+                      </Col>
                       <Col md={3} className={styles.info_profile_right}>
-                        <Image src={logo} className="img-fluid" />
-                        <p className={styles.p_custom}>{watch("username")}</p>
+                        <div className="circular-image-container">
+                          <Image
+                            src={profileImage}
+                            className="img-fluid circular-image" // Clase circular
+                            style={{ cursor: "pointer" }}
+                            onClick={() =>
+                              document.getElementById("imageUpload").click()
+                            }
+                          />
+                        </div>
+                        <input
+                          type="file"
+                          id="imageUpload"
+                          accept="image/*"
+                          style={{ display: "none" }}
+                          onChange={handleImageChange}
+                        />
+                        <p>{watch("username")}</p>
                         <button
                           className="btn btn-primary"
                           id="buttonLoginRegister"

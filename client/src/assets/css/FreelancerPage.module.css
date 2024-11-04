@@ -107,8 +107,13 @@
   background-color: var(--morado-hover);
 }
 
+.skill_container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
 .skill_label {
-  margin: 10px;
   padding: 5px;
   display: flex;
 }

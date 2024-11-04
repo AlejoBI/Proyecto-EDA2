@@ -151,7 +151,7 @@ export const checkAuth = async (req, res) => {
 };
 
 export const updateProfile = async (req, res) => {
-  const { age, name, lastName, gender, phone, city, country, professionalArea, skill } = req.body;
+  const { age, name, lastName, gender, phone, city, country, professionalArea, skills, profileImage } = req.body;
   const user = auth.currentUser;
 
   try {
@@ -175,7 +175,8 @@ export const updateProfile = async (req, res) => {
       city: city,
       country: country,
       professionalArea: professionalArea,
-      skill: skill
+      skills: skills,
+      profileImage
     });
 
 
@@ -191,7 +192,8 @@ export const updateProfile = async (req, res) => {
       city: city,
       country: country,
       professionalArea: professionalArea,
-      skill: skill
+      skills: skills,
+      profileImage
     });
   } catch (error) {
     res.status(500).json({ message: error.message });
