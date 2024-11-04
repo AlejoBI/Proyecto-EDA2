@@ -9,7 +9,7 @@ import styles from "../../assets/css/JobsPage.module.css";
 import logo from "../../assets/logo.png";
 import jobsicon from "../../assets/images/jobsicon.png";
 
-const JobsList = () => {
+const JobsList = ({usoEsteFilter = true}) => {
   const { countriesAndCities } = useParentComponentData();
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
@@ -49,6 +49,7 @@ const JobsList = () => {
 
   return (
     <Container className={styles.jobs_container}>
+      {usoEsteFilter && (
       <div className={styles.jobs_filter}>
         <Image
           src={logo}
@@ -106,7 +107,7 @@ const JobsList = () => {
             </Col>
           )}
         </Row>
-      </div>
+      </div>)}
       <div className={styles.jobs_list}>
         <div>
           <h4>
