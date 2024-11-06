@@ -182,3 +182,73 @@
   font-weight: bold;
   color: var(--moradooscuro); /* Ajusta el color según prefieras */
 }
+
+/* Create user */
+.formContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1rem;
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+}
+
+.label {
+  font-size: 1rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+  color: #333;
+}
+
+.inputField {
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 0.9rem;
+}
+
+.inputField:focus {
+  border-color: #007bff;
+  outline: none;
+}
+
+.errorText {
+  color: #d9534f;
+  font-size: 0.85rem;
+  margin-top: 0.25rem;
+}
+
+.dropdownToggle {
+  width: 100%;
+  text-align: left;
+}
+
+.cancelButton {
+  background-color: #6c757d;
+  border: none;
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  margin-right: 0.5rem;
+}
+
+.submitButton {
+  background-color: #007bff;
+  border: none;
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  color: #fff;
+}
+
+.submitButton:hover,
+.cancelButton:hover {
+  opacity: 0.9;
+}
+
+.modalTitle {
+  font-size: 1.25rem;
+  font-weight: bold;
+  color: #333;
+}
