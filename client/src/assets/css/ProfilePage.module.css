@@ -4,6 +4,7 @@
   border-radius: 50px;
   color: var(--negro);
   width: 70%;
+  height: auto;
   margin: 5% auto;
   padding: 20px;
   box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.1);
@@ -42,23 +43,54 @@
   text-align: left; /* Alinea a la derecha */
   margin: auto;
   width: 25%;
-  height: 700px;
 }
 
 .info_profile_center {
   text-align: center;
   margin: auto;
   width: 25%;
-  height: 700px;
 }
 .info_profile_center_right {
+  text-align: center;
+  margin: auto;
+  width: 25%;
+}
+
+.info_profile_right {
+  color: var(--negro);
+  flex-direction: column;
+  display: flex;
+  align-items: center;
+  margin: auto;
+  width: 25%;
+  font-size: 20px;
+}
+.info_profile_left2,
+.info_profile_right2 {
+  color: var(--negro);
+}
+
+.info_profile_left2 {
+  text-align: left; /* Alinea a la derecha */
+  margin: auto;
+  width: 25%;
+  height: 700px;
+}
+
+.info_profile_center2 {
+  text-align: center;
+  margin: auto;
+  width: 25%;
+  height: 700px;
+}
+.info_profile_center_right2 {
   text-align: center;
   margin: auto;
   width: 25%;
   height: 700px;
 }
 
-.info_profile_right {
+.info_profile_right2 {
   color: var(--negro);
   flex-direction: column;
   display: flex;
@@ -122,7 +154,7 @@
   width: 150px;
   height: 150px;
   object-fit: cover;
-  border-radius: 50%;
+  border-radius: 100%;
   border: 3px solid var(--grisoscuro);
 }
 
@@ -192,17 +224,19 @@ button.btn-outline-primary:hover {
 }
 
 .circular_image_container {
-  width: 100px; /* Ajusta el tamaño según sea necesario */
-  height: 100px; /* El mismo tamaño para crear un cuadrado */
-  border-radius: 50%; /* Hace que el contenedor sea circular */
-  overflow: hidden; /* Oculta la parte de la imagen que se desborda */
-  display: flex; /* Para centrar la imagen dentro del contenedor */
-  justify-content: center; /* Centra horizontalmente */
-  align-items: center; /* Centra verticalmente */
+  width: 100px; 
+  height: 100px;
+  border-radius: 50%; 
+  overflow: hidden;
+  display: flex; 
+  justify-content: center; 
+  align-items: center; 
+  cursor: pointer;
 }
 
 .circular_image {
-  width: 100%; /* Asegura que la imagen ocupe todo el contenedor */
-  height: 100%; /* Asegura que la imagen ocupe todo el contenedor */
-  object-fit: cover; /* Mantiene la proporción y recorta el exceso */
+  width: 100%; 
+  height: 100%;
+  object-fit: cover;
+  border-radius: 100%;
 }

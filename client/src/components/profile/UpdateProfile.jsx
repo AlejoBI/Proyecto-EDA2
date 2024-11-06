@@ -275,11 +275,10 @@ const UpdateProfile = () => {
                         />
                       </Col>
                       <Col md={3} className={styles.info_profile_right}>
-                        <div className="circular-image-container">
+                        <div className={styles.circular_image_container}>
                           <Image
                             src={profileImage}
-                            className="img-fluid circular-image" // Clase circular
-                            style={{ cursor: "pointer" }}
+                            className={styles.circular_image} // Clase circular
                             onClick={() =>
                               document.getElementById("imageUpload").click()
                             }
