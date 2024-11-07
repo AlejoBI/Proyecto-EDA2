@@ -7,6 +7,8 @@ import {
   signInWithEmailAndPassword,
   signOut,
   onAuthStateChanged,
+  GoogleAuthProvider,
+  signInWithPopup,
 } from "firebase/auth";
 import {
   getFirestore,
@@ -99,7 +101,54 @@ export const AuthProvider = ({ children }) => {
         id: userCredential.user.uid,
         ...userData,
       });
+      console.log(userCredential.user.uid);
       setIsAuthenticated(true);
+    } catch (error) {
+      if (error.code === "permission-denied") {
+        setErrors("Insufficient permissions");
+      } else if (error.code === "auth/user-not-found") {
+        setErrors("User not found");
+      } else if (error.code === "auth/wrong-password") {
+        setErrors("Wrong password");
+      } else if (error.code === "auth/invalid-email") {
+        setErrors("Invalid email");
+      } else if (error.code === "auth/invalid-credential") {
+        setErrors("Invalid credential");
+      } else {
+        setErrors(error.message);
+      }
+    }
+    setLoading(false);
+  };
+
+  const signinWithGoogle = async () => {
+    setLoading(true);
+    setErrors(null);
+    try {
+      const provider = new GoogleAuthProvider();
+      const userCredential = await signInWithPopup(auth, provider);
+
+      const docRef = doc(fireStore, "users", userCredential.user.uid);
+      const userDoc = await getDoc(docRef);
+
+      let userData;
+      if (!userDoc.exists()) {
+        userData = {
+          username: userCredential.user.displayName,
+          email: userCredential.user.email,
+          role: "customer", // Set default role to "customer"
+        };
+        await setDoc(docRef, userData);
+      } else {
+        userData = userDoc.data();
+      }
+
+      setUser({
+        id: userCredential.user.uid,
+        ...userData,
+      });
+      setIsAuthenticated(true);
+      return userCredential.user;
     } catch (error) {
       if (error.code === "permission-denied") {
         setErrors("Insufficient permissions");
@@ -195,6 +244,7 @@ export const AuthProvider = ({ children }) => {
         professionalArea,
         skills,
         profileImage,
+        role, // Include role
       } = user;
 
       const currentUser = auth.currentUser;
@@ -221,6 +271,7 @@ export const AuthProvider = ({ children }) => {
         professionalArea,
         skills,
         profileImage,
+        role, // Update role
       });
 
       setUser({
@@ -235,6 +286,7 @@ export const AuthProvider = ({ children }) => {
         professionalArea,
         skills,
         profileImage,
+        role, // Update role
       });
     } catch (error) {
       setErrors(error.message);
@@ -279,6 +331,7 @@ export const AuthProvider = ({ children }) => {
       value={{
         signup,
         signin,
+        signinWithGoogle,
         logout,
         getAllUsers,
         profile,

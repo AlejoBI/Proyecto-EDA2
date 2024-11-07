@@ -3,20 +3,27 @@ import { useForm } from "react-hook-form"; // Used for form validation in React
 import { useNavigate, Link } from "react-router-dom";
 
 import { Form, Button, Container, Card, Image } from "react-bootstrap";
-import logoImage from "../assets/logo.png"; 
+import logoImage from "../assets/logo.png";
 
-import { useAuth } from "../context/AuthContext"; 
-import { CustomToast } from "../components/index"; 
+import { useAuth } from "../context/AuthContext";
+import { CustomToast } from "../components/index";
 
 function LoginPage() {
   const {
     register,
     handleSubmit,
-    formState: { errors }
+    formState: { errors },
   } = useForm();
-  const { signin, isAuthenticated, errors: signinErrors } = useAuth();
+  const {
+    signin,
+    signinWithGoogle,
+    isAuthenticated,
+    errors: signinErrors,
+  } = useAuth();
   const navigate = useNavigate(); // Create a navigate function to redirect the user
   const [showToast, setShowToast] = useState(false); // Create a state to show the toast message
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
 
   useEffect(() => {
     // Redirect to the home page if the user is authenticated
@@ -33,6 +40,15 @@ function LoginPage() {
       setShowToast(true);
     }
   }, [signinErrors]);
+
+  const handleGoogleLogin = async () => {
+    const userCredential = await signinWithGoogle();
+    if (userCredential) {
+      setUsername(userCredential.username);
+      setEmail(userCredential.email);
+      navigate("/"); // Redirect to the homepage
+    }
+  };
 
   return (
     <Container className="d-flex align-items-center justify-content-center min-vh-100 min-vw-100 bg-gradient-custom">
@@ -66,14 +82,19 @@ function LoginPage() {
             />
             <h2 className="h4">Sign in</h2>
             <p className="mt-3 text-center">
-              Don't you have an account? <Link to="/register" id="linkText">Sign up</Link>
+              Don't you have an account?{" "}
+              <Link to="/register" id="linkText">
+                Sign up
+              </Link>
             </p>
           </div>
 
           <Container className="d-flex justify-content-center align-items-center">
             <Button
-            className="w-100 border"
-            id="buttonGoogleLoginRegister">
+              className="w-100 border"
+              onClick={handleGoogleLogin}
+              id="buttonGoogleLoginRegister"
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="16"
@@ -112,9 +133,18 @@ function LoginPage() {
               )}
             </Form.Group>
             <div className="d-flex justify-content-end m-2">
-              <Link to="/register" id="linkText">Forget your password</Link>
+              <Link to="/register" id="linkText">
+                Forget your password
+              </Link>
             </div>
-            <Button variant="primary" type="submit" className="w-100" id="buttonLoginRegister">Login</Button>
+            <Button
+              variant="primary"
+              type="submit"
+              className="w-100"
+              id="buttonLoginRegister"
+            >
+              Login
+            </Button>
           </Form>
         </Card.Body>
       </Card>
