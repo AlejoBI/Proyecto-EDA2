@@ -46,6 +46,7 @@ const UpdateProfile = () => {
     setValue("professionalArea", user.professionalArea || "");
     setValue("skills", user.skills || []);
     setValue("profileImage", user.profileImage || logo);
+    setValue("role", user.role);
   }, [user, setValue]);
 
   const onSubmit = async (data) => {
@@ -127,6 +128,14 @@ const UpdateProfile = () => {
                           </label>
                         </div>
                         <CountryCitySelector register={register} />
+                        <p className={styles.title_custom}>Role</p>
+                        <select
+                          className="form-control"
+                          {...register("role")}
+                        >
+                          <option value="customer">Customer</option>
+                          <option value="professional">Professional</option>
+                        </select>
                       </Col>
                       <Col md={3} className={styles.info_profile_center}>
                         <p className={styles.title_custom}>Lastname</p>
@@ -208,6 +217,14 @@ const UpdateProfile = () => {
                           {...register("name")}
                         />
                         <CountryCitySelector register={register} />
+                        <p className={styles.title_custom}>Role</p>
+                        <select
+                          className="form-control"
+                          {...register("role")}
+                        >
+                          <option value="customer">Customer</option>
+                          <option value="professional">Professional</option>
+                        </select>
                         <p className={styles.title_custom}>Gender</p>
                         <div className={styles.radio_custom}>
                           <label className={styles.radio}>
