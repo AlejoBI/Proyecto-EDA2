@@ -9,11 +9,11 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import styles from "../../assets/css/FreelancerPage.module.css";
 import freeicon from "../../assets/images/freeicon.png";
 import skillsicon from "../../assets/images/skillsicon.png";
+import { set } from "react-hook-form";
 
 const FreelancersList = () => {
   const navigate = useNavigate();
   const {
-    users,
     user,
     isAuthenticated,
     currentPage,
@@ -25,6 +25,8 @@ const FreelancersList = () => {
     setSelectedCity,
     selectedArea,
     setSelectedArea,
+    selectedSkill,
+    setSelectedSkill,
     showToast,
     setShowToast,
     toastMessage,
@@ -33,9 +35,10 @@ const FreelancersList = () => {
     handleStartChat,
     setCurrentPage,
     freelancersCount,
+    skillsCount
   } = useFreelancersList(navigate);
 
-  const { countriesAndCities, professionalAreas } = useParentComponentData();
+  const { countriesAndCities, professionalAreas, professionalAreasAndSkills } = useParentComponentData();
 
   const handleCountryChange = (country) => {
     setSelectedCountry(country);
@@ -48,6 +51,11 @@ const FreelancersList = () => {
 
   const handleAreaChange = (area) => {
     setSelectedArea(area);
+    setSelectedSkill("All");
+  };
+
+  const handleSkillChange = (skill) => {
+    setSelectedSkill(skill);
   };
 
   const handleNextPage = () => {
@@ -63,6 +71,7 @@ const FreelancersList = () => {
   };
 
   const currenUserId = user ? user.id : null;
+  const currenUserRole = user ? user.role : null;
 
   return (
     <Container className={styles.freelancers_container}>
@@ -127,6 +136,27 @@ const FreelancersList = () => {
               </Dropdown.Menu>
             </Dropdown>
           </Col>
+          <Col>
+            <Dropdown onSelect={handleSkillChange}>
+              <Dropdown.Toggle className={styles.freelancer_toggle}>
+                {selectedSkill === "All" ? "Select Skill" : selectedSkill}
+              </Dropdown.Toggle>
+              <Dropdown.Menu>
+                <Dropdown.Item eventKey="All">All</Dropdown.Item>
+                {selectedArea === "All" ? (
+                  <Dropdown.Item disabled>No skills available</Dropdown.Item>
+                ) : professionalAreasAndSkills[selectedArea]?.length > 0 ? (
+                  professionalAreasAndSkills[selectedArea].map((skill, index) => (
+                    <Dropdown.Item key={index} eventKey={skill}>
+                      {skill}
+                    </Dropdown.Item>
+                  ))
+                ) : (
+                  <Dropdown.Item disabled>No skills available</Dropdown.Item>
+                )}
+              </Dropdown.Menu>
+            </Dropdown>
+          </Col>
         </Row>
       </div>
       <div className={styles.freelancers_list}>
@@ -154,7 +184,7 @@ const FreelancersList = () => {
               className="d-inline-block align-center d-block"
             />
             <h4 className={styles.text_freelancer}>
-              Skills: {/*skillsFreelancersCount.length*/}
+              Skills: {skillsCount}
             </h4>
           </div>
         </div>
@@ -168,6 +198,16 @@ const FreelancersList = () => {
                   className={styles.freelancer_title + styles.freelancer_text}
                 >
                   {userJ.username}
+                  {isAuthenticated &&
+                    userJ.id !== currenUserId &&
+                    currenUserRole === "customer" && (
+                      <Button
+                        className={styles.freelancer_button}
+                        onClick={() => handleStartChat(userJ.id)}
+                      >
+                        Send a Message
+                      </Button>
+                    )}
                 </h4>
                 <p className={styles.line}></p>
                 <div>
@@ -197,16 +237,6 @@ const FreelancersList = () => {
                     ))}
                   </div>
                 )}
-                {isAuthenticated &&
-                  userJ.id !== currenUserId &&
-                  userJ.role === "customer" && (
-                    <Button
-                      className={styles.freelancer_button}
-                      onClick={() => handleStartChat(userJ.id)}
-                    >
-                      Send a Message
-                    </Button>
-                  )}
               </div>
             ))
           )}

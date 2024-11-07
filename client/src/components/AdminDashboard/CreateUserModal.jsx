@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
-import { useUsers } from "../../context/AdminContext";
+import { useAdmin} from "../../context/AdminContext";
 import { Modal, Button, Dropdown } from "react-bootstrap";
 import { ConfirmModal } from "../index";
 import styles from "../../assets/css/AdminDashBoard.module.css";
 
 const CreateUser = ({ show, handleClose }) => {
-  const { createUser } = useUsers();
+  const { createUser } = useAdmin();
   const {
     register,
     handleSubmit,

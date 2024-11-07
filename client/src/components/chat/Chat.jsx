@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import useChat from "../hooks/useChat";
-import { CustomToast } from "./index";
-import "../assets/css/Chat.css";
+import useChatApp from "../../hooks/useChatApp";
+import { CustomToast } from "../index";
+import "../../assets/css/Chat.css";
 
 const ChatApp = () => {
   const {
@@ -17,7 +17,7 @@ const ChatApp = () => {
     setNewMessage,
     setSearchTerm,
     handleSendMessage,
-  } = useChat();
+  } = useChatApp();
 
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
@@ -25,7 +25,7 @@ const ChatApp = () => {
 
   useEffect(() => {
     if (error) {
-      handleShowToast(error, "red");
+      handleShowToast(error, "white");
     }
   }, [error]);
 
@@ -37,25 +37,21 @@ const ChatApp = () => {
 
   const handleKeyDown = (e) => {
     if (e.key === "Escape" && activeChat) {
-      setActiveChat(null); // Desactiva el chat activo
-      setNewMessage(""); // Limpia el campo de nuevo mensaje
+      setActiveChat(null);
+      setNewMessage("");
     }
   };
 
   useEffect(() => {
-    // Añadir el event listener al montar el componente
     window.addEventListener("keydown", handleKeyDown);
 
-    // Limpiar el event listener al desmontar el componente
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [activeChat]); // Solo se ejecuta cuando activeChat cambia
+  }, [activeChat]);
 
   return (
     <div className="chat-app">
-      {error && <div className="chat-error">{error}</div>}
-
       <div className="chat-sidebar">
         <div className="chat-header">
           <h2>Messages</h2>
@@ -109,24 +105,31 @@ const ChatApp = () => {
         </div>
 
         <div className="chat-messages">
-          {activeChat &&
-            messages.map((msg, index) => (
-              <div
-                key={index}
-                className={`message ${
-                  msg.senderId === user.id ? "self" : "other"
-                }`}
-              >
-                <div className="message-content">{msg.message}</div>
-                <span className="message-time">
-                  {msg.timestamp
-                    ? new Date(
-                        msg.timestamp.seconds * 1000
-                      ).toLocaleTimeString()
-                    : "Loading..."}
-                </span>
-              </div>
-            ))}
+          {activeChat ? (
+            messages.length > 0 ? (
+              messages.map((msg, index) => (
+                <div
+                  key={index}
+                  className={`message ${
+                    msg.senderId === user.id ? "self" : "other"
+                  }`}
+                >
+                  <div className="message-content">{msg.message}</div>
+                  <span className="message-time">
+                    {msg.timestamp
+                      ? new Date(
+                          msg.timestamp.seconds * 1000
+                        ).toLocaleTimeString()
+                      : "Loading..."}
+                  </span>
+                </div>
+              ))
+            ) : (
+              <p>No messages</p>
+            )
+          ) : (
+            <p>Select a chat</p>
+          )}
         </div>
 
         {activeChat && (

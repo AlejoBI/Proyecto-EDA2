@@ -1,12 +1,13 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { useJobs } from "../context/JobsContext";
 import { useAuth } from "../context/AuthContext";
-import { createChatRequest } from "../api/chat";
-import { useNavigate } from "react-router-dom";
+import { useChat } from "../context/ChatContext";
 
 const useJobsList = () => {
   const { jobs, deleteJob } = useJobs();
   const { user } = useAuth();
+  const { createChat } = useChat();
 
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(8);
@@ -86,28 +87,29 @@ const useJobsList = () => {
   };
 
   const handleDelete = (jobId) => {
-    setCurrentJob({ id: jobId }); // Establecer el trabajo actual con solo su ID
+    setCurrentJob(jobId); // Establecer el trabajo actual con solo su ID
   };
 
-  const confirmDelete = async (setToast, setShowDeleteConfirm) => {
+  const confirmDelete = async () => {
     try {
       const res = await deleteJob(currentJob);
       if (res && res.message) {
-        setToast({ message: res.message, color: "green", show: true });
-        setShowDeleteConfirm(false); // Cerrar el modal al confirmar la eliminación
+        setToastMessage(res.message);
+        setToastType("success");
+        setShowToast(true);
       }
     } catch (error) {
-      setToast({
-        message: "Error: " + (error.response?.data?.error || error.message),
-        color: "red",
-        show: true,
-      });
+      setToastMessage(
+        "Error: " + (error.response?.data?.error || error.message)
+      );
+      setToastType("error");
+      setShowToast(true);
     }
   };
 
   const handleStartChat = async (participantId) => {
     try {
-      const response = await createChatRequest({
+      await createChat({
         userId: user.id,
         participantId,
       });

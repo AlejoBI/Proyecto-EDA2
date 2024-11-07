@@ -50,7 +50,6 @@ const UpdateProfile = () => {
 
   const onSubmit = async (data) => {
     try {
-      // Incluye la nueva URL de la imagen en los datos enviados
       const updatedData = { ...data, profileImage };
       const res = await updateProfile(updatedData);
       if (res && res.message) {
@@ -70,15 +69,9 @@ const UpdateProfile = () => {
   const handleImageChange = async (event) => {
     const file = event.target.files[0];
     if (file) {
-      // Aquí deberías subir la imagen a tu servidor o servicio de almacenamiento
       const formData = new FormData();
       formData.append("image", file);
 
-      // Supón que tienes una función para subir la imagen
-      // const imageUrl = await uploadImage(formData);
-      // setProfileImage(imageUrl);
-
-      // Para demostración, simplemente se mostrará la imagen seleccionada
       const reader = new FileReader();
       reader.onloadend = () => {
         setProfileImage(reader.result);

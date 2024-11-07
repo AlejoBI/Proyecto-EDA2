@@ -1,10 +1,10 @@
 import { Image, Table } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import logoImage from "../assets/logo.png";
+import logoImage from "../../assets/logo.png";
 import "bootstrap/dist/css/bootstrap.min.css";
-import styles from "../assets/css/Footer.module.css";
-import useParentComponentData from "../hooks/useParentComponentData";
-import { ScrollToTop } from "../hooks/ScrollToTop";
+import styles from "../../assets/css/Footer.module.css";
+import useParentComponentData from "../../hooks/useParentComponentData";
+import { ScrollToTop } from "../../hooks/ScrollToTop";
 
 const Footer = () => {
   const { tableData } = useParentComponentData();

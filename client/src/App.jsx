@@ -2,6 +2,7 @@ import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext";
 import { JobsProvider } from "./context/JobsContext";
 import { AdminProvider } from "./context/AdminContext";
+import { ChatProvider } from "./context/ChatContext";
 
 import { NavigationMenu, Footer } from "./components/index.jsx";
 
@@ -14,7 +15,7 @@ import {
   LoginPage,
   RegisterPage,
   ProfilePage,
-  ChatPage
+  ChatPage,
 } from "./pages/index.jsx";
 
 import ProtectedRoute from "./utils/ProtectedRoute";
@@ -39,73 +40,74 @@ function Layout({ children }) {
 function App() {
   return (
     <AuthProvider>
-      <JobsProvider>
-        <BrowserRouter>
-          <Routes>
-            <Route
-              path="/"
-              element={
-                <Layout>
-                  <HomePage />
-                </Layout>
-              }
-            />
+      <AdminProvider>
+        <ChatProvider>
+          <JobsProvider>
+            <BrowserRouter>
+              <Routes>
+                <Route
+                  path="/"
+                  element={
+                    <Layout>
+                      <HomePage />
+                    </Layout>
+                  }
+                />
 
-            <Route element={<PublicRoute />}>
-              <Route path="/login" element={<LoginPage />} />
-              <Route path="/register" element={<RegisterPage />} />
-              <Route
-                path="/jobs"
-                element={
-                  <Layout>
-                    <JobsPage />
-                  </Layout>
-                }
-              />
-              <Route
-                path="/freelancers"
-                element={
-                  <Layout>
-                    <FreelancersPage />
-                  </Layout>
-                }
-              />
-            </Route>
+                <Route element={<PublicRoute />}>
+                  <Route path="/login" element={<LoginPage />} />
+                  <Route path="/register" element={<RegisterPage />} />
+                  <Route
+                    path="/jobs"
+                    element={
+                      <Layout>
+                        <JobsPage />
+                      </Layout>
+                    }
+                  />
+                  <Route
+                    path="/freelancers"
+                    element={
+                      <Layout>
+                        <FreelancersPage />
+                      </Layout>
+                    }
+                  />
+                </Route>
 
-            <Route element={<ProtectedRoute />}>
-              <Route
-                path="/user/profile"
-                element={
-                  <Layout>
-                    <ProfilePage />
-                  </Layout>
-                }
-              />
-              <Route
-                path="/user/chat"
-                element={
-                  <Layout>
-                    <ChatPage />
-                  </Layout>
-                }
-              />
-              <Route
-                path="/admin/dashboard"
-                element={<AdminDashboard />}
-              />
-            </Route>
+                <Route element={<ProtectedRoute />}>
+                  <Route
+                    path="/user/profile"
+                    element={
+                      <Layout>
+                        <ProfilePage />
+                      </Layout>
+                    }
+                  />
+                  <Route
+                    path="/user/chat"
+                    element={
+                      <Layout>
+                        <ChatPage />
+                      </Layout>
+                    }
+                  />
+                  <Route path="/admin/dashboard" element={<AdminDashboard />} />
+                </Route>
 
-            <Route
-              path="*"
-              element={
-                <Layout>
-                  <NotFoundPage />
-                </Layout>
-              }
-            />
-          </Routes>
-        </BrowserRouter>
-      </JobsProvider>
+                <Route
+                  path="*"
+                  element={
+                    <Layout>
+                      <NotFoundPage />
+                    </Layout>
+                  }
+                />
+              </Routes>
+            </BrowserRouter>
+          </JobsProvider>
+        </ChatProvider>
+      </AdminProvider>
     </AuthProvider>
   );
 }
