@@ -227,7 +227,7 @@ const JobsList = ({usoEsteFilter = true}) => {
             show={showEditModal}
             handleClose={() => {
               setShowEditModal(false);
-              setCurrentJob(null); // Limpiar el trabajo actual al cerrar
+              setCurrentJob(null); 
             }}
             job={currentJob}
           />
@@ -236,8 +236,9 @@ const JobsList = ({usoEsteFilter = true}) => {
           <ConfirmModal
             show={showDeleteConfirm}
             handleClose={() => setShowDeleteConfirm(false)}
-            onConfirm={() => {
-              confirmDelete(setToast, setShowDeleteConfirm);
+            handleConfirm={() => {
+              confirmDelete();
+              setShowDeleteConfirm(false);
             }}
             message="Are you sure you want to delete this job?"
           />

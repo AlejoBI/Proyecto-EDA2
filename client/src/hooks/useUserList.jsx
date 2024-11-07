@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
-import { useUsers } from "../context/AdminContext";
+import { useAdmin } from "../context/AdminContext";
 
 const useUsersList = (searchTerm) => {
-  const { users, deleteUser } = useUsers();
+  const { users, deleteUser } = useAdmin();
 
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(8);

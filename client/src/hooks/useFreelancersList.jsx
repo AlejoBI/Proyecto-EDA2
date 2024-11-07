@@ -1,17 +1,23 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
-import { createChatRequest } from "../api/chat";
+import { useChat } from "../context/ChatContext";
+import { useNavigate } from "react-router-dom";
 
-const useFreelancersList = (navigate) => {
+const useFreelancersList = () => {
   const { getAllUsers, user, isAuthenticated } = useAuth();
+  const { createChat } = useChat();
+  const navigate = useNavigate();
+
   const [users, setUsers] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(8);
   const [filteredUsers, setFilteredUsers] = useState([]);
   const [freelancersCount, setFreelancersCount] = useState(0);
+  const [skillsCount, setSkillsCount] = useState(0);
   const [selectedCountry, setSelectedCountry] = useState("All");
   const [selectedCity, setSelectedCity] = useState("All");
   const [selectedArea, setSelectedArea] = useState("All");
+  const [selectedSkill, setSelectedSkill] = useState("All");
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
   const [toastType, setToastType] = useState("success");
@@ -31,13 +37,27 @@ const useFreelancersList = (navigate) => {
       setUsers(validProfessionals);
       setFilteredUsers(validProfessionals);
       setFreelancersCount(validProfessionals.length);
+
+      const countSkills = [];
+
+      validProfessionals.forEach((user) => {
+        if (user.skills && Array.isArray(user.skills)) {
+          user.skills.forEach((skill) => {
+            if (!countSkills.includes(skill)) {
+              countSkills.push(skill);
+            }
+          });
+        }
+      });
+
+      setSkillsCount(countSkills?.length);
     };
     fetchUsers();
   }, [getAllUsers]);
 
   useEffect(() => {
     applyFilters();
-  }, [selectedCountry, selectedCity, selectedArea]);
+  }, [selectedCountry, selectedCity, selectedArea, selectedSkill]);
 
   const applyFilters = () => {
     let updatedList = users;
@@ -54,13 +74,18 @@ const useFreelancersList = (navigate) => {
         (user) => user.professionalArea === selectedArea
       );
     }
+    if (selectedSkill !== "All") {
+      updatedList = updatedList.filter((user) =>
+        user.skills?.includes(selectedSkill)
+      );
+    }
     setFilteredUsers(updatedList);
   };
 
   const handleStartChat = async (participantId) => {
     if (!isAuthenticated) return;
     try {
-      const response = await createChatRequest({
+      await createChat({
         userId: user.id,
         participantId,
       });
@@ -95,6 +120,8 @@ const useFreelancersList = (navigate) => {
     setSelectedCity,
     selectedArea,
     setSelectedArea,
+    selectedSkill,
+    setSelectedSkill,
     showToast,
     setShowToast,
     toastMessage,
@@ -103,6 +130,7 @@ const useFreelancersList = (navigate) => {
     handleStartChat,
     setCurrentPage,
     freelancersCount,
+    skillsCount,
   };
 };
 

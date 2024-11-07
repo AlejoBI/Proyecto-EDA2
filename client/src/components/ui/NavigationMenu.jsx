@@ -7,8 +7,8 @@ import {
   Image
 } from "react-bootstrap";
 
-import logo from "../assets/logo.png";
-import { useAuth } from "../context/AuthContext";
+import logo from "../../assets/logo.png";
+import { useAuth } from "../../context/AuthContext";
 
 const NavigationMenu = () => {
   const { isAuthenticated, logout, user } = useAuth();
