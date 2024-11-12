@@ -18,4 +18,3 @@ export { default as ParentComponent } from "../hooks/useParentComponentData";
 export { default as UpdateProfile } from "./profile/UpdateProfile";
 export { default as Chat } from "./chat/Chat";
 export { default as FreelancersList } from "./freelancers/FreelancersList";
-export { default as CreateUser } from "./AdminDashboard/CreateUserModal";

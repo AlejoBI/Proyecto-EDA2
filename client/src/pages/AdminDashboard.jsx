@@ -4,23 +4,11 @@ import Sidebar from "../components/AdminDashboard/SideBar";
 import SearchBar from "../components/AdminDashboard/SearchBar";
 import UserList from "../components/AdminDashboard/UserList";
 import JobsList from "../components/jobs/JobsList";
-import CreateUser from "../components/AdminDashboard/CreateUserModal";
 import styles from "../../src/assets/css/AdminDashBoard.module.css";
-import { AdminProvider } from "../context/AdminContext";
-import { Footer } from "../components";
 
 const AdminDashboard = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [currentView, setCurrentView] = useState("freelancers");
-  const [showCreateUser, setShowCreateUser] = useState(false);
-
-  const handleCreateUser = () => {
-    setShowCreateUser(true);
-  };
-
-  const handleCloseCreateUser = () => {
-    setShowCreateUser(false);
-  };
 
   const handleSearch = (term) => {
     setSearchTerm(term);
@@ -36,22 +24,7 @@ const AdminDashboard = () => {
           <SearchBar searchTerm={searchTerm} handleSearch={handleSearch} />
           {currentView === "freelancers" && (
             <>
-              <div className={styles.headerActions}>
-                <Button
-                  className={styles.job_toggle}
-                  onClick={handleCreateUser}
-                >
-                  Create User
-                </Button>
-                {showCreateUser && (
-                  <CreateUser
-                    show={showCreateUser}
-                    handleClose={handleCloseCreateUser}
-                  />
-                )}
-              </div>
               <UserList
-                onCreateUser={handleCreateUser}
                 onEditUser={(user) => console.log("Edit user", user)}
                 onDeleteUser={(userId) => console.log("Delete user", userId)}
               />

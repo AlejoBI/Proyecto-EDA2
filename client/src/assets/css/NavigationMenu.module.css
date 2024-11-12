@@ -1,0 +1,46 @@
+/* Ruta: src/assets/css/NavigationMenu.module.css */
+
+.navbar {
+    background-color: #8306AD;
+    padding: 0.3% 8%;
+    width: 86%;
+    height: 5%;
+    margin: 25px auto;
+    border-radius: 40px;
+  }
+  
+  .brandContainer {
+    display: flex;
+    align-items: center;
+  }
+  
+  .brandText {
+    margin-left: 10px;
+    font-weight: bold;
+  }
+  
+  .navLinksContainer {
+    display: flex;
+    justify-content: flex-start;
+    width: 100%;
+    padding-left: 28%;
+  }
+  
+  .authButtons {
+    justify-content: flex-end;
+  }
+  
+  .link {
+    color: white;
+  }
+  
+  .loginButton, .registerButton {
+    background-color: #520078;
+    border-color: #520078;
+    font-weight: bold;
+  }
+  
+  .loginButton {
+    margin-right: 10px;
+  }
+  
