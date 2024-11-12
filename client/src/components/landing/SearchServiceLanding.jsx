@@ -1,7 +1,7 @@
 import { Container, Image } from "react-bootstrap";
 
-import {SearchBar} from "../index";
-import searchImage from "../../assets/imageCanva.png";
+import { SearchBar } from "../index";
+import imageCanva from "../../assets/images/imageCanva.jpg";
 
 const SearchServiceLanding = () => {
   return (
@@ -10,9 +10,15 @@ const SearchServiceLanding = () => {
         <h1>Quickly discover the perfect freelance service for your needs</h1>
         <p>Find the perfect freelance services for your business</p>
         <SearchBar />
-      </div>
+      </div>  
       <div className="w-60 image-search">
-        <Image src={searchImage} className="img-fluid" />
+        <Image
+          src={imageCanva}
+          className="img-fluid"
+          style={{
+            borderRadius: "30px",
+          }}
+        />
       </div>
     </Container>
   );

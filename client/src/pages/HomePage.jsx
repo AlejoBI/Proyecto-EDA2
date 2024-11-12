@@ -5,7 +5,12 @@ import {
   BecomePartLanding,
 } from "../components/index";
 import "../assets/css/LandingPage.css";
-import paginaweb from "../assets/paginaweb.jpg";
+import TechnologyAndProgramming from "../assets/images/TechnologyAndProgramming.jpg";
+import GraphicDesign from "../assets/images/GraphicDesign.jpg";
+import VideoAndAnimation from "../assets/images/VideoAndAnimation.jpg";
+import WritingAndTranslation from "../assets/images/WritingAndTranslation.jpg";
+import DigitalMarketing from "../assets/images/DigitalMarketing.jpg";
+import MusicAndAudio from "../assets/images/MusicAndAudio.jpg";
 
 const HomePage = () => {
 
@@ -26,33 +31,39 @@ const HomePage = () => {
         >
           <CustomLabelLanding
             text="Technology and Programming"
-            img={paginaweb}
+            img={TechnologyAndProgramming}
             numLabel="1"
+            path = "freelancers"
           />
           <CustomLabelLanding
             text="Graphic Design"
-            img={paginaweb}
+            img={GraphicDesign}
             numLabel="2"
+            path = "freelancers"
           />
           <CustomLabelLanding
             text="Video and Animation"
-            img={paginaweb}
+            img={VideoAndAnimation}
             numLabel="3"
+            path = "freelancers"
           />
           <CustomLabelLanding
             text="Writing and Translation"
-            img={paginaweb}
+            img={WritingAndTranslation}
             numLabel="4"
+            path = "freelancers"
           />
           <CustomLabelLanding
             text="Digital Marketing"
-            img={paginaweb}
+            img={DigitalMarketing}
             numLabel="5"
+            path = "freelancers"
           />
           <CustomLabelLanding
             text="Music and Audio"
-            img={paginaweb}
+            img={MusicAndAudio}
             numLabel="6"
+            path = "freelancers"
           />
         </div>
       </div>

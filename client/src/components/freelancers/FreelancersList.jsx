@@ -4,7 +4,7 @@ import { Container, Button, Dropdown, Row, Col, Image } from "react-bootstrap";
 import useParentComponentData from "../../hooks/useParentComponentData";
 import useFreelancersList from "../../hooks/useFreelancersList";
 import { CustomToast } from "../index";
-import logo from "../../assets/logo.png";
+import logo from "../../assets/images/logo.png";
 import "bootstrap/dist/css/bootstrap.min.css";
 import styles from "../../assets/css/FreelancerPage.module.css";
 import freeicon from "../../assets/images/freeicon.png";

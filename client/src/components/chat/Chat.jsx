@@ -22,6 +22,7 @@ const ChatApp = () => {
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
   const [toastColor, setToastColor] = useState("green");
+  const [indexImage, setIndexImage] = useState(null);
 
   useEffect(() => {
     if (error) {
@@ -50,6 +51,22 @@ const ChatApp = () => {
     };
   }, [activeChat]);
 
+  const handleSetActiveChat = (chatId, chatUsernames) => {
+    setActiveChat(chatId);
+    const userIndex = chatUsernames.findIndex((u) => u !== user.username);
+    setIndexImage(userIndex >= 0 ? userIndex : 0);
+  };
+
+  useEffect(() => {
+    if (filteredChats.length > 0 && indexImage === null) {
+      const initialChat = filteredChats[0];
+      const initialUserIndex = initialChat.usernames.findIndex(
+        (u) => u !== user.username
+      );
+      setIndexImage(initialUserIndex >= 0 ? initialUserIndex : 0);
+    }
+  }, [filteredChats, indexImage, user.username]);
+
   return (
     <div className="chat-app">
       <div className="chat-sidebar">
@@ -68,12 +85,12 @@ const ChatApp = () => {
             <div
               key={chat.id}
               className="chat-item"
-              onClick={() => setActiveChat(chat.id)}
+              onClick={() => handleSetActiveChat(chat.id, chat.usernames)}
             >
               <div className="chat-avatar-container">
                 <img
                   src={
-                    chat.images.filter((i) => i !== user.image)[1] ||
+                    chat.images.filter((i) => i !== user.image)[indexImage] ||
                     "https://via.placeholder.com/50"
                   }
                   alt="Profile"
@@ -100,7 +117,7 @@ const ChatApp = () => {
                 src={
                   chats
                     .find((chat) => chat.id === activeChat)
-                    .images.filter((i) => i !== user.image)[1] ||
+                    .images.filter((i) => i !== user.image)[indexImage] ||
                   "https://via.placeholder.com/50"
                 }
                 alt="Profile"
