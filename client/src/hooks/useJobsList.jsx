@@ -58,12 +58,12 @@ const useJobsList = () => {
     }
 
     setFilteredJobs(updatedList);
-    setCurrentPage(1); // Reiniciar a la primera página después de aplicar los filtros
+    setCurrentPage(1); 
   };
 
   const handleCountryChange = (country) => {
     setSelectedCountry(country);
-    setSelectedCity("All"); // Resetear ciudad al cambiar de país
+    setSelectedCity("All"); 
   };
 
   const handleCityChange = (city) => {
@@ -83,11 +83,11 @@ const useJobsList = () => {
   };
 
   const handleEdit = (job) => {
-    setCurrentJob(job); // Establecer el trabajo actual
+    setCurrentJob(job); 
   };
 
   const handleDelete = (jobId) => {
-    setCurrentJob(jobId); // Establecer el trabajo actual con solo su ID
+    setCurrentJob(jobId);
   };
 
   const confirmDelete = async () => {

@@ -27,39 +27,42 @@ const AdminDashboard = () => {
   };
 
   return (
-    <AdminProvider>
-      <Container fluid className={styles.adminDashboard}>
-        <Row>
-          <Col md={2} className={styles.sidebarCol}>
-            <Sidebar setCurrentView={setCurrentView} currentView={currentView} />
-          </Col>
-          <Col md={10} className={styles.contentCol}>
-            <SearchBar searchTerm={searchTerm} handleSearch={handleSearch} />
-            {currentView === "freelancers" && (
-              <>
-                <div className={styles.headerActions}>
-                  <Button className={styles.job_toggle} onClick={handleCreateUser}>
-                    Create User
-                  </Button>
-                  {showCreateUser && (
-                    <CreateUser show={showCreateUser} handleClose={handleCloseCreateUser} />
-                  )}
-                </div>
-                <UserList
-                  onCreateUser={handleCreateUser}
-                  onEditUser={(user) => console.log("Edit user", user)}
-                  onDeleteUser={(userId) => console.log("Delete user", userId)}
-                />
-              </>
-            )}
-            {currentView === "jobs" && (
-              <JobsList searchTerm={searchTerm} usoEsteFilter={false} />
-            )}
-          </Col>
-        </Row>
-        <Footer />
-      </Container>
-    </AdminProvider>
+    <Container fluid className={styles.adminDashboard}>
+      <Row>
+        <Col md={2} className={styles.sidebarCol}>
+          <Sidebar setCurrentView={setCurrentView} currentView={currentView} />
+        </Col>
+        <Col md={10} className={styles.contentCol}>
+          <SearchBar searchTerm={searchTerm} handleSearch={handleSearch} />
+          {currentView === "freelancers" && (
+            <>
+              <div className={styles.headerActions}>
+                <Button
+                  className={styles.job_toggle}
+                  onClick={handleCreateUser}
+                >
+                  Create User
+                </Button>
+                {showCreateUser && (
+                  <CreateUser
+                    show={showCreateUser}
+                    handleClose={handleCloseCreateUser}
+                  />
+                )}
+              </div>
+              <UserList
+                onCreateUser={handleCreateUser}
+                onEditUser={(user) => console.log("Edit user", user)}
+                onDeleteUser={(userId) => console.log("Delete user", userId)}
+              />
+            </>
+          )}
+          {currentView === "jobs" && (
+            <JobsList searchTerm={searchTerm} usoEsteFilter={false} />
+          )}
+        </Col>
+      </Row>
+    </Container>
   );
 };
 

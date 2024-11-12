@@ -155,8 +155,8 @@ const UpdateProfile = () => {
                         />
                         <p className={styles.title_custom}>Phone</p>
                         <input
-                          type="text"
-                          className="form-control"
+                          type="number"
+                          className="form-control no-spin"
                           {...register("phone")}
                         />
                         <p className={styles.title_custom}>E-mail</p>
@@ -265,8 +265,8 @@ const UpdateProfile = () => {
                         />
                         <p className={styles.title_custom}>Phone</p>
                         <input
-                          type="text"
-                          className="form-control"
+                          type="number"
+                          className="form-control no-spin"
                           {...register("phone")}
                         />
                         <p className={styles.title_custom}>E-mail</p>
@@ -281,14 +281,14 @@ const UpdateProfile = () => {
                         <ProfessionalAreaSelector
                           register={register}
                           setValue={setValue}
-                          getValues={getValues} // Pass getValues here
+                          getValues={getValues} 
                         />
                       </Col>
                       <Col md={3} className={styles.info_profile_right}>
                         <div className={styles.circular_image_container}>
                           <Image
                             src={profileImage}
-                            className={styles.circular_image} // Clase circular
+                            className={styles.circular_image} 
                             onClick={() =>
                               document.getElementById("imageUpload").click()
                             }

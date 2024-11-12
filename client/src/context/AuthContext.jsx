@@ -35,6 +35,12 @@ export const AuthProvider = ({ children }) => {
     setLoading(true);
     setErrors(null);
     try {
+      if (password.length < 6) {
+        setErrors("Password must be at least 6 characters");
+        setLoading(false);
+        return;
+      }
+
       const userCredential = await createUserWithEmailAndPassword(
         auth,
         email,
@@ -101,7 +107,6 @@ export const AuthProvider = ({ children }) => {
         id: userCredential.user.uid,
         ...userData,
       });
-      console.log(userCredential.user.uid);
       setIsAuthenticated(true);
     } catch (error) {
       if (error.code === "permission-denied") {
@@ -136,7 +141,7 @@ export const AuthProvider = ({ children }) => {
         userData = {
           username: userCredential.user.displayName,
           email: userCredential.user.email,
-          role: "customer", // Set default role to "customer"
+          role: "customer", 
         };
         await setDoc(docRef, userData);
       } else {
@@ -172,7 +177,6 @@ export const AuthProvider = ({ children }) => {
     setErrors(null);
     try {
       await signOut(auth);
-
       setUser(null);
       setIsAuthenticated(false);
     } catch (error) {
@@ -244,7 +248,7 @@ export const AuthProvider = ({ children }) => {
         professionalArea,
         skills,
         profileImage,
-        role, // Include role
+        role, 
       } = user;
 
       const currentUser = auth.currentUser;
@@ -271,7 +275,7 @@ export const AuthProvider = ({ children }) => {
         professionalArea,
         skills,
         profileImage,
-        role, // Update role
+        role, 
       });
 
       setUser({
@@ -286,7 +290,7 @@ export const AuthProvider = ({ children }) => {
         professionalArea,
         skills,
         profileImage,
-        role, // Update role
+        role, 
       });
     } catch (error) {
       setErrors(error.message);
@@ -340,6 +344,7 @@ export const AuthProvider = ({ children }) => {
         isAuthenticated,
         errors,
         loading,
+        setLoading
       }}
     >
       {children}

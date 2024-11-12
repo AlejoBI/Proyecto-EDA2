@@ -21,12 +21,10 @@ import {
 import ProtectedRoute from "./utils/ProtectedRoute";
 import PublicRoute from "./utils/PublicRoute";
 
-// Layout component to include NavigationMenu and Footer
 function Layout({ children }) {
   const location = useLocation();
 
-  // Determine if NavigationMenu and Footer should be shown
-  const showNavAndFooter = !["/login", "/register"].includes(location.pathname);
+  const showNavAndFooter = !["/login", "/register", "/admin/dashboard"].includes(location.pathname);
 
   return (
     <>
@@ -45,16 +43,15 @@ function App() {
           <JobsProvider>
             <BrowserRouter>
               <Routes>
-                <Route
-                  path="/"
-                  element={
-                    <Layout>
-                      <HomePage />
-                    </Layout>
-                  }
-                />
-
                 <Route element={<PublicRoute />}>
+                  <Route
+                    path="/"
+                    element={
+                      <Layout>
+                        <HomePage />
+                      </Layout>
+                    }
+                  />
                   <Route path="/login" element={<LoginPage />} />
                   <Route path="/register" element={<RegisterPage />} />
                   <Route
@@ -92,7 +89,14 @@ function App() {
                       </Layout>
                     }
                   />
-                  <Route path="/admin/dashboard" element={<AdminDashboard />} />
+                  <Route
+                    path="/admin/dashboard"
+                    element={
+                      <Layout>
+                        <AdminDashboard />
+                      </Layout>
+                    }
+                  />
                 </Route>
 
                 <Route
