@@ -56,9 +56,13 @@ export const ChatProvider = ({ children }) => {
       const userName = userDoc.data().username;
       const participantName = participantDoc.data().username;
 
+      const userImage = userDoc.data().profileImage;
+      const participantImage = participantDoc.data().profileImage;
+
       const newChat = await addDoc(collection(fireStore, "chats"), {
         users: [data.userId, data.participantId],
         usernames: [userName, participantName],
+        images: [userImage, participantImage],
         createdAt: new Date(),
       });
 

@@ -1,10 +1,12 @@
 import React from "react";
-import { Link } from "react-router-dom";
 import { Button, Image } from "react-bootstrap";
 import logo from "../../assets/logo.png";
 import styles from "../../assets/css/AdminDashBoard.module.css";
 
+import { useAuth } from "../../context/AuthContext";
+
 const Sidebar = ({ setCurrentView, currentView }) => {
+  const { logout } = useAuth();
   return (
     <div className={styles.sidebar}>
       <div className="logo">
@@ -33,6 +35,9 @@ const Sidebar = ({ setCurrentView, currentView }) => {
             className={currentView === "jobs" ? styles.active : ""}
           >
             Jobs
+          </Button>
+          <Button variant="danger" onClick={() => logout()}>
+            logout
           </Button>
         </ul>
       </div>

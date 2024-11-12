@@ -20,41 +20,32 @@ function LoginPage() {
     isAuthenticated,
     errors: signinErrors,
   } = useAuth();
-  const navigate = useNavigate(); // Create a navigate function to redirect the user
-  const [showToast, setShowToast] = useState(false); // Create a state to show the toast message
-  const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("");
+  const navigate = useNavigate();
+  const [showToast, setShowToast] = useState(false);
 
   useEffect(() => {
-    // Redirect to the home page if the user is authenticated
     if (isAuthenticated) navigate("/");
   }, [isAuthenticated]);
 
   const onSubmit = handleSubmit((data) => {
-    signin(data); // Call the signin function from the AuthContext file
+    signin(data);
   });
 
   useEffect(() => {
-    // Show the toast message if there are errors
     if (signinErrors) {
       setShowToast(true);
     }
   }, [signinErrors]);
 
   const handleGoogleLogin = async () => {
-    const userCredential = await signinWithGoogle();
-    if (userCredential) {
-      setUsername(userCredential.username);
-      setEmail(userCredential.email);
-      navigate("/"); // Redirect to the homepage
-    }
+    await signinWithGoogle();
   };
 
   return (
     <Container className="d-flex align-items-center justify-content-center min-vh-100 min-vw-100 bg-gradient-custom">
       <CustomToast
         show={showToast}
-        message={signinErrors && signinErrors.message}
+        message={signinErrors ? signinErrors : ""}
         position={{ top: "0", right: "0" }}
         duration={3000} // 3000 ms = 3 segundos
         onClose={() => setShowToast(false)}

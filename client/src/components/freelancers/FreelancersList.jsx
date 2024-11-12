@@ -9,7 +9,6 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import styles from "../../assets/css/FreelancerPage.module.css";
 import freeicon from "../../assets/images/freeicon.png";
 import skillsicon from "../../assets/images/skillsicon.png";
-import { set } from "react-hook-form";
 
 const FreelancersList = () => {
   const navigate = useNavigate();

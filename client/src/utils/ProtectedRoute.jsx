@@ -11,7 +11,14 @@ function ProtectedRoute() {
   }
 
   if (!isAuthenticated || !user) {
-    return <Navigate to="/login" replace />;
+    if (
+      window.location.pathname.startsWith("/user") ||
+      window.location.pathname.startsWith("/admin")
+    ) {
+      return <Navigate to="/" replace />;
+    } else {
+      return <Navigate to="/" replace />;
+    }
   }
 
   if (isAuthenticated && user.role === "admin") {
@@ -22,7 +29,10 @@ function ProtectedRoute() {
     }
   }
 
-  if (isAuthenticated && user.role === "customer" || user.role === "professional") {
+  if (
+    (isAuthenticated && user.role === "customer") ||
+    user.role === "professional"
+  ) {
     if (window.location.pathname.startsWith("/user")) {
       return <Outlet />;
     } else {

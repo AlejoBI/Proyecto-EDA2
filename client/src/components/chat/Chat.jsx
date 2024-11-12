@@ -70,11 +70,16 @@ const ChatApp = () => {
               className="chat-item"
               onClick={() => setActiveChat(chat.id)}
             >
-              <img
-                src="https://via.placeholder.com/50"
-                alt="Profile"
-                className="chat-avatar"
-              />
+              <div className="chat-avatar-container">
+                <img
+                  src={
+                    chat.images.filter((i) => i !== user.image)[1] ||
+                    "https://via.placeholder.com/50"
+                  }
+                  alt="Profile"
+                  className="chat-avatar"
+                />
+              </div>
               <div className="chat-info">
                 <span className="chat-name">
                   {chat.usernames.filter((u) => u !== user.username).join(", ")}
@@ -89,11 +94,26 @@ const ChatApp = () => {
 
       <div className="chat-window">
         <div className="chat-header-window">
-          <img
-            src="https://via.placeholder.com/50"
-            alt="Profile"
-            className="chat-window-avatar"
-          />
+          <div className="chat-avatar-container">
+            {activeChat ? (
+              <img
+                src={
+                  chats
+                    .find((chat) => chat.id === activeChat)
+                    .images.filter((i) => i !== user.image)[1] ||
+                  "https://via.placeholder.com/50"
+                }
+                alt="Profile"
+                className="chat-avatar"
+              />
+            ) : (
+              <img
+                src="https://via.placeholder.com/50"
+                alt="Profile"
+                className="chat-avatar"
+              />
+            )}
+          </div>
           <span className="chat-window-name">
             {activeChat
               ? chats
