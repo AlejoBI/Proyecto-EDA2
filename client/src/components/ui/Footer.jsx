@@ -37,28 +37,28 @@ const Footer = () => {
                 <td></td>
                 <td>
                   {row.categories && (
-                    <Link to="/register" className={styles.style_table2}>
+                    <Link to="/freelancers" className={styles.style_table2}>
                       {row.categories}
                     </Link>
                   )}
                 </td>
                 <td>
                   {row.help && (
-                    <Link to="/login" className={styles.style_table2}>
+                    <Link to="/freelancers" className={styles.style_table2}>
                       {row.help}
                     </Link>
                   )}
                 </td>
                 <td>
                   {row.community && (
-                    <Link to="/register" className={styles.style_table2}>
+                    <Link to="/freelancers" className={styles.style_table2}>
                       {row.community}
                     </Link>
                   )}
                 </td>
                 <td>
                   {row.company && (
-                    <Link to="/register" className={styles.style_table2}>
+                    <Link to="/freelancers" className={styles.style_table2}>
                       {row.company}
                     </Link>
                   )}
