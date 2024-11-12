@@ -89,7 +89,7 @@ const CreateJob = ({ show, handleClose }) => {
             <Dropdown
               onSelect={(country) => {
                 setSelectedCountry(country);
-                setSelectedCity(""); // Resetear ciudad al cambiar de país
+                setSelectedCity("");
               }}
             >
               <Dropdown.Toggle variant="secondary">
@@ -131,12 +131,16 @@ const CreateJob = ({ show, handleClose }) => {
             <input type="number" {...register("salary", { required: true })} />
             {errors.salary && <p className="text-danger">Salary is required</p>}
 
-            <Button variant="secondary" onClick={handleCancel}>
-              Cancel
-            </Button>
-            <Button type="submit" variant="primary">
-              Create Job
-            </Button>
+            <div className="mt-2">
+              <Modal.Footer>
+                <Button variant="secondary" onClick={handleCancel}>
+                  Cancel
+                </Button>
+                <Button type="submit" variant="primary">
+                  Create Job
+                </Button>
+              </Modal.Footer>
+            </div>
           </form>
         </Modal.Body>
       </Modal>

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { Card, Container, Row, Col, Image } from "react-bootstrap";
-import logo from "../../assets/logo.png";
+import logo from "../../assets/images/logo.png";
 import { useAuth } from "../../context/AuthContext";
 import {
   CountryCitySelector,

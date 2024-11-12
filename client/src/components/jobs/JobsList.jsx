@@ -6,7 +6,7 @@ import useParentComponentData from "../../hooks/useParentComponentData";
 import useJobsList from "../../hooks/useJobsList";
 import "bootstrap/dist/css/bootstrap.min.css";
 import styles from "../../assets/css/JobsPage.module.css";
-import logo from "../../assets/logo.png";
+import logo from "../../assets/images/logo.png";
 import jobsicon from "../../assets/images/jobsicon.png";
 
 const JobsList = ({usoEsteFilter = true}) => {

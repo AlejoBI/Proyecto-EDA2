@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import { useNavigate, Link } from "react-router-dom";
 
 import { Form, Button, Container, Card, Image } from "react-bootstrap";
-import logoImage from "../assets/logo.png";
+import logoImage from "../assets/images/logo.png";
 
 import { useAuth } from "../context/AuthContext";
 import { CustomToast } from "../components/index";

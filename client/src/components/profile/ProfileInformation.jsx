@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Card, Col, Container, Row, Image, Button, Modal } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import { useAuth } from "../../context/AuthContext";
-import logo from "../../assets/logo.png";
+import logo from "../../assets/images/logo.png";
 import { capitalizeFirstLetter } from "../../hooks/CapitalizeFirstLetter";
 import { UpdateProfile } from "../index";
 import styles from "../../assets/css/ProfilePage.module.css";

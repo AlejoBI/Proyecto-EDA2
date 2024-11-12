@@ -1,6 +1,6 @@
 import React from "react";
 import { Button, Image } from "react-bootstrap";
-import logo from "../../assets/logo.png";
+import logo from "../../assets/images/logo.png";
 import styles from "../../assets/css/AdminDashBoard.module.css";
 
 import { useAuth } from "../../context/AuthContext";
