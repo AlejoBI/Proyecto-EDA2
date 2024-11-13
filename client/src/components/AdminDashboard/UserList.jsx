@@ -70,10 +70,10 @@ const UserList = ({ searchTerm, onEditUser }) => {
             <Col>{user.email}</Col>
             <Col>{user.role}</Col>
             <Col>
-              <Button className={styles.user_button} onClick={() => toggleDetails(user.id)}>Details</Button>
+              <Button onClick={() => toggleDetails(user.id)}>Details</Button>
             </Col>
             <Col>
-              <Button className={styles.user_button} variant="warning" onClick={() => handleEditClick(user)}>
+              <Button variant="warning" onClick={() => handleEditClick(user)}>
                 Edit
               </Button>
             </Col>
