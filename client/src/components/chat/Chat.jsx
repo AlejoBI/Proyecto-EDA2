@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import useChatApp from "../../hooks/useChatApp";
 import { CustomToast } from "../index";
 import "../../assets/css/Chat.css";
+import logo from "../../assets/images/logo.png";
 
 const ChatApp = () => {
   const {
@@ -22,7 +23,7 @@ const ChatApp = () => {
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
   const [toastColor, setToastColor] = useState("green");
-  const [indexImage, setIndexImage] = useState(null);
+  const [chatImageIndices, setChatImageIndices] = useState({});
 
   useEffect(() => {
     if (error) {
@@ -54,18 +55,21 @@ const ChatApp = () => {
   const handleSetActiveChat = (chatId, chatUsernames) => {
     setActiveChat(chatId);
     const userIndex = chatUsernames.findIndex((u) => u !== user.username);
-    setIndexImage(userIndex >= 0 ? userIndex : 0);
+
+    setChatImageIndices((prevIndices) => ({
+      ...prevIndices,
+      [chatId]: userIndex >= 0 ? userIndex : 0,
+    }));
   };
 
   useEffect(() => {
-    if (filteredChats.length > 0 && indexImage === null) {
-      const initialChat = filteredChats[0];
-      const initialUserIndex = initialChat.usernames.findIndex(
-        (u) => u !== user.username
-      );
-      setIndexImage(initialUserIndex >= 0 ? initialUserIndex : 0);
-    }
-  }, [filteredChats, indexImage, user.username]);
+    const initialImageIndices = {};
+    filteredChats.forEach((chat) => {
+      const userIndex = chat.usernames.findIndex((u) => u !== user.username);
+      initialImageIndices[chat.id] = userIndex >= 0 ? userIndex : 0;
+    });
+    setChatImageIndices(initialImageIndices);
+  }, [filteredChats, user.username]);
 
   return (
     <div className="chat-app">
@@ -90,8 +94,9 @@ const ChatApp = () => {
               <div className="chat-avatar-container">
                 <img
                   src={
-                    chat.images.filter((i) => i !== user.image)[indexImage] ||
-                    "https://via.placeholder.com/50"
+                    chat.images.filter((i) => i !== user.image)[
+                      chatImageIndices[chat.id]
+                    ] || { logo }
                   }
                   alt="Profile"
                   className="chat-avatar"
@@ -117,18 +122,15 @@ const ChatApp = () => {
                 src={
                   chats
                     .find((chat) => chat.id === activeChat)
-                    .images.filter((i) => i !== user.image)[indexImage] ||
-                  "https://via.placeholder.com/50"
+                    .images.filter((i) => i !== user.image)[
+                    chatImageIndices[activeChat]
+                  ] || { logo }
                 }
                 alt="Profile"
                 className="chat-avatar"
               />
             ) : (
-              <img
-                src="https://via.placeholder.com/50"
-                alt="Profile"
-                className="chat-avatar"
-              />
+              <img src={logo} alt="Profile" className="chat-avatar" />
             )}
           </div>
           <span className="chat-window-name">
