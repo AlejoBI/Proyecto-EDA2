@@ -1,8 +1,7 @@
 import { createContext, useState, useContext, useEffect } from "react";
-
 import appFirebase from "../firebase/credentials.js";
-import { getFirestore, doc, updateDoc, deleteDoc } from "firebase/firestore";
-
+import { getFirestore, doc, deleteDoc, collection, getDocs } from "firebase/firestore";
+import { updateDoc } from "firebase/firestore";
 const fireStore = getFirestore(appFirebase);
 
 export const AdminContext = createContext();
@@ -19,19 +18,9 @@ export const AdminProvider = ({ children }) => {
         ...doc.data(),
       }));
       setUsers(usersData);
+      return usersData;
     } catch (error) {
       setErrors(error.message || "Error fetching users");
-    }
-  };
-
-  const deleteUser = async (userId) => {
-    try {
-      const userDocRef = doc(fireStore, "users", userId);
-      await deleteDoc(userDocRef);
-
-      setUsers((prevUsers) => prevUsers.filter((user) => user.id !== userId));
-    } catch (error) {
-      setErrors(error.message || "Error deleting user");
     }
   };
 
@@ -55,7 +44,7 @@ export const AdminProvider = ({ children }) => {
   }, []);
 
   return (
-    <AdminContext.Provider value={{ users, errors, deleteUser, editUser }}>
+    <AdminContext.Provider value={{ users, errors, getAllUsers, editUser }}>
       {children}
     </AdminContext.Provider>
   );

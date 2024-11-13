@@ -110,7 +110,7 @@ export const JobsProvider = ({ children }) => {
     }
   };
 
-  const deleteJob = async (jobId) => { 
+  const deleteJob = async (jobId) => {
     const userId = auth.currentUser ? auth.currentUser.uid : null;
 
     if (!userId) {
@@ -118,15 +118,20 @@ export const JobsProvider = ({ children }) => {
       return;
     }
 
+    const userRef = doc(fireStore, "users", userId);
+    const userDoc = await getDoc(userRef);
+    const userRole = userDoc.data().role;
+
     try {
       const docRef = doc(fireStore, "jobs", jobId);
       const jobDoc = await getDoc(docRef);
-
-      if (!jobDoc.exists || jobDoc.data().id_user !== userId) {
-        setErrors(
-          "Job not found or you do not have permission to delete this job"
-        );
-        return;
+      if (userRole !== "admin") {
+        if (!jobDoc.exists || jobDoc.data().id_user !== userId) {
+          setErrors(
+            "Job not found or you do not have permission to delete this job"
+          );
+          return;
+        }
       }
 
       await deleteDoc(docRef);
