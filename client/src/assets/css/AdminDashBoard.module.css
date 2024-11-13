@@ -302,3 +302,20 @@
 .adminDashboard .contentCol {
   padding-top: 20px; 
 }
+
+.user_button {
+  margin: 5px;
+  background-color: var(--morado);
+  color: white;
+  cursor: pointer;
+  border: none;
+  width: 15%;
+}
+
+.user_button:hover {
+  background-color: var(--morado-hover);
+}
+
+.user_button:disabled {
+  background: var(--moradogradiente);
+}
