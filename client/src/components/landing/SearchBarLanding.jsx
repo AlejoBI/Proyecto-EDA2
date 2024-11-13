@@ -1,7 +1,7 @@
 import { Form, InputGroup, Image } from "react-bootstrap";
 import searchImage from "../../assets/images/search.png";
 
-const SearchBar = () => {
+const SearchBarLanding = () => {
   return (
     <InputGroup className="mb-3" style={{ width: "50%" }}>
       <Form.Control
@@ -20,4 +20,4 @@ const SearchBar = () => {
   );
 };
 
-export default SearchBar;
+export default SearchBarLanding;

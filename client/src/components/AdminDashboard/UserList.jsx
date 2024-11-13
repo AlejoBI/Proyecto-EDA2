@@ -1,30 +1,44 @@
 import React, { useState } from "react";
 import { Container, Button, Row, Col, Image } from "react-bootstrap";
 import styles from "../../assets/css/AdminDashBoard.module.css";
-import useUsersList from "../../hooks/useUserList";
+import useUserList from "../../hooks/useUserList";
 import userIcon from "../../assets/images/user-interface.png";
 import professionalIcon from "../../assets/images/jobsicon.png";
 import customerIcon from "../../assets/images/edificios.png";
 import adminIcon from "../../assets/images/admin.png";
+import { CustomToast, EditUserModal } from "../index";
 
-const UserList = ({ onCreateUser }) => {
+const UserList = ({ searchTerm, onEditUser }) => {
   const {
     totalUsersCount,
     professionalUsersCount,
     customerUsersCount,
     adminUsersCount,
     currentUsers,
-    handleEdit,
-    handleDelete,
     showToast,
     toastMessage,
+    toastType,
     setShowToast,
-  } = useUsersList();
+  } = useUserList();
 
   const [expandedUserId, setExpandedUserId] = useState(null);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [currentUser, setCurrentUser] = useState(null);
 
   const toggleDetails = (userId) => {
     setExpandedUserId(expandedUserId === userId ? null : userId);
+  };
+
+  const filteredUsers = currentUsers.filter(
+    (user) =>
+      (user.username.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        user.email.toLowerCase().includes(searchTerm.toLowerCase()))
+  );
+
+  const handleEditClick = (user) => {
+    setCurrentUser(user);
+    setShowEditModal(true);
+    onEditUser(user);
   };
 
   return (
@@ -49,59 +63,48 @@ const UserList = ({ onCreateUser }) => {
         </div>
       </div>
 
-      {/* Lista de usuarios */}
-      <div className={styles.userHeader}>
-        <h4 className={styles.userHeading}>Users List</h4>
-        <Button variant="success" onClick={onCreateUser}>
-          Create User
-        </Button>
-      </div>
-
-      {currentUsers.map((user) => (
-        <div key={user.id} className={styles.userCard}>
-          <div className={styles.userInfo}>
-            <h5 className={styles.userName}>{user.name}</h5>
-            <Button variant="link" className={styles.detailsButton} onClick={() => toggleDetails(user.id)}>
-              {expandedUserId === user.id ? "Hide details" : "Show details"}
-            </Button>
-          </div>
+      {filteredUsers.map((user) => (
+        <div className={styles.userCard} key={user.id}>
+          <Row className={styles.userRow}>
+            <Col>{user.username}</Col>
+            <Col>{user.email}</Col>
+            <Col>{user.role}</Col>
+            <Col>
+              <Button onClick={() => toggleDetails(user.id)}>Details</Button>
+            </Col>
+            <Col>
+              <Button variant="warning" onClick={() => handleEditClick(user)}>
+                Edit
+              </Button>
+            </Col>
+          </Row>
 
           {expandedUserId === user.id && (
-            <Row className={styles.userDetails}>
-              <Col md={6}>
-                <p><strong>Username:</strong> {user.username}</p>
-                <p><strong>Role:</strong> {user.role}</p>
-                <p><strong>Age:</strong> {user.age}</p>
-                <p><strong>City:</strong> {user.city}</p>
-              </Col>
-              <Col md={6}>
-                <p><strong>Country:</strong> {user.country}</p>
-                <p><strong>Email:</strong> {user.email}</p>
-                <p><strong>Phone:</strong> {user.phone}</p>
-                <p><strong>Professional Area:</strong> {user.professionalArea}</p>
-                <p><strong>Skill:</strong> {user.skill}</p>
-              </Col>
-            </Row>
+            <div className={styles.userDetails}>
+              <p><strong>Full name:</strong> {user.name +" "+ user.lastName}</p>
+              <p><strong>Location:</strong> {user.country +", "+user.city}</p>
+            </div>
           )}
-
-          <div className={styles.userActions}>
-            <Button variant="warning" onClick={() => handleEdit(user)}>
-              Edit
-            </Button>
-            <Button variant="danger" onClick={() => handleDelete(user.id)}>
-              Delete
-            </Button>
-          </div>
         </div>
       ))}
 
-      {/* Toast Notification */}
-      {showToast && (
-        <div className={`toast ${toastType}`}>
-          {toastMessage}
-          <button onClick={() => setShowToast(false)}>Close</button>
-        </div>
+      {showEditModal && (
+        <EditUserModal
+          show={showEditModal}
+          handleClose={() => setShowEditModal(false)}
+          handleConfirm={() => {}}
+          user={currentUser}
+        />
       )}
+
+      <CustomToast
+        show={showToast}
+        message={toastMessage}
+        backgroundColor={toastType === "success" ? "green" : "red"}
+        color="white"
+        duration={3000}
+        onClose={() => setShowToast(false)}
+      />
     </Container>
   );
 };

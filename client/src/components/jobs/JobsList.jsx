@@ -59,7 +59,6 @@ const JobsList = ({usoEsteFilter = true}) => {
           className="d-inline-block align-center d-block mx-auto"
         />
         <h3 className={styles.job_text2}>Filter</h3>
-        {/* Filtros */}
         <Row className="mb-3">
           <Col>
             <Dropdown onSelect={handleCountryChange}>
@@ -137,7 +136,6 @@ const JobsList = ({usoEsteFilter = true}) => {
             </h4>
           </div>
         </div>
-        {/* Lista de Trabajos */}
         <section className={styles.job}>
           {!filteredJobs.length ? (
             <p>No jobs available</p>
@@ -202,7 +200,6 @@ const JobsList = ({usoEsteFilter = true}) => {
           )}
         </section>
 
-        {/* Paginación */}
         <section>
           <Button
             className={styles.job_button}

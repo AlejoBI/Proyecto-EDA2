@@ -37,7 +37,7 @@ const Sidebar = ({ setCurrentView, currentView }) => {
             Jobs
           </Button>
           <Button variant="danger" onClick={() => logout()}>
-            logout
+            Logout
           </Button>
         </ul>
       </div>
