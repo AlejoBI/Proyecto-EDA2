@@ -39,7 +39,7 @@
 .sidebar {
   background-color: var(--moradooscuro);
   color: var(--blanco);
-  height: 100vh;
+  height: 100%;
   padding: 20px;
 }
 
