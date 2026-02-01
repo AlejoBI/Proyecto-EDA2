@@ -8,6 +8,7 @@ import {
   signOut,
   onAuthStateChanged,
   GoogleAuthProvider,
+  GithubAuthProvider,
   signInWithPopup,
 } from "firebase/auth";
 import {
@@ -165,6 +166,50 @@ export const AuthProvider = ({ children }) => {
         setErrors("Invalid email");
       } else if (error.code === "auth/invalid-credential") {
         setErrors("Invalid credential");
+      } else {
+        setErrors(error.message);
+      }
+    }
+    setLoading(false);
+  };
+
+  const signinWithGithub = async () => {
+    setLoading(true);
+    setErrors(null);
+    try {
+      const provider = new GithubAuthProvider();
+      const userCredential = await signInWithPopup(auth, provider);
+
+      const docRef = doc(fireStore, "users", userCredential.user.uid);
+      const userDoc = await getDoc(docRef);
+
+      let userData;
+      if (!userDoc.exists()) {
+        userData = {
+          username: userCredential.user.displayName || userCredential.user.email.split('@')[0],
+          email: userCredential.user.email,
+          role: "customer", 
+        };
+        await setDoc(docRef, userData);
+      } else {
+        userData = userDoc.data();
+      }
+
+      setUser({
+        id: userCredential.user.uid,
+        ...userData,
+      });
+      setIsAuthenticated(true);
+      return userCredential.user;
+    } catch (error) {
+      if (error.code === "permission-denied") {
+        setErrors("Insufficient permissions");
+      } else if (error.code === "auth/account-exists-with-different-credential") {
+        setErrors("An account already exists with the same email address");
+      } else if (error.code === "auth/popup-blocked") {
+        setErrors("Popup blocked by browser");
+      } else if (error.code === "auth/popup-closed-by-user") {
+        setErrors("Login cancelled");
       } else {
         setErrors(error.message);
       }
@@ -336,6 +381,7 @@ export const AuthProvider = ({ children }) => {
         signup,
         signin,
         signinWithGoogle,
+        signinWithGithub,
         logout,
         getAllUsers,
         profile,
