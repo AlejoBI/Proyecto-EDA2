@@ -1,9 +1,8 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
 import { Container, Button, Dropdown, Row, Col, Image } from "react-bootstrap";
 import useParentComponentData from "../../hooks/useParentComponentData";
 import useFreelancersList from "../../hooks/useFreelancersList";
-import { CustomToast } from "../index";
+import { CustomToast, CustomSpinner } from "../index";
 import logo from "../../assets/images/logo.png";
 import "bootstrap/dist/css/bootstrap.min.css";
 import styles from "../../assets/css/FreelancerPage.module.css";
@@ -11,7 +10,6 @@ import freeicon from "../../assets/images/freeicon.png";
 import skillsicon from "../../assets/images/skillsicon.png";
 
 const FreelancersList = () => {
-  const navigate = useNavigate();
   const {
     user,
     isAuthenticated,
@@ -34,8 +32,9 @@ const FreelancersList = () => {
     handleStartChat,
     setCurrentPage,
     freelancersCount,
-    skillsCount
-  } = useFreelancersList(navigate);
+    skillsCount,
+    loading
+  } = useFreelancersList();
 
   const { countriesAndCities, professionalAreas, professionalAreasAndSkills } = useParentComponentData();
 
@@ -188,13 +187,15 @@ const FreelancersList = () => {
           </div>
         </div>
         <section className={styles.freelancer}>
-          {!filteredUsers.length ? (
+          {loading ? (
+            <CustomSpinner />
+          ) : !filteredUsers.length ? (
             <p>No freelancers available</p>
           ) : (
             currentItems.map((userJ) => (
               <div key={userJ.id} className={styles.freelancer_card}>
                 <h4
-                  className={styles.freelancer_title + styles.freelancer_text}
+                  className={`${styles.freelancer_title} ${styles.freelancer_text}`}
                 >
                   {userJ.username}
                   {isAuthenticated &&

@@ -31,8 +31,8 @@ const UserList = ({ searchTerm, onEditUser }) => {
 
   const filteredUsers = currentUsers.filter(
     (user) =>
-      (user.username.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        user.email.toLowerCase().includes(searchTerm.toLowerCase()))
+      (user.username?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        user.email?.toLowerCase().includes(searchTerm.toLowerCase()))
   );
 
   const handleEditClick = (user) => {
@@ -81,8 +81,8 @@ const UserList = ({ searchTerm, onEditUser }) => {
 
           {expandedUserId === user.id && (
             <div className={styles.userDetails}>
-              <p><strong>Full name:</strong> {user.name +" "+ user.lastName}</p>
-              <p><strong>Location:</strong> {user.country +", "+user.city}</p>
+              <p><strong>Full name:</strong> {(user.name || "") + " " + (user.lastName || "")}</p>
+              <p><strong>Location:</strong> {(user.country || "") + ", " + (user.city || "")}</p>
             </div>
           )}
         </div>

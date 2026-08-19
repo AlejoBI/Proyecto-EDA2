@@ -15,26 +15,27 @@ const UpdateProfile = () => {
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
   const [toastColor, setToastColor] = useState("green");
-  const [profileImage, setProfileImage] = useState(user.profileImage || logo);
+  const [profileImage, setProfileImage] = useState(user?.profileImage || logo);
 
   const { register, handleSubmit, setValue, watch, getValues } = useForm({
     defaultValues: {
-      username: user.username,
-      lastName: user.lastName || "",
-      phone: user.phone || "",
-      email: user.email,
-      age: user.age || 0,
-      city: user.city || "",
-      country: user.country || "",
-      gender: user.gender || "",
-      professionalArea: user.professionalArea || "",
-      skills: user.skills || [],
-      role: user.role,
-      profileImage: user.profileImage || logo,
+      username: user?.username || "",
+      lastName: user?.lastName || "",
+      phone: user?.phone || "",
+      email: user?.email || "",
+      age: user?.age || 0,
+      city: user?.city || "",
+      country: user?.country || "",
+      gender: user?.gender || "",
+      professionalArea: user?.professionalArea || "",
+      skills: user?.skills || [],
+      role: user?.role || "customer",
+      profileImage: user?.profileImage || logo,
     },
   });
 
   useEffect(() => {
+    if (!user) return;
     setValue("name", user.name);
     setValue("lastName", user.lastName || "");
     setValue("phone", user.phone || "");
@@ -48,6 +49,10 @@ const UpdateProfile = () => {
     setValue("profileImage", user.profileImage || logo);
     setValue("role", user.role);
   }, [user, setValue]);
+
+  if (!user) {
+    return null;
+  }
 
   const onSubmit = async (data) => {
     try {

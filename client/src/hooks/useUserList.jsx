@@ -15,15 +15,16 @@ const useUserList = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       const res = await getAllUsers();
-      setCurrentUsers(res);
-      setTotalUsersCount(res.length);
+      const usersArray = Array.isArray(res) ? res : [];
+      setCurrentUsers(usersArray);
+      setTotalUsersCount(usersArray.length);
       setProfessionalUsersCount(
-        res.filter((user) => user.role === "professional").length
+        usersArray.filter((user) => user.role === "professional").length
       );
       setCustomerUsersCount(
-        res.filter((user) => user.role === "customer").length
+        usersArray.filter((user) => user.role === "customer").length
       );
-      setAdminUsersCount(res.filter((user) => user.role === "admin").length);
+      setAdminUsersCount(usersArray.filter((user) => user.role === "admin").length);
     };
     fetchUsers();
   }, [getAllUsers]);

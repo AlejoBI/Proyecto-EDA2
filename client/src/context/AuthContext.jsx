@@ -244,6 +244,7 @@ export const AuthProvider = ({ children }) => {
       return users;
     } catch (error) {
       setErrors(error.message);
+      return [];
     }
   };
 

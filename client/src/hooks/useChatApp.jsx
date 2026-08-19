@@ -37,13 +37,13 @@ const useChatApp = () => {
     setFilteredChats(
       chats.filter((chat) =>
         chat.usernames
-          .filter((u) => u !== currentUserId)
+          .filter((u) => u !== user?.username)
           .join(", ")
           .toLowerCase()
           .includes(searchTerm.toLowerCase())
       )
     );
-  }, [searchTerm, chats, currentUserId]);
+  }, [searchTerm, chats, user?.username]);
 
   const handleSendMessage = async () => {
     if (newMessage.trim() && activeChat) {

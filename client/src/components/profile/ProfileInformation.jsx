@@ -10,24 +10,24 @@ import styles from "../../assets/css/ProfilePage.module.css";
 const ProfileInformation = () => {
   const { user } = useAuth();
   const [showModal, setShowModal] = useState(false);
+  const [updateInformation, setUpdateInformation] = useState(false);
 
   const { register, handleSubmit, setValue } = useForm({
     defaultValues: {
-      username: user.username,
-      lastName: user.lastName || "",
-      phone: user.phone || "",
-      email: user.email,
-      age: user.age || 0,
-      city: user.city || "",
-      country: user.country || "",
-      gender: user.gender || "",
-      profileImage: user.profileImage || logo,
+      username: user?.username || "",
+      lastName: user?.lastName || "",
+      phone: user?.phone || "",
+      email: user?.email || "",
+      age: user?.age || 0,
+      city: user?.city || "",
+      country: user?.country || "",
+      gender: user?.gender || "",
+      profileImage: user?.profileImage || logo,
     },
   });
 
-  const [updateInformation, setUpdateInformation] = useState(false);
-
   useEffect(() => {
+    if (!user) return;
     setValue("name", user.name);
     setValue("lastName", user.lastName || "");
     setValue("phone", user.phone || "");
@@ -48,6 +48,10 @@ const ProfileInformation = () => {
       setShowModal(true);
     }
   }, [user, setValue]);
+
+  if (!user) {
+    return null;
+  }
 
   return (
     <>

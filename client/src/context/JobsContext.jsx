@@ -81,7 +81,7 @@ export const JobsProvider = ({ children }) => {
       const docRef = doc(fireStore, "jobs", id);
       const jobDoc = await getDoc(docRef);
 
-      if (!jobDoc.exists || jobDoc.data().id_user !== userId) {
+      if (!jobDoc.exists() || jobDoc.data().id_user !== userId) {
         setErrors(
           "Job not found or you do not have permission to update this job"
         );
@@ -120,13 +120,19 @@ export const JobsProvider = ({ children }) => {
 
     const userRef = doc(fireStore, "users", userId);
     const userDoc = await getDoc(userRef);
+
+    if (!userDoc.exists()) {
+      setErrors("User not found");
+      return { error: "User not found" };
+    }
+
     const userRole = userDoc.data().role;
 
     try {
       const docRef = doc(fireStore, "jobs", jobId);
       const jobDoc = await getDoc(docRef);
       if (userRole !== "admin") {
-        if (!jobDoc.exists || jobDoc.data().id_user !== userId) {
+        if (!jobDoc.exists() || jobDoc.data().id_user !== userId) {
           setErrors(
             "Job not found or you do not have permission to delete this job"
           );

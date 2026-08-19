@@ -21,43 +21,59 @@ const useFreelancersList = () => {
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
   const [toastType, setToastType] = useState("success");
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchUsers = async () => {
-      const res = await getAllUsers();
-      const professionals = res.filter((user) => user.role === "professional");
-      const validProfessionals = professionals.filter(
-        (user) =>
-          user.username?.trim() &&
-          user.email?.trim() &&
-          user.city?.trim() &&
-          user.country?.trim() &&
-          user.professionalArea?.trim()
-      );
-      setUsers(validProfessionals);
-      setFilteredUsers(validProfessionals);
-      setFreelancersCount(validProfessionals.length);
-
-      const countSkills = [];
-
-      validProfessionals.forEach((user) => {
-        if (user.skills && Array.isArray(user.skills)) {
-          user.skills.forEach((skill) => {
-            if (!countSkills.includes(skill)) {
-              countSkills.push(skill);
-            }
-          });
+      setLoading(true);
+      try {
+        const res = await getAllUsers();
+        if (!Array.isArray(res)) {
+          setUsers([]);
+          setFilteredUsers([]);
+          setFreelancersCount(0);
+          setSkillsCount(0);
+          return;
         }
-      });
+        const professionals = res.filter((user) => user.role === "professional");
+        const validProfessionals = professionals.filter(
+          (user) =>
+            user.username?.trim() &&
+            user.email?.trim() &&
+            user.city?.trim() &&
+            user.country?.trim() &&
+            user.professionalArea?.trim()
+        );
+        setUsers(validProfessionals);
+        setFilteredUsers(validProfessionals);
+        setFreelancersCount(validProfessionals.length);
 
-      setSkillsCount(countSkills?.length);
+        const countSkills = [];
+
+        validProfessionals.forEach((user) => {
+          if (user.skills && Array.isArray(user.skills)) {
+            user.skills.forEach((skill) => {
+              if (!countSkills.includes(skill)) {
+                countSkills.push(skill);
+              }
+            });
+          }
+        });
+
+        setSkillsCount(countSkills?.length);
+      } catch {
+        setUsers([]);
+        setFilteredUsers([]);
+      } finally {
+        setLoading(false);
+      }
     };
     fetchUsers();
   }, [getAllUsers]);
 
   useEffect(() => {
     applyFilters();
-  }, [selectedCountry, selectedCity, selectedArea, selectedSkill]);
+  }, [selectedCountry, selectedCity, selectedArea, selectedSkill, users]);
 
   const applyFilters = () => {
     let updatedList = users;
@@ -131,6 +147,7 @@ const useFreelancersList = () => {
     setCurrentPage,
     freelancersCount,
     skillsCount,
+    loading,
   };
 };
 

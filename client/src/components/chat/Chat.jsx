@@ -91,12 +91,12 @@ const ChatApp = () => {
               className="chat-item"
               onClick={() => handleSetActiveChat(chat.id, chat.usernames)}
             >
-              <div className="chat-avatar-container">
+                  <div className="chat-avatar-container">
                 <img
                   src={
-                    chat.images.filter((i) => i !== user.image)[
+                    chat.images?.filter((i) => i !== user.image)[
                       chatImageIndices[chat.id]
-                    ] || { logo }
+                    ] || logo
                   }
                   alt="Profile"
                   className="chat-avatar"
@@ -118,27 +118,34 @@ const ChatApp = () => {
         <div className="chat-header-window">
           <div className="chat-avatar-container">
             {activeChat ? (
-              <img
-                src={
-                  chats
-                    .find((chat) => chat.id === activeChat)
-                    .images.filter((i) => i !== user.image)[
-                    chatImageIndices[activeChat]
-                  ] || { logo }
+              (() => {
+                const activeChatData = chats.find((chat) => chat.id === activeChat);
+                if (!activeChatData) {
+                  return <img src={logo} alt="Profile" className="chat-avatar" />;
                 }
-                alt="Profile"
-                className="chat-avatar"
-              />
+                return (
+                  <img
+                    src={
+                      activeChatData.images?.filter((i) => i !== user.image)[
+                        chatImageIndices[activeChat]
+                      ] || logo
+                    }
+                    alt="Profile"
+                    className="chat-avatar"
+                  />
+                );
+              })()
             ) : (
               <img src={logo} alt="Profile" className="chat-avatar" />
             )}
           </div>
           <span className="chat-window-name">
             {activeChat
-              ? chats
-                  .find((chat) => chat.id === activeChat)
-                  .usernames.filter((u) => u !== user.username)
-                  .join(", ")
+              ? (() => {
+                  const activeChatData = chats.find((chat) => chat.id === activeChat);
+                  if (!activeChatData) return "Unknown";
+                  return activeChatData.usernames.filter((u) => u !== user.username).join(", ");
+                })()
               : "Select a chat"}
           </span>
         </div>

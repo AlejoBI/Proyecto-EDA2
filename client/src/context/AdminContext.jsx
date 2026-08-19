@@ -21,6 +21,7 @@ export const AdminProvider = ({ children }) => {
       return usersData;
     } catch (error) {
       setErrors(error.message || "Error fetching users");
+      return [];
     }
   };
 
@@ -39,12 +40,22 @@ export const AdminProvider = ({ children }) => {
     }
   };
 
+  const deleteUser = async (userId) => {
+    try {
+      const userDocRef = doc(fireStore, "users", userId);
+      await deleteDoc(userDocRef);
+      setUsers((prevUsers) => prevUsers.filter((user) => user.id !== userId));
+    } catch (error) {
+      setErrors(error.message || "Error deleting user");
+    }
+  };
+
   useEffect(() => {
     getAllUsers();
   }, []);
 
   return (
-    <AdminContext.Provider value={{ users, errors, getAllUsers, editUser }}>
+    <AdminContext.Provider value={{ users, errors, getAllUsers, editUser, deleteUser }}>
       {children}
     </AdminContext.Provider>
   );

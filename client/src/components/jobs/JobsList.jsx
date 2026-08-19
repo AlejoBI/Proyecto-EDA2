@@ -142,7 +142,7 @@ const JobsList = ({usoEsteFilter = true}) => {
           ) : (
             currentItems.map((job) => (
               <div key={job.id} className={styles.job_card}>
-                <h4 className={styles.job_title + styles.job_text}>
+                <h4 className={`${styles.job_title} ${styles.job_text}`}>
                   {job.title}
                 </h4>
                 <p className={styles.line}></p>
