@@ -226,7 +226,7 @@ const FreelancersList = () => {
                   <strong className={styles.freelancer_text}>Area:</strong>{" "}
                   {userJ.professionalArea}
                 </div>
-                {userJ.skills && userJ.skills.length > 0 && (
+                {Array.isArray(userJ.skills) && userJ.skills.length > 0 && (
                   <div className={styles.skill_container}>
                     {userJ.skills.map((skill, index) => (
                       <div key={index}>

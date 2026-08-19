@@ -42,7 +42,8 @@ const useFreelancersList = () => {
             user.email?.trim() &&
             user.city?.trim() &&
             user.country?.trim() &&
-            user.professionalArea?.trim()
+            user.professionalArea?.trim() &&
+            Array.isArray(user.skills)
         );
         setUsers(validProfessionals);
         setFilteredUsers(validProfessionals);
