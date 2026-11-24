@@ -15,14 +15,14 @@ function LoginPage() {
     formState: { errors },
   } = useForm();
   const {
+    isAuthenticated,
+    errors: signinErrors,
     signin,
     signinWithGoogle,
     signinWithGithub,
-    isAuthenticated,
-    errors: signinErrors,
     authStatus,
+    loading,
   } = useAuth();
-  const authUnavailable = authStatus === "unavailable";
   const navigate = useNavigate();
   const location = useLocation();
   const [showToast, setShowToast] = useState(false);
@@ -33,9 +33,8 @@ function LoginPage() {
     }
   }, [isAuthenticated, location.pathname, navigate]);
 
-  const onSubmit = handleSubmit((data) => {
-    signin(data);
-  });
+  const onSubmit = handleSubmit(({ email, password }) => signin({ email, password }));
+  const authReady = authStatus === "ready" && !loading;
 
   useEffect(() => {
     if (signinErrors) {
@@ -43,16 +42,8 @@ function LoginPage() {
     }
   }, [signinErrors]);
 
-  const handleGoogleLogin = async () => {
-    await signinWithGoogle();
-  };
-
-  const handleGithubLogin = async () => {
-    await signinWithGithub();
-  };
-
   return (
-    <Container className="d-flex align-items-center justify-content-center min-vh-100 min-vw-100 bg-gradient-custom">
+    <main className="auth-page"><Container className="d-flex align-items-center justify-content-center bg-gradient-custom">
       <CustomToast
         show={showToast}
         message={signinErrors ? signinErrors : ""}
@@ -63,7 +54,7 @@ function LoginPage() {
       <Card className="shadow-lg rounded-5 w-50 h-50 d-flex justify-content-center align-items-center">
         <Card.Body className="mx-3 my-5 w-50 h-50">
           <div className="d-flex justify-content-end">
-            <Button variant="link" href="/" className="p-0">
+            <Button variant="link" href="/" className="p-0" aria-label="Close sign in">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="16"
@@ -78,6 +69,7 @@ function LoginPage() {
           <div className="text-center mb-4">
             <Image
               src={logoImage}
+              alt="Freelance platform logo"
               className="img-fluid"
               style={{ width: "80px", height: "80px" }}
             />
@@ -90,7 +82,7 @@ function LoginPage() {
             </p>
           </div>
 
-          {authUnavailable && (
+          {authStatus === "unavailable" && (
             <Alert variant="warning" role="alert">
               Authentication is currently unavailable. Please try again later.
             </Alert>
@@ -99,9 +91,9 @@ function LoginPage() {
           <Container className="d-flex flex-column gap-2 justify-content-center align-items-center">
             <Button
               className="w-100 border"
-              onClick={handleGoogleLogin}
               id="buttonGoogleLoginRegister"
-              disabled={authStatus !== "ready"}
+              disabled={!authReady}
+              onClick={signinWithGoogle}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -117,9 +109,9 @@ function LoginPage() {
             </Button>
             <Button
               className="w-100 border"
-              onClick={handleGithubLogin}
               id="buttonGithubLoginRegister"
-              disabled={authStatus !== "ready"}
+              disabled={!authReady}
+              onClick={signinWithGithub}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -137,10 +129,11 @@ function LoginPage() {
 
           <div className="divider">OR</div>
 
-          <Form onSubmit={handleSubmit(onSubmit)}>
+          <Form onSubmit={onSubmit}>
             <Form.Group className="mb-3" controlId="formBasicEmail">
               <Form.Label>Email address</Form.Label>
               <Form.Control
+                className="ui-input"
                 type="email"
                 placeholder="Enter email"
                 {...register("email", { required: true })}
@@ -150,6 +143,7 @@ function LoginPage() {
             <Form.Group className="mb-3" controlId="formBasicPassword">
               <Form.Label>Password</Form.Label>
               <Form.Control
+                className="ui-input"
                 type="password"
                 placeholder="Password"
                 {...register("password", { required: true })}
@@ -168,14 +162,14 @@ function LoginPage() {
               type="submit"
               className="w-100"
               id="buttonLoginRegister"
-              disabled={authStatus !== "ready"}
+              disabled={!authReady}
             >
               Login
             </Button>
           </Form>
         </Card.Body>
       </Card>
-    </Container>
+    </Container></main>
   );
 }
 

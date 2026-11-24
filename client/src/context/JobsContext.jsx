@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import PropTypes from "prop-types";
 import JobsContext from "./JobsContextInstance.js";
 import {
@@ -15,6 +15,7 @@ import { v4 as uuidv4 } from "uuid";
 import { getFirebaseServices } from "../firebase/firebaseServices.js";
 
 const SERVICES_UNAVAILABLE_MESSAGE = "Jobs are currently unavailable.";
+const getErrorMessage = (error) => typeof error?.message === "string" && error.message.trim() ? error.message : SERVICES_UNAVAILABLE_MESSAGE;
 
 const fetchJobs = async (fireStore) => {
   const q = query(collection(fireStore, "jobs"));
@@ -28,7 +29,9 @@ const fetchJobs = async (fireStore) => {
 export const JobsProvider = ({ children }) => {
   const [jobs, setJobs] = useState([]);
   const [errors, setErrors] = useState(null);
+  const [loading, setLoading] = useState(true);
   const [services, setServices] = useState(null);
+  const jobsRequestId = useRef(0);
 
   const createJob = async (job) => {
     if (!services) {
@@ -66,16 +69,24 @@ export const JobsProvider = ({ children }) => {
   };
 
   const getAllJobs = async (availableServices = services) => {
-    if (!availableServices) {
-      setErrors(SERVICES_UNAVAILABLE_MESSAGE);
-      return [];
-    }
-    const { fireStore } = availableServices;
+    const requestId = ++jobsRequestId.current;
+    setLoading(true);
+    setErrors(null);
     try {
-      const jobs = await fetchJobs(fireStore);
+      const resolvedServices = availableServices || await getFirebaseServices();
+      const jobs = await fetchJobs(resolvedServices.fireStore);
+      if (requestId !== jobsRequestId.current) return jobs;
+      setServices(resolvedServices);
       setJobs(jobs);
+      setErrors(null);
+      setLoading(false);
+      return jobs;
     } catch (error) {
-      setErrors(error.message);
+      const message = getErrorMessage(error);
+      if (requestId !== jobsRequestId.current) return { error: message };
+      setErrors(message);
+      setLoading(false);
+      return { error: message };
     }
   };
 
@@ -173,27 +184,31 @@ export const JobsProvider = ({ children }) => {
   };
 
   useEffect(() => {
+    const requestId = ++jobsRequestId.current;
     let cancelled = false;
     getFirebaseServices()
       .then((availableServices) => {
-        if (cancelled) return;
+        if (cancelled || requestId !== jobsRequestId.current) return;
         setServices(availableServices);
+        setLoading(true);
+        setErrors(null);
         return fetchJobs(availableServices.fireStore)
-          .then(setJobs)
-          .catch((error) => setErrors(error.message));
+          .then((loadedJobs) => { if (!cancelled && requestId === jobsRequestId.current) { setJobs(loadedJobs); setErrors(null); setLoading(false); } })
+          .catch((error) => { if (!cancelled && requestId === jobsRequestId.current) { setErrors(getErrorMessage(error)); setLoading(false); } });
       })
       .catch(() => {
-        if (!cancelled) setErrors(SERVICES_UNAVAILABLE_MESSAGE);
+        if (!cancelled && requestId === jobsRequestId.current) { setErrors(SERVICES_UNAVAILABLE_MESSAGE); setLoading(false); }
       });
 
     return () => {
       cancelled = true;
+      jobsRequestId.current += 1;
     };
   }, []);
 
   return (
     <JobsContext.Provider
-      value={{ jobs, errors, createJob, updateJob, deleteJob, getAllJobs }}
+      value={{ jobs, loading, errors, createJob, updateJob, deleteJob, getAllJobs }}
     >
       {children}
     </JobsContext.Provider>

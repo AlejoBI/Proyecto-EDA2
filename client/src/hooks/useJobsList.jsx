@@ -14,7 +14,7 @@ const getErrorMessage = (error, fallback) => {
 };
 
 const useJobsList = () => {
-  const { jobs, deleteJob } = useJobs();
+  const { jobs, loading, errors, getAllJobs, deleteJob } = useJobs();
   const { user } = useAuth();
   const { createChat } = useChat();
 
@@ -161,6 +161,9 @@ const useJobsList = () => {
     JobsCount,
     setJobsCount,
     usersJobsCount,
+    loading,
+    errors,
+    retryJobs: getAllJobs,
   };
 };
 

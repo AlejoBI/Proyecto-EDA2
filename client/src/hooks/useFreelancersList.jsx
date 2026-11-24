@@ -31,13 +31,16 @@ const useFreelancersList = () => {
   const [toastMessage, setToastMessage] = useState("");
   const [toastType, setToastType] = useState("success");
   const [loading, setLoading] = useState(true);
+  const [errors, setErrors] = useState(null);
 
   useEffect(() => {
     const fetchUsers = async () => {
       setLoading(true);
+      setErrors(null);
       try {
         const res = await getAllUsers();
         if (!Array.isArray(res)) {
+          setErrors("Freelancers are currently unavailable.");
           setUsers([]);
           setFilteredUsers([]);
           setFreelancersCount(0);
@@ -71,7 +74,8 @@ const useFreelancersList = () => {
         });
 
         setSkillsCount(countSkills?.length);
-      } catch {
+      } catch (error) {
+        setErrors(getErrorMessage(error, "Freelancers are currently unavailable."));
         setUsers([]);
         setFilteredUsers([]);
       } finally {
@@ -79,6 +83,25 @@ const useFreelancersList = () => {
       }
     };
     fetchUsers();
+  }, [getAllUsers]);
+
+  const retryUsers = useCallback(() => {
+    setLoading(true);
+    setErrors(null);
+    return getAllUsers().then((res) => {
+      if (!Array.isArray(res)) throw new Error("Freelancers are currently unavailable.");
+      const professionals = res.filter((candidate) => candidate.role === "professional" && candidate.username?.trim() && candidate.email?.trim() && candidate.city?.trim() && candidate.country?.trim() && candidate.professionalArea?.trim() && Array.isArray(candidate.skills));
+      setUsers(professionals);
+      setFreelancersCount(professionals.length);
+      setSkillsCount(new Set(professionals.flatMap((candidate) => candidate.skills)).size);
+      setLoading(false);
+      return professionals;
+    }).catch((error) => {
+      setErrors(getErrorMessage(error, "Freelancers are currently unavailable."));
+      setUsers([]);
+      setLoading(false);
+      return [];
+    });
   }, [getAllUsers]);
 
   const applyFilters = useCallback(() => {
@@ -159,6 +182,8 @@ const useFreelancersList = () => {
     freelancersCount,
     skillsCount,
     loading,
+    errors,
+    retryUsers,
   };
 };
 

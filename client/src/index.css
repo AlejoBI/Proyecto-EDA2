@@ -19,6 +19,33 @@
   --grisnegro: #333;
 
   --morado: #8306ad;
+  --color-brand: #8306ad;
+  --color-brand-deep: #520078;
+  --moradooscuro: #520078;
+  --color-brand-hover: #6b0490;
+  --color-text: #333333;
+  --color-muted: #6c757d;
+  --color-surface: #ffffff;
+  --color-surface-subtle: #f5f5f5;
+  --color-accent-lavender: #a5a6f6;
+  --color-accent-green: #63c07c;
+  --color-accent-orange: #f9a86d;
+  --color-accent-pink: #f4537c;
+  --color-accent-mint: #7ed2b9;
+  --font-family-base: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  --space-1: .25rem;
+  --space-2: .5rem;
+  --space-3: .75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-10: 2.5rem;
+  --radius-sm: .25rem;
+  --radius-md: .5rem;
+  --radius-lg: .875rem;
+  --shadow-sm: 0 1px 3px rgba(36, 20, 43, .08);
+  --shadow-md: 0 8px 24px rgba(36, 20, 43, .12);
   --morado2: #74557e;
   --moradoclaro: #a5a6f6;
   --moradogradiente: linear-gradient(90deg, rgba(107,4,144,1) 0%, rgba(131,6,173,1) 100%);
@@ -45,6 +72,45 @@
 body {
   margin: 0;
 }
+
+.auth-page :where(a, button, input, select, textarea, [tabindex]):focus-visible,
+.not-found-page :where(a, button, input, select, textarea, [tabindex]):focus-visible,
+.home-page :where(a, button, input, select, textarea, [tabindex]):focus-visible,
+.footer_custom :where(a, button, input, select, textarea, [tabindex]):focus-visible,
+.navbar :where(a, button, input, select, textarea, [tabindex]):focus-visible {
+  outline: 2px solid #ffffff;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 5px var(--color-brand-deep);
+}
+
+.ui-state { color: var(--color-text); }
+.ui-state a, .ui-state button { color: var(--color-brand-deep); }
+
+.ui-button { border: 0; border-radius: .5rem; padding: .625rem 1rem; background: var(--color-brand-deep); color: #fff; cursor: pointer; }
+.ui-input { min-height: 2.75rem; border: 1px solid var(--color-muted); border-radius: .375rem; padding: .5rem .75rem; }
+.ui-card { display: block; color: #000; text-decoration: none; }
+.ui-state--loading, .ui-state--empty, .ui-state--error, .ui-state--retry { padding: 1rem; border-radius: .5rem; background: var(--color-surface-subtle); }
+.ui-state--error { color: #7a0018; }
+.ui-state--retry { color: var(--color-brand-deep); }
+
+.auth-page { min-height: 100vh; padding: clamp(.75rem, 3vw, 2rem); background: linear-gradient(to right, var(--color-brand-deep), var(--color-brand)); }
+.auth-page > .container { width: 100%; min-width: 0; max-width: none; min-height: calc(100vh - clamp(1.5rem, 6vw, 4rem)); padding: clamp(.5rem, 2vw, 1.5rem); }
+.auth-page .card.w-50 { box-sizing: border-box; width: min(100%, 32rem) !important; height: auto !important; flex: 0 1 32rem; border: 0; border-radius: 1.5rem; }
+.auth-page .card-body.w-50 { box-sizing: border-box; width: 100% !important; max-width: 28rem; margin: 0 !important; padding: clamp(1.25rem, 5vw, 2.5rem); }
+.auth-page .form-control, .auth-page .form-select { min-height: 2.75rem; border-color: var(--color-muted); }
+.auth-page .form-control:focus, .auth-page .form-select:focus { border-color: var(--color-brand-deep); box-shadow: 0 0 0 .2rem rgba(82, 0, 120, .2); }
+.auth-page :where(a, button, input, select, textarea, [tabindex]):focus-visible { outline: 2px solid #ffffff; outline-offset: 2px; box-shadow: 0 0 0 5px #520078 !important; }
+.auth-page #linkText { color: var(--color-brand-deep); }
+.auth-page #buttonLoginRegister { background: var(--color-brand-deep); color: #fff; }
+.auth-page #buttonLoginRegister:hover { background: var(--color-brand-hover); }
+.auth-page #buttonGoogleLoginRegister { color: var(--color-text); }
+.not-found-page { min-height: 50vh; display: grid; align-content: center; justify-items: center; text-align: center; padding: 3rem 1rem; color: var(--color-text); }
+.not-found-page a { color: var(--color-brand-deep); font-weight: 700; }
+.not-found-page a.ui-button,
+.not-found-page a.ui-button:visited { color: #fff; }
+.not-found-page a.ui-button:hover { color: #fff; background: var(--color-brand-hover); }
+.not-found-page a.ui-button:focus-visible { color: #fff; }
+@media (max-width: 575.98px) { .auth-page { padding: .5rem; } .auth-page > .container { padding: .5rem; } .auth-page .card-body.w-50 { padding: 1.25rem; } }
 /* Degradado background login y register# */
 .bg-gradient-custom {
   background: linear-gradient(to right, #520078, #8306AD);
@@ -116,4 +182,18 @@ body {
 
 .image-search {
   margin: 2%;
+}
+
+.auth-page #linkText { color: #520078; font-weight: 600; }
+.auth-page :where(.form-label, .alert) { color: #333333; }
+.auth-page .btn { min-height: 2.75rem; }
+
+@media (max-width: 360px) {
+  .auth-page > .container { padding: .25rem; }
+  .auth-page .card-body.w-50 { padding: 1rem; }
+}
+.modal .job-location-dropdown {
+  max-height: min(60vh, 28rem);
+  overflow-y: auto;
+  overscroll-behavior: contain;
 }

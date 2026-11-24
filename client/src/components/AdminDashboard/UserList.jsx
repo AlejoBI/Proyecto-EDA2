@@ -8,7 +8,7 @@ import professionalIcon from "../../assets/images/jobsicon.png";
 import customerIcon from "../../assets/images/edificios.png";
 import adminIcon from "../../assets/images/admin.png";
 
-const UserList = ({ searchTerm, onEditUser }) => {
+const UserList = ({ searchTerm, onEditUser, onDeleteUser }) => {
   const {
     totalUsersCount,
     professionalUsersCount,
@@ -34,9 +34,9 @@ const UserList = ({ searchTerm, onEditUser }) => {
   };
 
   return (
-    <Container className={styles.userContainer}>
+    <Container fluid className={styles.userContainer}>
       {/* Encabezado de estadísticas */}
-      <div className={styles.statsHeader}>
+      <section className={styles.statsHeader} aria-label="User statistics">
         <div className={styles.statItem}>
           <Image src={userIcon} alt="Total Users Icon" height="80" width="80" />
           <h4 className={styles.textStat}>Total Users: {totalUsersCount}</h4>
@@ -53,20 +53,30 @@ const UserList = ({ searchTerm, onEditUser }) => {
           <Image src={adminIcon} alt="Admin Users Icon" height="80" width="80" />
           <h4 className={styles.textStat}>Admin Users: {adminUsersCount}</h4>
         </div>
-      </div>
+      </section>
 
-      {filteredUsers.map((user) => (
+      {filteredUsers.length === 0 ? (
+        <div className={styles.emptyState} role="status">
+          <h2>{currentUsers.length ? "No matching users" : "No users yet"}</h2>
+          <p>{currentUsers.length ? "Try a different name or email." : "User accounts will appear here when available."}</p>
+        </div>
+      ) : filteredUsers.map((user) => (
         <div className={styles.userCard} key={user.id}>
           <Row className={styles.userRow}>
-            <Col>{user.username}</Col>
-            <Col>{user.email}</Col>
-            <Col>{user.role}</Col>
+            <Col xs={12} md>{user.username}</Col>
+            <Col xs={12} md>{user.email}</Col>
+            <Col xs={12} md><span className={styles.roleBadge}>{user.role}</span></Col>
             <Col>
-              <Button onClick={() => toggleDetails(user.id)}>Details</Button>
+              <Button aria-expanded={expandedUserId === user.id} onClick={() => toggleDetails(user.id)}>Details</Button>
             </Col>
             <Col>
               <Button variant="warning" onClick={() => handleEditClick(user)}>
                 Edit
+              </Button>
+            </Col>
+            <Col>
+              <Button variant="danger" aria-label={`Delete ${user.username}`} onClick={() => onDeleteUser(user.id)}>
+                Delete
               </Button>
             </Col>
           </Row>
@@ -87,6 +97,7 @@ const UserList = ({ searchTerm, onEditUser }) => {
 UserList.propTypes = {
   searchTerm: PropTypes.string.isRequired,
   onEditUser: PropTypes.func.isRequired,
+  onDeleteUser: PropTypes.func.isRequired,
 };
 
 export default UserList;

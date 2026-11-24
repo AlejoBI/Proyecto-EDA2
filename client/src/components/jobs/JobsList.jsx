@@ -39,6 +39,9 @@ const JobsList = ({usoEsteFilter = true}) => {
     toastType,
     JobsCount,
     usersJobsCount,
+    loading,
+    errors,
+    retryJobs,
   } = useJobsList();
 
   const { user, isAuthenticated } = useAuth();
@@ -63,10 +66,10 @@ const JobsList = ({usoEsteFilter = true}) => {
         <Row className="mb-3">
           <Col>
             <Dropdown onSelect={handleCountryChange}>
-              <Dropdown.Toggle className={styles.job_toggle}>
+              <Dropdown.Toggle className={styles.job_toggle} aria-label="Filter jobs by country">
                 {selectedCountry === "All" ? "Select Country" : selectedCountry}
               </Dropdown.Toggle>
-              <Dropdown.Menu>
+              <Dropdown.Menu className={styles.dropdown_menu}>
                 <Dropdown.Item eventKey="All">All</Dropdown.Item>
                 {Object.keys(countriesAndCities).map((country, index) => (
                   <Dropdown.Item key={index} eventKey={country}>
@@ -78,10 +81,10 @@ const JobsList = ({usoEsteFilter = true}) => {
           </Col>
           <Col>
             <Dropdown onSelect={handleCityChange}>
-              <Dropdown.Toggle className={styles.job_toggle}>
+              <Dropdown.Toggle className={styles.job_toggle} aria-label="Filter jobs by city">
                 {selectedCity === "All" ? "Select City" : selectedCity}
               </Dropdown.Toggle>
-              <Dropdown.Menu>
+              <Dropdown.Menu className={styles.dropdown_menu}>
                 <Dropdown.Item eventKey="All">All</Dropdown.Item>
                 {selectedCountry === "All"
                   ? null
@@ -110,10 +113,10 @@ const JobsList = ({usoEsteFilter = true}) => {
       </div>)}
       <div className={styles.jobs_list}>
         <div>
-          <h4>
+          <h1 className={styles.page_title}>
             Hello {user ? user.username : "new user"} 👋🏼, here you can find all
             the jobs or people you need.
-          </h4>
+          </h1>
           <div className={styles.jobs_header}>
             <Image
               src={jobsicon}
@@ -137,9 +140,11 @@ const JobsList = ({usoEsteFilter = true}) => {
             </h4>
           </div>
         </div>
-        <section className={styles.job}>
-          {!filteredJobs.length ? (
-            <p>No jobs available</p>
+        <section className={styles.job} aria-label="Available jobs">
+          {loading ? <p className="ui-state--loading" role="status" aria-live="polite">Loading jobs…</p> : errors ? (
+            <div className="ui-state--error" role="alert"><p>{errors}</p><Button className={styles.job_button} onClick={retryJobs}>Retry</Button></div>
+          ) : !filteredJobs.length ? (
+            <p className="ui-state--empty">No jobs available</p>
           ) : (
             currentItems.map((job) => (
               <div key={job.id} className={styles.job_card}>
@@ -201,7 +206,7 @@ const JobsList = ({usoEsteFilter = true}) => {
           )}
         </section>
 
-        <section>
+        {!loading && !errors && filteredJobs.length > 0 && <nav className={styles.pagination} aria-label="Job pages">
           <Button
             className={styles.job_button}
             onClick={handlePreviousPage}
@@ -213,12 +218,12 @@ const JobsList = ({usoEsteFilter = true}) => {
             className={styles.job_button}
             onClick={handleNextPage}
             disabled={
-              currentPage === Math.ceil(filteredJobs.length / itemsPerPage)
+              currentPage >= Math.ceil(filteredJobs.length / itemsPerPage)
             }
           >
             Next
           </Button>
-        </section>
+        </nav>}
 
         {showEditModal && (
           <EditJob

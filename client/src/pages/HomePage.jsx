@@ -15,20 +15,13 @@ import MusicAndAudio from "../assets/images/MusicAndAudio.jpg";
 const HomePage = () => {
 
   return (
-    <>
+    <div className="home-page">
       <div className="container">
         <SearchServiceLanding />
       </div>
 
       <div className="container">
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "space-between",
-            margin: "50px auto",
-          }}
-        >
+        <div className="home-categories">
           <CustomLabelLanding
             text="Technology and Programming"
             img={TechnologyAndProgramming}
@@ -72,9 +65,9 @@ const HomePage = () => {
         className="container d-flex flex-column align-items-center justify-content-center text-center"
         style={{ height: "35vh", color: "#520078" }}
       >
-        <h2 className="fw-bold display-6">
+        <h1 className="fw-bold display-6">
           Discover the right expert for your needs
-        </h2>
+        </h1>
         <p className="fw-bold lead">
           Make your projects a reality with ease and smart solutions. Let’s
           bring your vision to life together!
@@ -88,7 +81,7 @@ const HomePage = () => {
       <div className="container">
         <BecomePartLanding />
       </div>
-    </>
+    </div>
   );
 };
 

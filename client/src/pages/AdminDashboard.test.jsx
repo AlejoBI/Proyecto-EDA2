@@ -25,12 +25,7 @@ vi.mock("../components/index", async () => {
   Sidebar: () => null,
   SearchBar: () => null,
   JobsList: () => null,
-  UserList: (props) => createElement(
-    "div",
-    null,
-    createElement(UserList, props),
-    createElement("button", { onClick: () => props.onDeleteUser("user-1") }, "Open delete")
-  ),
+  UserList: (props) => createElement(UserList, props),
   EditUserModal: ({ show, handleClose, handleConfirm }) => show
     ? createElement(
       "section",
@@ -115,7 +110,9 @@ describe("AdminDashboard administration flows", () => {
     dashboardMocks.deleteUser.mockRejectedValue(new Error("delete rejected"));
     render(<AdminDashboard />);
 
-    await user.click(screen.getByRole("button", { name: "Open delete" }));
+    await user.click(await screen.findByRole("button", { name: "Delete Before" }));
+    expect(screen.getByRole("dialog", { name: "Are you sure you want to delete this user?" })).toBeInTheDocument();
+    expect(dashboardMocks.deleteUser).not.toHaveBeenCalled();
     await user.click(screen.getByRole("button", { name: "Confirm delete" }));
 
     expect(await screen.findByRole("status")).toHaveTextContent("Failed to delete user");
@@ -130,11 +127,19 @@ describe("AdminDashboard administration flows", () => {
 
     await user.click(await screen.findByRole("button", { name: "Edit" }));
     await user.click(screen.getByRole("button", { name: "Cancel edit" }));
-    await user.click(screen.getByRole("button", { name: "Open delete" }));
+    await user.click(await screen.findByRole("button", { name: "Delete Before" }));
     await user.click(screen.getByRole("button", { name: "Cancel delete" }));
 
     expect(dashboardMocks.editUser).not.toHaveBeenCalled();
     expect(dashboardMocks.deleteUser).not.toHaveBeenCalled();
     expect(screen.queryByRole("status")).not.toBeInTheDocument();
+  });
+
+  it("renders the empty user state with fixture data and no backend", async () => {
+    dashboardMocks.getAllUsers.mockResolvedValueOnce([]);
+    render(<AdminDashboard />);
+
+    expect(await screen.findByRole("heading", { name: "No users yet" })).toBeInTheDocument();
+    expect(screen.getByText("User accounts will appear here when available.")).toBeInTheDocument();
   });
 });

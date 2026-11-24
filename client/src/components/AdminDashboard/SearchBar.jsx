@@ -8,10 +8,11 @@ const SearchBar = ({ searchTerm, handleSearch }) => {
   };
 
   return (
-    <InputGroup className={`${styles['search-bar']} mb-3`}>
+    <InputGroup className={`${styles.searchBar} mb-3`} role="search">
       <Form.Control
         type="text"
         placeholder="Search..."
+        aria-label="Search users"
         value={searchTerm}
         onChange={onInputChange}
       />

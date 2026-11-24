@@ -8,7 +8,7 @@ import { useAuth } from "../../hooks/useAuth.js";
 const Sidebar = ({ setCurrentView, currentView }) => {
   const { logout } = useAuth();
   return (
-    <div className={styles.sidebar}>
+    <aside className={styles.sidebar} aria-label="Admin navigation">
       <div className="logo">
         <Image
           src={logo}
@@ -17,15 +17,16 @@ const Sidebar = ({ setCurrentView, currentView }) => {
           width="80"
           className="d-inline-block align-center d-block mx-auto"
         />
-        <h4>AdminDashboard</h4>
+        <h4>Admin workspace</h4>
       </div>
       <div className={styles.links}>
-        <ul>
-          <p className="spann">Lists</p>
+        <nav aria-label="Dashboard sections">
+          <p className={styles.navLabel}>Workspace</p>
           <Button
             variant="primary"
             onClick={() => setCurrentView("freelancers")}
             className={currentView === "freelancers" ? styles.active : ""}
+            aria-current={currentView === "freelancers" ? "page" : undefined}
           >
             Users
           </Button>
@@ -33,15 +34,16 @@ const Sidebar = ({ setCurrentView, currentView }) => {
             variant="primary"
             onClick={() => setCurrentView("jobs")}
             className={currentView === "jobs" ? styles.active : ""}
+            aria-current={currentView === "jobs" ? "page" : undefined}
           >
             Jobs
           </Button>
           <Button variant="danger" onClick={() => logout()}>
             Logout
           </Button>
-        </ul>
+        </nav>
       </div>
-    </div>
+    </aside>
   );
 };
 

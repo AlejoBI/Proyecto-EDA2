@@ -72,13 +72,15 @@ const ChatApp = () => {
   }, [filteredChats, user.username]);
 
   return (
-    <div className="chat-app">
+    <div className={`chat-app ${activeChat ? "has-active-chat" : "no-active-chat"}`} data-active-chat={activeChat ? "true" : "false"}>
       <div className="chat-sidebar">
         <div className="chat-header">
           <h2>Messages</h2>
+          <label className="chat-search-label" htmlFor="chat-search">Search conversations</label>
           <input
+            id="chat-search"
             type="text"
-            placeholder="Search Chat"
+            placeholder="Search chats"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="chat-search"
@@ -86,10 +88,12 @@ const ChatApp = () => {
         </div>
         <div className="chat-list">
           {filteredChats.map((chat) => (
-            <div
+            <button
               key={chat.id}
               className="chat-item"
               onClick={() => handleSetActiveChat(chat.id, chat.usernames)}
+              aria-pressed={activeChat === chat.id}
+              aria-label={`Open chat with ${chat.usernames.filter((u) => u !== user.username).join(", ")}`}
             >
                   <div className="chat-avatar-container">
                 <img
@@ -109,13 +113,23 @@ const ChatApp = () => {
                 <span className="chat-time">Last message</span>
               </div>
               <span className="chat-status"></span>
-            </div>
+            </button>
           ))}
         </div>
       </div>
 
       <div className="chat-window">
         <div className="chat-header-window">
+          {activeChat && (
+            <button
+              type="button"
+              className="chat-back-button"
+              onClick={() => { setActiveChat(null); setNewMessage(""); }}
+              aria-label="Back to conversations"
+            >
+              Back to conversations
+            </button>
+          )}
           <div className="chat-avatar-container">
             {activeChat ? (
               (() => {
@@ -180,7 +194,9 @@ const ChatApp = () => {
 
         {activeChat && (
           <div className="chat-input-container">
+            <label className="chat-composer-label" htmlFor="chat-message">Message</label>
             <input
+              id="chat-message"
               type="text"
               placeholder="Write a message..."
               value={newMessage}
@@ -192,6 +208,7 @@ const ChatApp = () => {
               onClick={handleSendMessage}
               className="send-button"
               disabled={!newMessage.trim()}
+              aria-label="Send message"
             >
               Send
             </button>

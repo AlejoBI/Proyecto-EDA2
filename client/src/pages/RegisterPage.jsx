@@ -14,8 +14,13 @@ function RegisterPage() {
     handleSubmit,
     formState: { errors },
   } = useForm();
-  const { signup, isAuthenticated, errors: registerErrors, authStatus } = useAuth();
-  const authUnavailable = authStatus === "unavailable";
+  const {
+    isAuthenticated,
+    errors: registerErrors,
+    signup,
+    authStatus,
+    loading,
+  } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const [showToast, setShowToast] = useState(false);
@@ -26,9 +31,8 @@ function RegisterPage() {
     }
   }, [isAuthenticated, location.pathname, navigate]);
 
-  const onSubmit = handleSubmit(async (values) => {
-    signup(values);
-  });
+  const onSubmit = handleSubmit((values) => signup(values));
+  const authReady = authStatus === "ready" && !loading;
 
   useEffect(() => {
     if (registerErrors) {
@@ -37,7 +41,7 @@ function RegisterPage() {
   }, [registerErrors]);
 
   return (
-    <Container className="d-flex align-items-center justify-content-center min-vh-100 min-vw-100 bg-gradient-custom">
+    <main className="auth-page"><Container className="d-flex align-items-center justify-content-center bg-gradient-custom">
       <CustomToast
         show={showToast}
         message={registerErrors ? registerErrors : ""}
@@ -48,7 +52,7 @@ function RegisterPage() {
       <Card className="shadow-lg rounded-5 w-50 h-50 d-flex justify-content-center align-items-center">
         <Card.Body className="mx-3 my-5 w-50 h-50">
           <div className="d-flex justify-content-end">
-            <Button variant="link" href="/" className="p-0">
+            <Button variant="link" href="/" className="p-0" aria-label="Close sign up">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="16"
@@ -63,6 +67,7 @@ function RegisterPage() {
           <div className="text-center mb-4">
             <Image
               src={logoImage}
+              alt="Freelance platform logo"
               className="img-fluid"
               style={{ width: "80px", height: "80px" }}
             />
@@ -75,17 +80,16 @@ function RegisterPage() {
             </p>
           </div>
 
-          {authUnavailable && (
-            <Alert variant="warning" role="alert">
+          {authStatus === "unavailable" && <Alert variant="warning" role="alert">
               Registration is currently unavailable. Please try again later.
-            </Alert>
-          )}
+          </Alert>}
 
           <div className="divider">OR</div>
           <Form onSubmit={onSubmit}>
             <Form.Group className="mb-3" controlId="formBasicUsername">
               <Form.Label>Username</Form.Label>
               <Form.Control 
+                className="ui-input"
                 type="text"
                 placeholder="Enter username"
                 {...register("username", { required: true })} 
@@ -97,6 +101,7 @@ function RegisterPage() {
             <Form.Group className="mb-3" controlId="formBasicEmail">
               <Form.Label>Email address</Form.Label>
               <Form.Control
+                className="ui-input"
                 type="email"
                 placeholder="Enter email"
                 {...register("email", { required: true })}
@@ -108,6 +113,7 @@ function RegisterPage() {
             <Form.Group className="mb-3" controlId="formBasicPassword">
               <Form.Label>Password</Form.Label>
               <Form.Control
+                className="ui-input"
                 type="password"
                 placeholder="Password"
                 {...register("password", { required: true })}
@@ -118,7 +124,7 @@ function RegisterPage() {
             </Form.Group>
             <Form.Group className="mb-3" controlId="formBasicRole">
               <Form.Label>Role</Form.Label>
-              <Form.Select {...register("role", { required: true })}>
+              <Form.Select className="ui-input" {...register("role", { required: true })}>
                 <option value="customer">Customer</option>
                 <option value="professional">Professional</option>
               </Form.Select>
@@ -129,14 +135,14 @@ function RegisterPage() {
               type="submit"
               className="w-100"
               id="buttonLoginRegister"
-              disabled={authStatus !== "ready"}
+              disabled={!authReady}
             >
               Register
             </Button>
           </Form>
         </Card.Body>
       </Card>
-    </Container>
+    </Container></main>
   );
 }
 

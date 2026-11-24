@@ -12,19 +12,42 @@ const Footer = () => {
   return (
     <div className={styles.footer_custom}>
       <div style={{ padding: "2% 7%" }}>
+        <div className={styles.mobile_footer}>
+          <button type="button" onClick={ScrollToTop} className={styles.mobile_brand} aria-label="Scroll to top">
+            <Image src={logoImage} className={styles.logo_footer} alt="" />
+            <span>Taskeria</span>
+          </button>
+          <div className={styles.mobile_groups}>
+            {[
+              ["Categories", "categories"],
+              ["Help", "help"],
+              ["Community", "community"],
+              ["Company", "company"],
+            ].map(([heading, key]) => (
+              <section key={key} className={styles.mobile_group}>
+                <h2 className={styles.mobile_heading}>{heading}</h2>
+                <ul>
+                  {tableData.filter((row) => row[key]).map((row, index) => (
+                    <li key={`${key}-${index}`}><Link to="/freelancers" className={styles.style_table2}>{row[key]}</Link></li>
+                  ))}
+                </ul>
+              </section>
+            ))}
+          </div>
+        </div>
         <div className={styles.table_scroll}>
           <Table className={styles.style_table}>
             <thead>
             <tr>
               <th>
-                <div onClick={ScrollToTop} className={styles.image_footer}>
+                <button type="button" onClick={ScrollToTop} className={styles.image_footer} aria-label="Scroll to top">
                   <Image
                     src={logoImage}
                     className={styles.logo_footer}
                     alt="Logo"
                   />
                   <h4 className={styles.text_table}>Taskeria</h4>
-                </div>
+                </button>
               </th>
               <th className={styles.text_table}>Categories</th>
               <th className={styles.text_table}>Help</th>

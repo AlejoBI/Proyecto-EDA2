@@ -1,12 +1,11 @@
 /* Ruta: src/assets/css/NavigationMenu.module.css */
 
 .navbar {
-    background-color: #8306AD;
-    padding: 0.3% 8%;
-    width: 86%;
-    height: 5%;
-    margin: 25px auto;
-    border-radius: 40px;
+    background-color: var(--color-brand);
+    padding: 0.5rem clamp(1rem, 4vw, 3rem);
+    width: min(94%, 1440px);
+    margin: 1rem auto;
+    border-radius: 2rem;
   }
   
   .brandContainer {
@@ -19,11 +18,11 @@
     font-weight: bold;
   }
   
-  .navLinksContainer {
+.navLinksContainer {
     display: flex;
     justify-content: flex-start;
     width: 100%;
-    padding-left: 28%;
+    padding-left: clamp(0rem, 3vw, 2rem);
   }
   
   .authButtons {
@@ -33,6 +32,10 @@
   .link {
     color: white;
   }
+
+  .link:hover, .link:focus-visible { color: #ffffff; text-decoration: underline; }
+
+  .navbar :where(a, button, input, select, textarea, [tabindex]):focus-visible { outline: 2px solid #ffffff; outline-offset: 2px; box-shadow: 0 0 0 5px #520078; }
   
   .loginButton, .registerButton {
     background-color: #520078;
@@ -43,4 +46,9 @@
   .loginButton {
     margin-right: 10px;
   }
-  
+
+@media (max-width: 991.98px) {
+  .navbar { width: calc(100% - 1.5rem); border-radius: 1.25rem; }
+  .navLinksContainer { padding-left: 0; }
+  .authButtons { align-items: flex-start; gap: .5rem; }
+}

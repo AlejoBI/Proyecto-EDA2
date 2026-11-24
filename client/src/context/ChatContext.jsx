@@ -1,163 +1,48 @@
-import { useCallback, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import PropTypes from "prop-types";
 import ChatContext from "./ChatContextInstance.js";
+import { getFirebaseServices } from "../firebase/firebaseServices.js";
+import { collection, addDoc, query, where, getDocs, doc, getDoc, orderBy, onSnapshot } from "firebase/firestore";
 
-import appFirebase from "../firebase/credentials.js";
-import {
-  getFirestore,
-  collection,
-  addDoc,
-  query,
-  where,
-  getDocs,
-  doc,
-  getDoc,
-  orderBy,
-  onSnapshot,
-} from "firebase/firestore";
-
-const fireStore = getFirestore(appFirebase);
-
-const getErrorMessage = (error, fallback) => {
-  try {
-    const message = error?.message;
-    return typeof message === "string" && message.trim() ? message : fallback;
-  } catch {
-    return fallback;
-  }
-};
+const errorMessage = (error, fallback) => typeof error?.message === "string" && error.message.trim() ? error.message : fallback;
 
 export const ChatProvider = ({ children }) => {
   const [chats, setChats] = useState([]);
   const [messages, setMessages] = useState([]);
   const [errors, setErrors] = useState(null);
+  const servicesRef = useRef(null);
+  const getServices = () => servicesRef.current || getFirebaseServices().then((services) => (servicesRef.current = services));
 
   const createChat = async (data) => {
     try {
-      const q = query(
-        collection(fireStore, "chats"),
-        where("users", "array-contains", data.userId)
-      );
-
-      const chatsSnapshot = await getDocs(q);
-
-      const existingChat = chatsSnapshot.docs.find((doc) =>
-        doc.data().users.includes(data.participantId)
-      );
-
-      if (existingChat) {
-        return { chatId: existingChat.id };
-      }
-
-      const userRef = doc(fireStore, "users", data.userId);
-      const participantRef = doc(fireStore, "users", data.participantId);
-
-      const [userDoc, participantDoc] = await Promise.all([
-        getDoc(userRef),
-        getDoc(participantRef),
-      ]);
-
-      if (!userDoc.exists() || !participantDoc.exists()) {
-        setErrors("User not found");
-        throw new Error("User not found");
-      }
-
-      const userName = userDoc.data().username;
-      const participantName = participantDoc.data().username;
-
-      const userImage = userDoc.data().profileImage;
-      const participantImage = participantDoc.data().profileImage;
-
-      const newChat = await addDoc(collection(fireStore, "chats"), {
-        users: [data.userId, data.participantId],
-        usernames: [userName, participantName],
-        images: [userImage, participantImage],
-        createdAt: new Date(),
-      });
-
-      return { chatId: newChat.id };
-    } catch (error) {
-      const message = getErrorMessage(error, "Error creating chat");
-      setErrors(message);
-      throw new Error(message);
-    }
+      const { fireStore } = await getServices();
+      const q = query(collection(fireStore, "chats"), where("users", "array-contains", data.userId));
+      const snapshot = await getDocs(q);
+      const existing = snapshot.docs.find((item) => item.data().users.includes(data.participantId));
+      if (existing) return { chatId: existing.id };
+      const [userDoc, participantDoc] = await Promise.all([getDoc(doc(fireStore, "users", data.userId)), getDoc(doc(fireStore, "users", data.participantId))]);
+      if (!userDoc.exists() || !participantDoc.exists()) throw new Error("User not found");
+      const chat = await addDoc(collection(fireStore, "chats"), { users: [data.userId, data.participantId], usernames: [userDoc.data().username, participantDoc.data().username], images: [userDoc.data().profileImage, participantDoc.data().profileImage], createdAt: new Date() });
+      return { chatId: chat.id };
+    } catch (error) { const message = errorMessage(error, "Error creating chat"); setErrors(message); throw new Error(message); }
   };
 
-  const getUserChats = useCallback((userId) => {
-    try {
-      const q = query(
-        collection(fireStore, "chats"),
-        where("users", "array-contains", userId)
-      );
-      const unsubscribe = onSnapshot(q, (snapshot) => {
-        const fetchedChats = snapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        }));
-        setChats(fetchedChats);
-      }, (error) => {
-        setErrors(getErrorMessage(error, "Error fetching user chats"));
-      });
-      return unsubscribe;
-    } catch (error) {
-      setErrors(getErrorMessage(error, "Error fetching user chats"));
-      return undefined;
-    }
+  const listen = useCallback((buildQuery, setter, fallback) => {
+    let cancelled = false;
+    let unsubscribe;
+    getServices().then(({ fireStore }) => {
+      if (cancelled) return;
+      unsubscribe = onSnapshot(buildQuery(fireStore), (snapshot) => setter(snapshot.docs.map((item) => ({ id: item.id, ...item.data() }))), (error) => setErrors(errorMessage(error, fallback)));
+      if (cancelled) unsubscribe();
+    }).catch((error) => { if (!cancelled) setErrors(errorMessage(error, fallback)); });
+    return () => { cancelled = true; unsubscribe?.(); };
   }, []);
-
-  const listenToMessages = useCallback((chatId) => {
-    try {
-      const messagesRef = collection(fireStore, `chats/${chatId}/messages`);
-      const messagesQuery = query(messagesRef, orderBy("timestamp", "asc"));
-
-      const unsubscribe = onSnapshot(messagesQuery, (snapshot) => {
-        const fetchedMessages = snapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        }));
-        setMessages(fetchedMessages);
-      }, (error) => {
-        setErrors(getErrorMessage(error, "Error fetching messages"));
-      });
-      return unsubscribe;
-    } catch (error) {
-      setErrors(getErrorMessage(error, "Error fetching messages"));
-      return undefined;
-    }
-  }, []);
-
+  const getUserChats = useCallback((userId) => listen((db) => query(collection(db, "chats"), where("users", "array-contains", userId)), setChats, "Error fetching user chats"), [listen]);
+  const listenToMessages = useCallback((chatId) => listen((db) => query(collection(db, `chats/${chatId}/messages`), orderBy("timestamp", "asc")), setMessages, "Error fetching messages"), [listen]);
   const sendMessage = async (chatId, senderId, message) => {
-    try {
-      await addDoc(collection(fireStore, `chats/${chatId}/messages`), {
-        senderId,
-        message,
-        timestamp: new Date(),
-      });
-      return { success: true };
-    } catch (error) {
-      const message = getErrorMessage(error, "Error sending message");
-      setErrors(message);
-      return { success: false, error: message };
-    }
+    try { const { fireStore } = await getServices(); await addDoc(collection(fireStore, `chats/${chatId}/messages`), { senderId, message, timestamp: new Date() }); return { success: true }; }
+    catch (error) { const messageText = errorMessage(error, "Error sending message"); setErrors(messageText); return { success: false, error: messageText }; }
   };
-
-  return (
-    <ChatContext.Provider
-      value={{
-        chats,
-        messages,
-        errors,
-        createChat,
-        sendMessage,
-        getUserChats,
-        listenToMessages,
-      }}
-    >
-      {children}
-    </ChatContext.Provider>
-  );
+  return <ChatContext.Provider value={{ chats, messages, errors, createChat, sendMessage, getUserChats, listenToMessages }}>{children}</ChatContext.Provider>;
 };
-
-ChatProvider.propTypes = {
-  children: PropTypes.node.isRequired,
-};
+ChatProvider.propTypes = { children: PropTypes.node.isRequired };

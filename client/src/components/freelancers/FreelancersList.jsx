@@ -32,7 +32,9 @@ const FreelancersList = () => {
     setCurrentPage,
     freelancersCount,
     skillsCount,
-    loading
+    loading,
+    errors,
+    retryUsers
   } = useFreelancersList();
 
   const { countriesAndCities, professionalAreas, professionalAreasAndSkills } = useParentComponentData();
@@ -84,10 +86,10 @@ const FreelancersList = () => {
         <Row className="mb-3">
           <Col>
             <Dropdown onSelect={handleCountryChange}>
-              <Dropdown.Toggle className={styles.freelancer_toggle}>
+              <Dropdown.Toggle className={styles.freelancer_toggle} aria-label="Filter freelancers by country">
                 {selectedCountry === "All" ? "Select Country" : selectedCountry}
               </Dropdown.Toggle>
-              <Dropdown.Menu>
+              <Dropdown.Menu className={styles.dropdown_menu}>
                 <Dropdown.Item eventKey="All">All</Dropdown.Item>
                 {Object.keys(countriesAndCities).map((country, index) => (
                   <Dropdown.Item key={index} eventKey={country}>
@@ -99,10 +101,10 @@ const FreelancersList = () => {
           </Col>
           <Col>
             <Dropdown onSelect={handleCityChange}>
-              <Dropdown.Toggle className={styles.freelancer_toggle}>
+              <Dropdown.Toggle className={styles.freelancer_toggle} aria-label="Filter freelancers by city">
                 {selectedCity === "All" ? "Select City" : selectedCity}
               </Dropdown.Toggle>
-              <Dropdown.Menu>
+              <Dropdown.Menu className={styles.dropdown_menu}>
                 <Dropdown.Item eventKey="All">All</Dropdown.Item>
                 {selectedCountry === "All" ? (
                   <Dropdown.Item disabled>No cities available</Dropdown.Item>
@@ -120,10 +122,10 @@ const FreelancersList = () => {
           </Col>
           <Col>
             <Dropdown onSelect={handleAreaChange}>
-              <Dropdown.Toggle className={styles.freelancer_toggle}>
+              <Dropdown.Toggle className={styles.freelancer_toggle} aria-label="Filter freelancers by professional area">
                 {selectedArea === "All" ? "Select Area" : selectedArea}
               </Dropdown.Toggle>
-              <Dropdown.Menu>
+              <Dropdown.Menu className={styles.dropdown_menu}>
                 <Dropdown.Item eventKey="All">All</Dropdown.Item>
                 {professionalAreas.map((area, index) => (
                   <Dropdown.Item key={index} eventKey={area}>
@@ -135,10 +137,10 @@ const FreelancersList = () => {
           </Col>
           <Col>
             <Dropdown onSelect={handleSkillChange}>
-              <Dropdown.Toggle className={styles.freelancer_toggle}>
+              <Dropdown.Toggle className={styles.freelancer_toggle} aria-label="Filter freelancers by skill">
                 {selectedSkill === "All" ? "Select Skill" : selectedSkill}
               </Dropdown.Toggle>
-              <Dropdown.Menu>
+              <Dropdown.Menu className={styles.dropdown_menu}>
                 <Dropdown.Item eventKey="All">All</Dropdown.Item>
                 {selectedArea === "All" ? (
                   <Dropdown.Item disabled>No skills available</Dropdown.Item>
@@ -158,10 +160,10 @@ const FreelancersList = () => {
       </div>
       <div className={styles.freelancers_list}>
         <div>
-          <h4>
+          <h1 className={styles.page_title}>
             Hello {user ? user.username : "new user"} 👋🏼, here you can find all
             the jobs or people you need.
-          </h4>
+          </h1>
           <div className={styles.freelancers_header}>
             <Image
               src={freeicon}
@@ -187,9 +189,11 @@ const FreelancersList = () => {
         </div>
         <section className={styles.freelancer}>
           {loading ? (
-            <CustomSpinner />
+            <div className="ui-state--loading" role="status" aria-live="polite"><CustomSpinner />Loading freelancers…</div>
+          ) : errors ? (
+            <div className="ui-state--error" role="alert"><p>{errors}</p><Button className={styles.freelancer_button} onClick={retryUsers}>Retry</Button></div>
           ) : !filteredUsers.length ? (
-            <p>No freelancers available</p>
+            <p className="ui-state--empty">No freelancers available</p>
           ) : (
             currentItems.map((userJ) => (
               <div key={userJ.id} className={styles.freelancer_card}>
@@ -241,7 +245,7 @@ const FreelancersList = () => {
           )}
         </section>
 
-        <section>
+        {!loading && !errors && filteredUsers.length > 0 && <nav className={styles.pagination} aria-label="Freelancer pages">
           <Button
             className={styles.freelancer_button}
             onClick={handlePreviousPage}
@@ -253,12 +257,12 @@ const FreelancersList = () => {
             className={styles.freelancer_button}
             onClick={handleNextPage}
             disabled={
-              currentPage === Math.ceil(filteredUsers.length / itemsPerPage)
+              currentPage >= Math.ceil(filteredUsers.length / itemsPerPage)
             }
           >
             Next
           </Button>
-        </section>
+        </nav>}
       </div>
 
       <CustomToast

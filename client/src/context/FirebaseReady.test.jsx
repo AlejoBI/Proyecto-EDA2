@@ -58,19 +58,15 @@ vi.mock("firebase/firestore", () => ({
 
 vi.mock("../components/index.jsx", async () => {
   const { createElement: h } = await import("react");
-  const [{ useAuth: authHook }, { useJobs: jobsHook }] = await Promise.all([
-    import("../hooks/useAuth.js"), import("../hooks/useJobs.js"),
-  ]);
+  const { useAuth: authHook } = await import("../hooks/useAuth.js");
   return {
     NavigationMenu: () => h("nav", null, "Navigation"), Footer: () => null,
     CustomSpinner: () => h("p", null, "Loading"), CustomToast: () => null,
     CustomLabelLanding: ({ text }) => h("div", null, text),
     SearchServiceLanding: () => {
       const auth = authHook();
-      const { jobs } = jobsHook();
       return h("section", null,
-        h("output", { "aria-label": "auth-probe" }, JSON.stringify({ authStatus: auth.authStatus, isAuthenticated: auth.isAuthenticated, user: auth.user })),
-        h("ul", { "aria-label": "jobs-probe" }, jobs.map((job) => h("li", { key: job.id }, job.title))));
+        h("output", { "aria-label": "auth-probe" }, JSON.stringify({ authStatus: auth.authStatus, isAuthenticated: auth.isAuthenticated, user: auth.user })));
     }, TestimonialLanding: () => null,
     BecomePartLanding: () => null,
     ProfileInformation: () => {
@@ -91,6 +87,11 @@ vi.mock("../pages/index.jsx", async () => {
     AdminDashboard: () => null, JobsPage: () => null, FreelancersPage: () => null,
     LoginPage: () => null, RegisterPage: () => null, ChatPage: () => null,
   };
+});
+vi.mock("../pages/JobsPage.jsx", async () => {
+  const [{ createElement: h }, { useJobs }] = await Promise.all([import("react"), import("../hooks/useJobs.js")]);
+  function JobsRouteProbe() { const { jobs, loading, errors } = useJobs(); return h("div", { "data-testid": "jobs-route-probe" }, loading ? h("p", { role: "status" }, "Loading jobs") : errors ? h("p", { role: "alert" }, errors) : jobs.length ? h("ul", null, jobs.map((job) => h("li", { key: job.id }, job.title))) : h("p", null, "No jobs available")); }
+  return { default: JobsRouteProbe };
 });
 
 import App from "../App.jsx";
@@ -129,21 +130,20 @@ describe("Firebase disponible completamente simulado", () => {
     expect(mocks.unsubscribe).toHaveBeenCalledOnce();
   });
 
-  it("sets auth ready and loads local jobs into the real Home page", async () => {
+  it("sets auth ready on Home without querying jobs", async () => {
     renderRoute("/");
     await waitFor(() => expect(mocks.authCallback).toBeTypeOf("function"));
     await act(async () => { await mocks.authCallback(professional); });
 
     expect(await screen.findByRole("heading", { name: "Discover the right expert for your needs" })).toBeInTheDocument();
-    expect(await screen.findByText("Local simulated job")).toBeInTheDocument();
+    expect(screen.getByRole("main")).toContainElement(screen.getByRole("heading", { level: 1, name: "Discover the right expert for your needs" }));
     expect(screen.getByLabelText("auth-probe")).toHaveTextContent('"authStatus":"ready"');
     expect(screen.getByLabelText("auth-probe")).toHaveTextContent('"isAuthenticated":true');
     expect(screen.getByLabelText("auth-probe")).toHaveTextContent('"role":"professional"');
     expect(mocks.getFirebaseServices).toHaveBeenCalled();
     expect(mocks.onAuthStateChanged).toHaveBeenCalledWith(mocks.fakeAuth, expect.any(Function));
     expect(mocks.getDoc).toHaveBeenCalled();
-    expect(mocks.getDocs).toHaveBeenCalled();
-    expect(mocks.collection).toHaveBeenCalledWith(mocks.fakeDb, "jobs");
+    expect(mocks.getDocs).not.toHaveBeenCalled();
     expect(mocks.getAuth).not.toHaveBeenCalled();
     expect(mocks.getFirestore).not.toHaveBeenCalled();
     for (const method of [mocks.createUserWithEmailAndPassword, mocks.signInWithEmailAndPassword, mocks.signInWithPopup, mocks.signOut, mocks.setDoc, mocks.addDoc, mocks.updateDoc, mocks.deleteDoc]) {
@@ -162,9 +162,39 @@ describe("Firebase disponible completamente simulado", () => {
     expect(mocks.getFirebaseServices).toHaveBeenCalled();
     expect(mocks.onAuthStateChanged).toHaveBeenCalled();
     expect(mocks.getDoc).toHaveBeenCalled();
-    expect(mocks.getDocs).toHaveBeenCalled();
+    expect(mocks.getDocs).not.toHaveBeenCalled();
     for (const method of [mocks.createUserWithEmailAndPassword, mocks.signInWithEmailAndPassword, mocks.signInWithPopup, mocks.signOut, mocks.setDoc, mocks.addDoc, mocks.updateDoc, mocks.deleteDoc]) {
       expect(method).not.toHaveBeenCalled();
     }
+  });
+
+  it("loads simulated jobs only on the jobs route", async () => {
+    renderRoute("/jobs");
+    await waitFor(() => expect(mocks.authCallback).toBeTypeOf("function"));
+    await act(async () => { await mocks.authCallback(null); });
+    expect(await screen.findByText("Local simulated job")).toBeInTheDocument();
+    await waitFor(() => expect(mocks.getDocs).toHaveBeenCalledOnce());
+    expect(mocks.collection).toHaveBeenCalledWith(mocks.fakeDb, "jobs");
+  });
+
+  it("shows loading and then empty only after a successful empty response", async () => {
+    let resolveJobs;
+    mocks.getDocs.mockReturnValueOnce(new Promise((resolve) => { resolveJobs = resolve; }));
+    renderRoute("/jobs");
+    await waitFor(() => expect(mocks.authCallback).toBeTypeOf("function"));
+    await act(async () => { await mocks.authCallback(null); });
+    await screen.findByTestId("jobs-route-probe");
+    expect(await screen.findByRole("status")).toHaveTextContent("Loading jobs");
+    await act(async () => resolveJobs({ docs: [] }));
+    expect(await screen.findByText("No jobs available")).toBeInTheDocument();
+    expect(screen.queryByRole("alert")).not.toBeInTheDocument();
+  });
+
+  it("shows an error rather than empty when Firebase services are unavailable on /jobs", async () => {
+    mocks.getFirebaseServices.mockRejectedValue(new Error("adapter unavailable"));
+    renderRoute("/jobs");
+    await screen.findByTestId("jobs-route-probe");
+    expect(await screen.findByRole("alert")).toHaveTextContent("Jobs are currently unavailable.");
+    expect(screen.queryByText("No jobs available")).not.toBeInTheDocument();
   });
 });

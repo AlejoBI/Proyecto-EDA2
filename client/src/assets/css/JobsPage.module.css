@@ -1,16 +1,20 @@
 .jobs_container {
   display: flex;
   flex-direction: row;
+  align-items: flex-start;
+  gap: 1.5rem;
   width: 100%;
-  padding: 20px;
+  max-width: 80rem;
+  padding: 1.5rem;
+  box-sizing: border-box;
 }
 
 .jobs_filter {
   display: flex;
   flex-direction: column;
-  width: 35%;
-  height: 10%;
-  padding: 20px;
+  flex: 0 0 17rem;
+  min-width: 0;
+  padding: 1.25rem;
   border-right: 1px solid #e0e0e0;
   background-color: #ffffff;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -18,8 +22,9 @@
 }
 
 .jobs_list {
-  width: 100%;
-  padding: 20px;
+  flex: 1 1 0;
+  min-width: 0;
+  padding: .5rem 0;
 }
 
 .job {
@@ -34,7 +39,9 @@
 }
 
 .job_card {
-  width: 1000px;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
   margin: 20px 0;
   padding: 20px;
   border: 1px solid #e0e0e0;
@@ -73,10 +80,15 @@
 
 .dropdown_menu {
   background: var(--moradogradiente);
+  max-height: min(60vh, 28rem);
+  overflow-y: auto;
+  overscroll-behavior: contain;
 }
 
 .jobs_header {
-  width: 1000px;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
   margin: 20px 0;
   padding: 40px;
   border: 1px solid #e0e0e0;
@@ -99,7 +111,7 @@
   color: white;
   cursor: pointer;
   border: none;
-  width: 15%;
+  min-width: 6rem;
 }
 
 .job_button:hover {
@@ -120,4 +132,30 @@
 
 .job_toggle:hover {
   background-color: var(--morado-hover);
+}
+
+.jobs_container :where(button, a, input, select, summary, [tabindex]):focus-visible { outline: 3px solid #520078; outline-offset: 3px; }
+.jobs_container :where(button, .job_toggle) { min-height: 2.75rem; }
+.jobs_container :where(.job_card, .jobs_header) { overflow-wrap: anywhere; }
+.jobs_header { gap: 1rem; flex-wrap: wrap; }
+.job { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr)); gap: 1rem; }
+.job_card { min-width: 0; margin: 0; }
+.job_button { width: auto; }
+.page_title { color: #333; font-size: clamp(1.25rem, 2vw, 1.75rem); }
+.pagination { display: flex; flex-wrap: wrap; gap: .5rem; }
+
+@media (max-width: 767.98px) {
+  .jobs_container { flex-direction: column; padding: 1rem; gap: 1rem; }
+  .jobs_filter { flex: 1 1 auto; width: 100%; }
+  .jobs_list { width: 100%; padding: 0; }
+  .jobs_filter :global(.row) { row-gap: .5rem; }
+  .jobs_header { justify-content: flex-start; padding: 1rem; }
+  .jobs_header img { width: 3rem; height: 3rem; }
+  .text_job { flex: 1 1 8rem; margin: 0; }
+}
+
+@media (max-width: 420px) {
+  .jobs_container { padding: .5rem; }
+  .jobs_filter, .job_card { padding: .875rem; }
+  .job_button { min-height: 2.75rem; }
 }

@@ -35,7 +35,7 @@ const TestimonialLanding = () => {
             <SplideSlide key={review.id}>
               <div className="testimonial-card">
                 <div className="testimonial-img-container">
-                  <img className="review-img" src={review.image} alt={review.name} />
+                  <img className="review-img" src={review.image} alt="Illustrative reviewer avatar" />
                   <div className="user-info">
                     <h4 className="user">{review.name}</h4>
                     <p className="position">{review.position}</p>

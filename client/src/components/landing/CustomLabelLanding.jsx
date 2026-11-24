@@ -1,21 +1,15 @@
 import PropTypes from "prop-types";
 import { Card } from "react-bootstrap";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const CustomLabelLanding = ({ text, img, numLabel, path }) => {
-  const navigate = useNavigate();
-
-  const handleClick = () => {
-    navigate(`/${path}`);
-  };
-
   return (
     <Card
+      as={Link}
+      to={`/${path}`}
+      className="home-category-card ui-card"
       style={{ width: "12rem", borderRadius: "10%" }}
       id={`cardLanding${numLabel}`}
-      onClick={() => {
-        handleClick();
-      }}
     >
       <Card.Body>
         <Card.Title>{text}</Card.Title>
@@ -23,10 +17,13 @@ const CustomLabelLanding = ({ text, img, numLabel, path }) => {
       <Card.Img
         variant="down"
         src={img}
-        style={{
-          margin: "10%",
-          borderRadius: "10%",
-        }}
+        alt={text}
+        width="240"
+        height="160"
+        loading="lazy"
+        decoding="async"
+        className="home-category-image"
+        style={{ borderRadius: "10%" }}
       />
     </Card>
   );

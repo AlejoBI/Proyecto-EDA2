@@ -14,6 +14,9 @@ const SearchServiceLanding = () => {
       <div className="w-60 image-search">
         <Image
           src={imageCanva}
+          alt="Freelancer working on a creative project"
+          width="640"
+          height="426"
           className="img-fluid"
           style={{
             borderRadius: "30px",

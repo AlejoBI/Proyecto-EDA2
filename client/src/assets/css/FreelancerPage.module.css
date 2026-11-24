@@ -1,16 +1,20 @@
 .freelancers_container {
   display: flex;
   flex-direction: row;
+  align-items: flex-start;
+  gap: 1.5rem;
   width: 100%;
-  padding: 20px;
+  max-width: 80rem;
+  padding: 1.5rem;
+  box-sizing: border-box;
 }
 
 .freelancers_filter {
   display: flex;
   flex-direction: column;
-  width: 35%;
-  height: 10%;
-  padding: 20px;
+  flex: 0 0 17rem;
+  min-width: 0;
+  padding: 1.25rem;
   border-right: 1px solid #e0e0e0;
   background-color: #ffffff;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -18,12 +22,16 @@
 }
 
 .freelancers_list {
-  width: 100%;
-  padding: 20px;
+  flex: 1 1 0;
+  min-width: 0;
+  padding: .5rem 0;
 }
 
 .freelancer {
   width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
   margin: 10px 0;
   border-radius: 10px;
 }
@@ -85,7 +93,7 @@
   color: white;
   cursor: pointer;
   border: none;
-  width: 15%;
+  min-width: 6rem;
 }
 
 
@@ -109,6 +117,12 @@
   background-color: var(--morado-hover);
 }
 
+.dropdown_menu {
+  max-height: min(60vh, 28rem);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
 .skill_container {
   display: flex;
   flex-direction: row;
@@ -129,4 +143,31 @@
   color: var(--blanco);
   box-shadow: 0 0 2px var(--negro);
   align-content: center;
+}
+
+.freelancers_container :where(button, a, input, select, [tabindex]):focus-visible { outline: 3px solid #520078; outline-offset: 3px; }
+.freelancers_container :where(button, .freelancer_toggle) { min-height: 2.75rem; }
+.freelancers_header { gap: 1rem; flex-wrap: wrap; }
+.freelancer { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr)); gap: 1rem; }
+.freelancer_card { margin: 0; overflow-wrap: anywhere; }
+.freelancer_title { display: flex; align-items: center; justify-content: space-between; gap: .75rem; flex-wrap: wrap; }
+.freelancer_button { width: auto; }
+.skill_label { margin: 0; }
+.skill_freelancer { margin: .25rem; padding: .6rem .9rem; }
+.page_title { color: #333; font-size: clamp(1.25rem, 2vw, 1.75rem); }
+.pagination { display: flex; flex-wrap: wrap; gap: .5rem; }
+
+@media (max-width: 767.98px) {
+  .freelancers_container { flex-direction: column; padding: 1rem; gap: 1rem; }
+  .freelancers_filter { flex: 1 1 auto; width: 100%; }
+  .freelancers_list { width: 100%; padding: 0; }
+  .freelancers_filter :global(.row) { row-gap: .5rem; }
+  .freelancers_header { justify-content: flex-start; padding: 1rem; }
+  .freelancers_header img { width: 3rem; height: 3rem; }
+  .text_freelancer { flex: 1 1 8rem; margin: 0; }
+}
+
+@media (max-width: 420px) {
+  .freelancers_container { padding: .5rem; }
+  .freelancers_filter, .freelancer_card { padding: .875rem; }
 }

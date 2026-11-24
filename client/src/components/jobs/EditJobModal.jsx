@@ -136,7 +136,7 @@ const EditJob = ({ show, handleClose, job }) => {
               <Dropdown.Toggle variant="secondary">
                 {selectedCountry || "Select Country"}
               </Dropdown.Toggle>
-              <Dropdown.Menu>
+              <Dropdown.Menu className="job-location-dropdown">
                 {Object.keys(countriesAndCities).map((country, index) => (
                   <Dropdown.Item key={index} eventKey={country}>
                     {country}
@@ -150,7 +150,7 @@ const EditJob = ({ show, handleClose, job }) => {
               <Dropdown.Toggle variant="secondary">
                 {selectedCity || "Select City"}
               </Dropdown.Toggle>
-              <Dropdown.Menu>
+              <Dropdown.Menu className="job-location-dropdown">
                 {selectedCountry &&
                   countriesAndCities[selectedCountry]?.map((city, index) => (
                     <Dropdown.Item key={index} eventKey={city}>

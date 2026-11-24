@@ -83,11 +83,16 @@ const AdminDashboard = () => {
 
   return (
     <Container fluid className={styles.adminDashboard}>
-      <Row>
-        <Col md={2} className={styles.sidebarCol}>
+      <Row className={styles.dashboardRow}>
+        <Col xs={12} md={3} lg={2} className={styles.sidebarCol}>
           <Sidebar setCurrentView={setCurrentView} currentView={currentView} />
         </Col>
-        <Col md={10} className={styles.contentCol}>
+        <Col xs={12} md={9} lg={10} className={styles.contentCol}>
+          <header className={styles.pageHeader}>
+            <p className={styles.eyebrow}>Administration</p>
+            <h1>{currentView === "freelancers" ? "Users" : "Jobs"}</h1>
+            <p>Manage platform activity and accounts.</p>
+          </header>
           {currentView === "freelancers" && (
             <>
               <SearchBar searchTerm={searchTerm} handleSearch={handleSearch} />
