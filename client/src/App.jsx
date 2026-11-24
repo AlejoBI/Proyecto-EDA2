@@ -1,3 +1,4 @@
+import PropTypes from "prop-types";
 import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext";
 import { JobsProvider } from "./context/JobsContext";
@@ -35,14 +36,17 @@ function Layout({ children }) {
   );
 }
 
+Layout.propTypes = {
+  children: PropTypes.node.isRequired,
+};
+
 function App() {
   return (
     <AuthProvider>
-      <AdminProvider>
-        <ChatProvider>
-          <JobsProvider>
-            <BrowserRouter>
-              <Routes>
+      <ChatProvider>
+        <JobsProvider>
+          <BrowserRouter>
+            <Routes>
                 <Route element={<PublicRoute />}>
                   <Route
                     path="/"
@@ -92,9 +96,11 @@ function App() {
                   <Route
                     path="/admin/dashboard"
                     element={
-                      <Layout>
-                        <AdminDashboard />
-                      </Layout>
+                      <AdminProvider>
+                        <Layout>
+                          <AdminDashboard />
+                        </Layout>
+                      </AdminProvider>
                     }
                   />
                 </Route>
@@ -107,11 +113,10 @@ function App() {
                     </Layout>
                   }
                 />
-              </Routes>
-            </BrowserRouter>
-          </JobsProvider>
-        </ChatProvider>
-      </AdminProvider>
+            </Routes>
+          </BrowserRouter>
+        </JobsProvider>
+      </ChatProvider>
     </AuthProvider>
   );
 }

@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
+import PropTypes from "prop-types";
 import { Modal, Button, Form } from "react-bootstrap";
 import { ConfirmModal } from "../index";
 
@@ -32,10 +33,12 @@ const EditUserModal = ({ show, handleClose, handleConfirm, user }) => {
     setShowConfirmModal(true);
   };
 
-  const confirmSave = () => {
-    handleConfirm(user.id, formData);
+  const confirmSave = async () => {
+    const succeeded = await handleConfirm(user.id, formData);
     setShowConfirmModal(false);
-    handleClose();
+    if (succeeded) {
+      handleClose();
+    }
   };
 
   return (
@@ -100,6 +103,18 @@ const EditUserModal = ({ show, handleClose, handleConfirm, user }) => {
       )}
     </>
   );
+};
+
+EditUserModal.propTypes = {
+  show: PropTypes.bool.isRequired,
+  handleClose: PropTypes.func.isRequired,
+  handleConfirm: PropTypes.func.isRequired,
+  user: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    username: PropTypes.string,
+    email: PropTypes.string,
+    role: PropTypes.string,
+  }).isRequired,
 };
 
 export default EditUserModal;

@@ -1,10 +1,18 @@
 import { Navigate, Outlet } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../hooks/useAuth.js";
 
 import { CustomSpinner } from "../components/index";
 
 function ProtectedRoute() {
-  const { user, isAuthenticated, loading } = useAuth();
+  const { user, isAuthenticated, loading, authStatus } = useAuth();
+
+  if (authStatus === "unavailable") {
+    return (
+      <p role="alert">
+        Authentication is unavailable. Private pages cannot be opened right now.
+      </p>
+    );
+  }
 
   if (loading) {
     return <CustomSpinner />;

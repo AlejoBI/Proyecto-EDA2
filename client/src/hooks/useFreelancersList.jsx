@@ -1,7 +1,16 @@
-import { useState, useEffect } from "react";
-import { useAuth } from "../context/AuthContext";
-import { useChat } from "../context/ChatContext";
+import { useCallback, useState, useEffect } from "react";
+import { useAuth } from "./useAuth.js";
+import { useChat } from "./useChat.js";
 import { useNavigate } from "react-router-dom";
+
+const getErrorMessage = (error, fallback) => {
+  try {
+    const message = error?.message;
+    return typeof message === "string" && message.trim() ? message : fallback;
+  } catch {
+    return fallback;
+  }
+};
 
 const useFreelancersList = () => {
   const { getAllUsers, user, isAuthenticated } = useAuth();
@@ -72,11 +81,7 @@ const useFreelancersList = () => {
     fetchUsers();
   }, [getAllUsers]);
 
-  useEffect(() => {
-    applyFilters();
-  }, [selectedCountry, selectedCity, selectedArea, selectedSkill, users]);
-
-  const applyFilters = () => {
+  const applyFilters = useCallback(() => {
     let updatedList = users;
     if (selectedCountry !== "All") {
       updatedList = updatedList.filter(
@@ -97,22 +102,27 @@ const useFreelancersList = () => {
       );
     }
     setFilteredUsers(updatedList);
-  };
+  }, [users, selectedCountry, selectedCity, selectedArea, selectedSkill]);
+
+  useEffect(() => {
+    applyFilters();
+  }, [applyFilters]);
 
   const handleStartChat = async (participantId) => {
     if (!isAuthenticated) return;
     try {
-      await createChat({
+      const result = await createChat({
         userId: user.id,
         participantId,
       });
+      if (!result?.chatId) throw new Error("Error al iniciar el chat");
       setToastMessage("Chat iniciado con éxito, redirigiendo...");
       setToastType("success");
       setTimeout(() => {
         navigate("/user/chat");
       }, 3000);
     } catch (error) {
-      setToastMessage("Error al iniciar el chat");
+      setToastMessage(getErrorMessage(error, "Error al iniciar el chat"));
       setToastType("error");
     } finally {
       setShowToast(true);

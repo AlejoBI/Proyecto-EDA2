@@ -1,4 +1,3 @@
-import React from "react";
 import { Container, Button, Dropdown, Row, Col, Image } from "react-bootstrap";
 import useParentComponentData from "../../hooks/useParentComponentData";
 import useFreelancersList from "../../hooks/useFreelancersList";

@@ -12,8 +12,9 @@ const Footer = () => {
   return (
     <div className={styles.footer_custom}>
       <div style={{ padding: "2% 7%" }}>
-        <Table className={styles.style_table}>
-          <thead>
+        <div className={styles.table_scroll}>
+          <Table className={styles.style_table}>
+            <thead>
             <tr>
               <th>
                 <div onClick={ScrollToTop} className={styles.image_footer}>
@@ -30,8 +31,8 @@ const Footer = () => {
               <th className={styles.text_table}>Community</th>
               <th className={styles.text_table}>Company</th>
             </tr>
-          </thead>
-          <tbody>
+            </thead>
+            <tbody>
             {tableData.map((row, index) => (
               <tr key={index}>
                 <td></td>
@@ -65,8 +66,9 @@ const Footer = () => {
                 </td>
               </tr>
             ))}
-          </tbody>
-        </Table>
+            </tbody>
+          </Table>
+        </div>
       </div>
       <div className={styles.footer_bottom}>
         <div className={styles.bottom_left}>

@@ -1,8 +1,7 @@
-import { createContext, useState, useContext, useEffect } from "react";
-
-import appFirebase from "../firebase/credentials.js";
+import { useState, useEffect } from "react";
+import PropTypes from "prop-types";
+import JobsContext from "./JobsContextInstance.js";
 import {
-  getFirestore,
   doc,
   setDoc,
   getDoc,
@@ -12,19 +11,31 @@ import {
   updateDoc,
   deleteDoc,
 } from "firebase/firestore";
-import { getAuth } from "firebase/auth";
 import { v4 as uuidv4 } from "uuid";
+import { getFirebaseServices } from "../firebase/firebaseServices.js";
 
-const auth = getAuth(appFirebase);
-const fireStore = getFirestore(appFirebase);
+const SERVICES_UNAVAILABLE_MESSAGE = "Jobs are currently unavailable.";
 
-export const JobsContext = createContext();
+const fetchJobs = async (fireStore) => {
+  const q = query(collection(fireStore, "jobs"));
+  const querySnapshot = await getDocs(q);
+  return querySnapshot.docs.map((doc) => ({
+    id: doc.id,
+    ...doc.data(),
+  }));
+};
 
 export const JobsProvider = ({ children }) => {
   const [jobs, setJobs] = useState([]);
   const [errors, setErrors] = useState(null);
+  const [services, setServices] = useState(null);
 
   const createJob = async (job) => {
+    if (!services) {
+      setErrors(SERVICES_UNAVAILABLE_MESSAGE);
+      return { error: SERVICES_UNAVAILABLE_MESSAGE };
+    }
+    const { auth, fireStore } = services;
     const { title, description, company, country, city, salary } = job;
     const jobId = uuidv4();
     const userId = auth.currentUser ? auth.currentUser.uid : null;
@@ -54,14 +65,14 @@ export const JobsProvider = ({ children }) => {
     }
   };
 
-  const getAllJobs = async () => {
+  const getAllJobs = async (availableServices = services) => {
+    if (!availableServices) {
+      setErrors(SERVICES_UNAVAILABLE_MESSAGE);
+      return [];
+    }
+    const { fireStore } = availableServices;
     try {
-      const q = query(collection(fireStore, "jobs"));
-      const querySnapshot = await getDocs(q);
-      const jobs = querySnapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
+      const jobs = await fetchJobs(fireStore);
       setJobs(jobs);
     } catch (error) {
       setErrors(error.message);
@@ -69,6 +80,11 @@ export const JobsProvider = ({ children }) => {
   };
 
   const updateJob = async (job) => {
+    if (!services) {
+      setErrors(SERVICES_UNAVAILABLE_MESSAGE);
+      return { error: SERVICES_UNAVAILABLE_MESSAGE };
+    }
+    const { auth, fireStore } = services;
     const { id, title, description, company, country, city, salary } = job;
     const userId = auth.currentUser ? auth.currentUser.uid : null;
 
@@ -111,6 +127,11 @@ export const JobsProvider = ({ children }) => {
   };
 
   const deleteJob = async (jobId) => {
+    if (!services) {
+      setErrors(SERVICES_UNAVAILABLE_MESSAGE);
+      return { error: SERVICES_UNAVAILABLE_MESSAGE };
+    }
+    const { auth, fireStore } = services;
     const userId = auth.currentUser ? auth.currentUser.uid : null;
 
     if (!userId) {
@@ -152,7 +173,22 @@ export const JobsProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    getAllJobs();
+    let cancelled = false;
+    getFirebaseServices()
+      .then((availableServices) => {
+        if (cancelled) return;
+        setServices(availableServices);
+        return fetchJobs(availableServices.fireStore)
+          .then(setJobs)
+          .catch((error) => setErrors(error.message));
+      })
+      .catch(() => {
+        if (!cancelled) setErrors(SERVICES_UNAVAILABLE_MESSAGE);
+      });
+
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   return (
@@ -164,10 +200,6 @@ export const JobsProvider = ({ children }) => {
   );
 };
 
-export const useJobs = () => {
-  const context = useContext(JobsContext);
-  if (!context) {
-    throw new Error("useJobs must be used within a JobsProvider");
-  }
-  return context;
+JobsProvider.propTypes = {
+  children: PropTypes.node.isRequired,
 };

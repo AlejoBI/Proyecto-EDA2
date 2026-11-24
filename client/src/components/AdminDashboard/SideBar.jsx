@@ -1,9 +1,9 @@
-import React from "react";
+import PropTypes from "prop-types";
 import { Button, Image } from "react-bootstrap";
 import logo from "../../assets/images/logo.png";
 import styles from "../../assets/css/AdminDashBoard.module.css";
 
-import { useAuth } from "../../context/AuthContext";
+import { useAuth } from "../../hooks/useAuth.js";
 
 const Sidebar = ({ setCurrentView, currentView }) => {
   const { logout } = useAuth();
@@ -43,6 +43,11 @@ const Sidebar = ({ setCurrentView, currentView }) => {
       </div>
     </div>
   );
+};
+
+Sidebar.propTypes = {
+  setCurrentView: PropTypes.func.isRequired,
+  currentView: PropTypes.oneOf(["freelancers", "jobs"]).isRequired,
 };
 
 export default Sidebar;

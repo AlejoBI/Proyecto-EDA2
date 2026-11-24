@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { useNavigate, Link } from "react-router-dom";
+import { useLocation, useNavigate, Link } from "react-router-dom";
 
-import { Form, Button, Container, Card, Image } from "react-bootstrap";
+import { Form, Button, Container, Card, Image, Alert } from "react-bootstrap";
 import logoImage from "../assets/images/logo.png";
 
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../hooks/useAuth.js";
 import { CustomToast } from "../components/index";
 
 function RegisterPage() {
@@ -14,13 +14,17 @@ function RegisterPage() {
     handleSubmit,
     formState: { errors },
   } = useForm();
-  const { signup, isAuthenticated, errors: registerErrors } = useAuth();
+  const { signup, isAuthenticated, errors: registerErrors, authStatus } = useAuth();
+  const authUnavailable = authStatus === "unavailable";
   const navigate = useNavigate();
+  const location = useLocation();
   const [showToast, setShowToast] = useState(false);
 
   useEffect(() => {
-    if (isAuthenticated) navigate("/");
-  }, [isAuthenticated]);
+    if (isAuthenticated && location.pathname !== "/") {
+      navigate("/", { replace: true });
+    }
+  }, [isAuthenticated, location.pathname, navigate]);
 
   const onSubmit = handleSubmit(async (values) => {
     signup(values);
@@ -71,6 +75,12 @@ function RegisterPage() {
             </p>
           </div>
 
+          {authUnavailable && (
+            <Alert variant="warning" role="alert">
+              Registration is currently unavailable. Please try again later.
+            </Alert>
+          )}
+
           <div className="divider">OR</div>
           <Form onSubmit={onSubmit}>
             <Form.Group className="mb-3" controlId="formBasicUsername">
@@ -119,6 +129,7 @@ function RegisterPage() {
               type="submit"
               className="w-100"
               id="buttonLoginRegister"
+              disabled={authStatus !== "ready"}
             >
               Register
             </Button>

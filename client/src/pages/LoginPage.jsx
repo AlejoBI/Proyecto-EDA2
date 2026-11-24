@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form"; // Used for form validation in React
-import { useNavigate, Link } from "react-router-dom";
+import { useLocation, useNavigate, Link } from "react-router-dom";
 
-import { Form, Button, Container, Card, Image } from "react-bootstrap";
+import { Form, Button, Container, Card, Image, Alert } from "react-bootstrap";
 import logoImage from "../assets/images/logo.png";
 
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../hooks/useAuth.js";
 import { CustomToast } from "../components/index";
 
 function LoginPage() {
@@ -20,13 +20,18 @@ function LoginPage() {
     signinWithGithub,
     isAuthenticated,
     errors: signinErrors,
+    authStatus,
   } = useAuth();
+  const authUnavailable = authStatus === "unavailable";
   const navigate = useNavigate();
+  const location = useLocation();
   const [showToast, setShowToast] = useState(false);
 
   useEffect(() => {
-    if (isAuthenticated) navigate("/");
-  }, [isAuthenticated]);
+    if (isAuthenticated && location.pathname !== "/") {
+      navigate("/", { replace: true });
+    }
+  }, [isAuthenticated, location.pathname, navigate]);
 
   const onSubmit = handleSubmit((data) => {
     signin(data);
@@ -78,18 +83,25 @@ function LoginPage() {
             />
             <h2 className="h4">Sign in</h2>
             <p className="mt-3 text-center">
-              Don't you have an account?{" "}
+              Don&apos;t you have an account?{" "}
               <Link to="/register" id="linkText">
                 Sign up
               </Link>
             </p>
           </div>
 
+          {authUnavailable && (
+            <Alert variant="warning" role="alert">
+              Authentication is currently unavailable. Please try again later.
+            </Alert>
+          )}
+
           <Container className="d-flex flex-column gap-2 justify-content-center align-items-center">
             <Button
               className="w-100 border"
               onClick={handleGoogleLogin}
               id="buttonGoogleLoginRegister"
+              disabled={authStatus !== "ready"}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -107,6 +119,7 @@ function LoginPage() {
               className="w-100 border"
               onClick={handleGithubLogin}
               id="buttonGithubLoginRegister"
+              disabled={authStatus !== "ready"}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -155,6 +168,7 @@ function LoginPage() {
               type="submit"
               className="w-100"
               id="buttonLoginRegister"
+              disabled={authStatus !== "ready"}
             >
               Login
             </Button>

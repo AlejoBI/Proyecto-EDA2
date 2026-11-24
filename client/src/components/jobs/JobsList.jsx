@@ -1,5 +1,6 @@
-import React, { useState } from "react";
-import { useAuth } from "../../context/AuthContext";
+import { useState } from "react";
+import PropTypes from "prop-types";
+import { useAuth } from "../../hooks/useAuth.js";
 import { CreateJob, EditJob, ConfirmModal, CustomToast } from "../index";
 import { Container, Button, Dropdown, Row, Col, Image } from "react-bootstrap";
 import useParentComponentData from "../../hooks/useParentComponentData";
@@ -252,6 +253,10 @@ const JobsList = ({usoEsteFilter = true}) => {
       />
     </Container>
   );
+};
+
+JobsList.propTypes = {
+  usoEsteFilter: PropTypes.bool,
 };
 
 export default JobsList;

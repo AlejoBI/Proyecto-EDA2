@@ -1,4 +1,3 @@
-import React from "react";
 import { FreelancersList } from "../components/index";
 import { Container } from "react-bootstrap";
 

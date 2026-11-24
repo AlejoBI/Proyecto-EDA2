@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
+import PropTypes from "prop-types";
 import useParentComponentData from "../../hooks/useParentComponentData";
 import styles from "../../assets/css/ProfilePage.module.css";
 
@@ -15,7 +16,7 @@ const CountryCitySelector = ({ register, setValue }) => {
     } else {
       setFilteredCities([]);
     }
-  }, [selectedCountry]);
+  }, [selectedCountry, countriesAndCities]);
 
   return (
     <>
@@ -56,6 +57,11 @@ const CountryCitySelector = ({ register, setValue }) => {
       </select>
     </>
   );
+};
+
+CountryCitySelector.propTypes = {
+  register: PropTypes.func.isRequired,
+  setValue: PropTypes.func.isRequired,
 };
 
 export default CountryCitySelector;

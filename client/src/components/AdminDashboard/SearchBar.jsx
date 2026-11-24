@@ -1,4 +1,4 @@
-import React from "react";
+import PropTypes from "prop-types";
 import { InputGroup, Form, Button } from "react-bootstrap";
 import styles from "../../assets/css/AdminDashBoard.module.css";
 
@@ -20,6 +20,11 @@ const SearchBar = ({ searchTerm, handleSearch }) => {
       </Button>
     </InputGroup>
   );
+};
+
+SearchBar.propTypes = {
+  searchTerm: PropTypes.string.isRequired,
+  handleSearch: PropTypes.func.isRequired,
 };
 
 export default SearchBar;

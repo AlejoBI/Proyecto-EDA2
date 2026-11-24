@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import useChatApp from "../../hooks/useChatApp";
 import { CustomToast } from "../index";
 import "../../assets/css/Chat.css";
@@ -37,20 +37,20 @@ const ChatApp = () => {
     setShowToast(true);
   };
 
-  const handleKeyDown = (e) => {
-    if (e.key === "Escape" && activeChat) {
-      setActiveChat(null);
-      setNewMessage("");
-    }
-  };
-
   useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === "Escape" && activeChat) {
+        setActiveChat(null);
+        setNewMessage("");
+      }
+    };
+
     window.addEventListener("keydown", handleKeyDown);
 
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [activeChat]);
+  }, [activeChat, setActiveChat, setNewMessage]);
 
   const handleSetActiveChat = (chatId, chatUsernames) => {
     setActiveChat(chatId);

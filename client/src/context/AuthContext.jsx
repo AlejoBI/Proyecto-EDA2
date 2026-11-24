@@ -1,8 +1,7 @@
-import { createContext, useState, useContext, useEffect } from "react";
-
-import appFirebase from "../firebase/credentials.js";
+import { useState, useEffect } from "react";
+import PropTypes from "prop-types";
+import AuthContext from "./AuthContextInstance.js";
 import {
-  getAuth,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   signOut,
@@ -12,7 +11,6 @@ import {
   signInWithPopup,
 } from "firebase/auth";
 import {
-  getFirestore,
   doc,
   setDoc,
   getDoc,
@@ -20,19 +18,30 @@ import {
   query,
   getDocs,
 } from "firebase/firestore";
+import { getFirebaseServices } from "../firebase/firebaseServices.js";
 
-const auth = getAuth(appFirebase);
-const fireStore = getFirestore(appFirebase);
-
-export const AuthContext = createContext();
+const AUTH_UNAVAILABLE_MESSAGE = "Authentication is currently unavailable.";
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(null);
   const [errors, setErrors] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [authStatus, setAuthStatus] = useState("checking");
+  const [services, setServices] = useState(null);
+
+  const getAvailableServices = () => {
+    if (!services) {
+      setErrors(AUTH_UNAVAILABLE_MESSAGE);
+      return null;
+    }
+    return services;
+  };
 
   const signup = async ({ username, email, password, role }) => {
+    const availableServices = getAvailableServices();
+    if (!availableServices) return { error: AUTH_UNAVAILABLE_MESSAGE };
+    const { auth, fireStore } = availableServices;
     setLoading(true);
     setErrors(null);
     try {
@@ -84,6 +93,9 @@ export const AuthProvider = ({ children }) => {
   };
 
   const signin = async ({ email, password }) => {
+    const availableServices = getAvailableServices();
+    if (!availableServices) return { error: AUTH_UNAVAILABLE_MESSAGE };
+    const { auth, fireStore } = availableServices;
     setLoading(true);
     setErrors(null);
     try {
@@ -128,6 +140,9 @@ export const AuthProvider = ({ children }) => {
   };
 
   const signinWithGoogle = async () => {
+    const availableServices = getAvailableServices();
+    if (!availableServices) return { error: AUTH_UNAVAILABLE_MESSAGE };
+    const { auth, fireStore } = availableServices;
     setLoading(true);
     setErrors(null);
     try {
@@ -174,6 +189,9 @@ export const AuthProvider = ({ children }) => {
   };
 
   const signinWithGithub = async () => {
+    const availableServices = getAvailableServices();
+    if (!availableServices) return { error: AUTH_UNAVAILABLE_MESSAGE };
+    const { auth, fireStore } = availableServices;
     setLoading(true);
     setErrors(null);
     try {
@@ -218,6 +236,9 @@ export const AuthProvider = ({ children }) => {
   };
 
   const logout = async () => {
+    const availableServices = getAvailableServices();
+    if (!availableServices) return { error: AUTH_UNAVAILABLE_MESSAGE };
+    const { auth } = availableServices;
     setLoading(true);
     setErrors(null);
     try {
@@ -231,6 +252,9 @@ export const AuthProvider = ({ children }) => {
   };
 
   const getAllUsers = async () => {
+    const availableServices = getAvailableServices();
+    if (!availableServices) return [];
+    const { fireStore } = availableServices;
     setErrors(null);
     try {
       const q = query(collection(fireStore, "users"));
@@ -249,6 +273,9 @@ export const AuthProvider = ({ children }) => {
   };
 
   const profile = async () => {
+    const availableServices = getAvailableServices();
+    if (!availableServices) return { error: AUTH_UNAVAILABLE_MESSAGE };
+    const { auth, fireStore } = availableServices;
     setLoading(true);
     setErrors(null);
     try {
@@ -279,6 +306,9 @@ export const AuthProvider = ({ children }) => {
   };
 
   const updateProfile = async (user) => {
+    const availableServices = getAvailableServices();
+    if (!availableServices) return { error: AUTH_UNAVAILABLE_MESSAGE };
+    const { auth, fireStore } = availableServices;
     setLoading(true);
     setErrors(null);
 
@@ -346,34 +376,53 @@ export const AuthProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (user) => {
-      setLoading(true);
-      if (user) {
-        try {
-          const docRef = doc(fireStore, "users", user.uid);
-          const userDoc = await getDoc(docRef);
-          const userData = userDoc.exists() ? userDoc.data() : null;
+    let cancelled = false;
+    let unsubscribe;
 
-          if (userData) {
-            setUser({ id: user.uid, ...userData });
-            setIsAuthenticated(true);
+    getFirebaseServices()
+      .then(({ auth, fireStore }) => {
+        if (cancelled) return;
+        setServices({ auth, fireStore });
+        setAuthStatus("ready");
+        unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+          setLoading(true);
+          if (currentUser) {
+            try {
+              const docRef = doc(fireStore, "users", currentUser.uid);
+              const userDoc = await getDoc(docRef);
+              const userData = userDoc.exists() ? userDoc.data() : null;
+
+              if (userData) {
+                setUser({ id: currentUser.uid, ...userData });
+                setIsAuthenticated(true);
+              } else {
+                setIsAuthenticated(false);
+                setUser(null);
+              }
+            } catch {
+              setIsAuthenticated(false);
+              setUser(null);
+            }
           } else {
             setIsAuthenticated(false);
             setUser(null);
           }
-        } catch (error) {
-          console.error("Error fetching user data:", error);
-          setIsAuthenticated(false);
-          setUser(null);
-        }
-      } else {
-        setIsAuthenticated(false);
+          setLoading(false);
+        });
+      })
+      .catch(() => {
+        if (cancelled) return;
+        setServices(null);
+        setAuthStatus("unavailable");
         setUser(null);
-      }
-      setLoading(false);
-    });
+        setIsAuthenticated(false);
+        setLoading(false);
+      });
 
-    return () => unsubscribe();
+    return () => {
+      cancelled = true;
+      unsubscribe?.();
+    };
   }, []);
 
   return (
@@ -391,6 +440,7 @@ export const AuthProvider = ({ children }) => {
         isAuthenticated,
         errors,
         loading,
+        authStatus,
         setLoading
       }}
     >
@@ -399,10 +449,6 @@ export const AuthProvider = ({ children }) => {
   );
 };
 
-export const useAuth = () => {
-  const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error("useAuth must be used within an AuthProvider");
-  }
-  return context;
+AuthProvider.propTypes = {
+  children: PropTypes.node.isRequired,
 };

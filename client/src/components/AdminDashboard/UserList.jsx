@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import { useState } from "react";
+import PropTypes from "prop-types";
 import { Container, Button, Row, Col, Image } from "react-bootstrap";
 import styles from "../../assets/css/AdminDashBoard.module.css";
 import useUserList from "../../hooks/useUserList";
@@ -6,7 +7,6 @@ import userIcon from "../../assets/images/user-interface.png";
 import professionalIcon from "../../assets/images/jobsicon.png";
 import customerIcon from "../../assets/images/edificios.png";
 import adminIcon from "../../assets/images/admin.png";
-import { CustomToast, EditUserModal } from "../index";
 
 const UserList = ({ searchTerm, onEditUser }) => {
   const {
@@ -15,15 +15,9 @@ const UserList = ({ searchTerm, onEditUser }) => {
     customerUsersCount,
     adminUsersCount,
     currentUsers,
-    showToast,
-    toastMessage,
-    toastType,
-    setShowToast,
   } = useUserList();
 
   const [expandedUserId, setExpandedUserId] = useState(null);
-  const [showEditModal, setShowEditModal] = useState(false);
-  const [currentUser, setCurrentUser] = useState(null);
 
   const toggleDetails = (userId) => {
     setExpandedUserId(expandedUserId === userId ? null : userId);
@@ -36,8 +30,6 @@ const UserList = ({ searchTerm, onEditUser }) => {
   );
 
   const handleEditClick = (user) => {
-    setCurrentUser(user);
-    setShowEditModal(true);
     onEditUser(user);
   };
 
@@ -88,25 +80,13 @@ const UserList = ({ searchTerm, onEditUser }) => {
         </div>
       ))}
 
-      {showEditModal && (
-        <EditUserModal
-          show={showEditModal}
-          handleClose={() => setShowEditModal(false)}
-          handleConfirm={() => {}}
-          user={currentUser}
-        />
-      )}
-
-      <CustomToast
-        show={showToast}
-        message={toastMessage}
-        backgroundColor={toastType === "success" ? "green" : "red"}
-        color="white"
-        duration={3000}
-        onClose={() => setShowToast(false)}
-      />
     </Container>
   );
+};
+
+UserList.propTypes = {
+  searchTerm: PropTypes.string.isRequired,
+  onEditUser: PropTypes.func.isRequired,
 };
 
 export default UserList;

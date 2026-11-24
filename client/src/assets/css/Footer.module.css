@@ -17,6 +17,11 @@
   background-color: var(--transparente);
 }
 
+.table_scroll {
+  max-width: 100%;
+  overflow-x: auto;
+}
+
 .style_table td,
 .style_table th {
   background-color: var(--transparente);
@@ -63,4 +68,32 @@
   width: 80px;
   height: 80px;
   color: var(--blanco);
+}
+
+@media (max-width: 576px) {
+  .footer_custom {
+    border-radius: 32px 32px 0 0;
+  }
+
+  .style_table {
+    min-width: 560px;
+  }
+
+  .footer_bottom,
+  .bottom_left,
+  .bottom_right {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .bottom_left,
+  .bottom_right {
+    width: 100%;
+    text-align: center;
+  }
+
+  .bottom_left p,
+  .bottom_right p {
+    margin: 0 0 0.5rem;
+  }
 }

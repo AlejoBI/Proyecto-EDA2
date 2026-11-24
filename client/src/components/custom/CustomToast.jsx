@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import PropTypes from "prop-types";
 import { Toast } from "react-bootstrap";
 
 const CustomToast = ({
@@ -36,6 +37,19 @@ const CustomToast = ({
       <Toast.Body>{message}</Toast.Body>
     </Toast>
   );
+};
+
+CustomToast.propTypes = {
+  show: PropTypes.bool.isRequired,
+  message: PropTypes.string.isRequired,
+  position: PropTypes.shape({
+    top: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    right: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  }),
+  backgroundColor: PropTypes.string,
+  color: PropTypes.string,
+  duration: PropTypes.number,
+  onClose: PropTypes.func.isRequired,
 };
 
 export default CustomToast;

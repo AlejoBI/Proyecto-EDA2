@@ -1,3 +1,4 @@
+import PropTypes from "prop-types";
 import { Card } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 
@@ -29,6 +30,13 @@ const CustomLabelLanding = ({ text, img, numLabel, path }) => {
       />
     </Card>
   );
+};
+
+CustomLabelLanding.propTypes = {
+  text: PropTypes.string.isRequired,
+  img: PropTypes.string.isRequired,
+  numLabel: PropTypes.string.isRequired,
+  path: PropTypes.string.isRequired,
 };
 
 export default CustomLabelLanding;

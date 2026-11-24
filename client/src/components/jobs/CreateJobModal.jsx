@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
+import PropTypes from "prop-types";
 import { useForm } from "react-hook-form";
-import { useJobs } from "../../context/JobsContext";
-import { useAuth } from "../../context/AuthContext";
+import { useJobs } from "../../hooks/useJobs.js";
+import { useAuth } from "../../hooks/useAuth.js";
 import { useNavigate } from "react-router-dom";
 import { ConfirmModal } from "../index";
 import { Modal, Button, Dropdown } from "react-bootstrap";
@@ -14,7 +15,6 @@ const CreateJob = ({ show, handleClose }) => {
     register,
     handleSubmit,
     formState: { errors },
-    setValue, // Para establecer valores del formulario
   } = useForm();
 
   const { createJob } = useJobs();
@@ -160,6 +160,11 @@ const CreateJob = ({ show, handleClose }) => {
       />
     </>
   );
+};
+
+CreateJob.propTypes = {
+  show: PropTypes.bool.isRequired,
+  handleClose: PropTypes.func.isRequired,
 };
 
 export default CreateJob;

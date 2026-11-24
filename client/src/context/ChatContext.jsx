@@ -1,4 +1,6 @@
-import { createContext, useContext, useState } from "react";
+import { useCallback, useState } from "react";
+import PropTypes from "prop-types";
+import ChatContext from "./ChatContextInstance.js";
 
 import appFirebase from "../firebase/credentials.js";
 import {
@@ -16,7 +18,14 @@ import {
 
 const fireStore = getFirestore(appFirebase);
 
-const ChatContext = createContext();
+const getErrorMessage = (error, fallback) => {
+  try {
+    const message = error?.message;
+    return typeof message === "string" && message.trim() ? message : fallback;
+  } catch {
+    return fallback;
+  }
+};
 
 export const ChatProvider = ({ children }) => {
   const [chats, setChats] = useState([]);
@@ -50,7 +59,7 @@ export const ChatProvider = ({ children }) => {
 
       if (!userDoc.exists() || !participantDoc.exists()) {
         setErrors("User not found");
-        return;
+        throw new Error("User not found");
       }
 
       const userName = userDoc.data().username;
@@ -68,12 +77,13 @@ export const ChatProvider = ({ children }) => {
 
       return { chatId: newChat.id };
     } catch (error) {
-      setErrors(error.message || "Error creating chat");
-      return null;
+      const message = getErrorMessage(error, "Error creating chat");
+      setErrors(message);
+      throw new Error(message);
     }
   };
 
-  const getUserChats = (userId) => {
+  const getUserChats = useCallback((userId) => {
     try {
       const q = query(
         collection(fireStore, "chats"),
@@ -85,14 +95,17 @@ export const ChatProvider = ({ children }) => {
           ...doc.data(),
         }));
         setChats(fetchedChats);
+      }, (error) => {
+        setErrors(getErrorMessage(error, "Error fetching user chats"));
       });
       return unsubscribe;
     } catch (error) {
-      setErrors(error.message || "Error fetching user chats");
+      setErrors(getErrorMessage(error, "Error fetching user chats"));
+      return undefined;
     }
-  };
+  }, []);
 
-  const listenToMessages = (chatId) => {
+  const listenToMessages = useCallback((chatId) => {
     try {
       const messagesRef = collection(fireStore, `chats/${chatId}/messages`);
       const messagesQuery = query(messagesRef, orderBy("timestamp", "asc"));
@@ -103,12 +116,15 @@ export const ChatProvider = ({ children }) => {
           ...doc.data(),
         }));
         setMessages(fetchedMessages);
+      }, (error) => {
+        setErrors(getErrorMessage(error, "Error fetching messages"));
       });
       return unsubscribe;
     } catch (error) {
-      setErrors(error.message || "Error fetching messages");
+      setErrors(getErrorMessage(error, "Error fetching messages"));
+      return undefined;
     }
-  };
+  }, []);
 
   const sendMessage = async (chatId, senderId, message) => {
     try {
@@ -117,8 +133,11 @@ export const ChatProvider = ({ children }) => {
         message,
         timestamp: new Date(),
       });
+      return { success: true };
     } catch (error) {
-      setErrors(error.message || "Error sending message");
+      const message = getErrorMessage(error, "Error sending message");
+      setErrors(message);
+      return { success: false, error: message };
     }
   };
 
@@ -139,10 +158,6 @@ export const ChatProvider = ({ children }) => {
   );
 };
 
-export const useChat = () => {
-  const context = useContext(ChatContext);
-  if (!context) {
-    throw new Error("useChat must be used within a ChatProvider");
-  }
-  return context;
+ChatProvider.propTypes = {
+  children: PropTypes.node.isRequired,
 };

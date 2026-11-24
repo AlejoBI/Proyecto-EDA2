@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useAdmin } from "../context/AdminContext";
+import { useAdmin } from "./useAdmin.js";
 
 const useUserList = () => {
   const { getAllUsers } = useAdmin();
@@ -8,9 +8,6 @@ const useUserList = () => {
   const [professionalUsersCount, setProfessionalUsersCount] = useState(0);
   const [customerUsersCount, setCustomerUsersCount] = useState(0);
   const [adminUsersCount, setAdminUsersCount] = useState(0);
-  const [showToast, setShowToast] = useState(false);
-  const [toastMessage, setToastMessage] = useState("");
-  const [toastType, setToastType] = useState("");
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -29,22 +26,12 @@ const useUserList = () => {
     fetchUsers();
   }, [getAllUsers]);
 
-  const showToastMessage = (message, type) => {
-    setToastMessage(message);
-    setToastType(type);
-    setShowToast(true);
-  };
-
   return {
     totalUsersCount,
     professionalUsersCount,
     customerUsersCount,
     adminUsersCount,
     currentUsers,
-    showToast,
-    toastMessage,
-    setShowToast,
-    toastType,
   };
 };
 

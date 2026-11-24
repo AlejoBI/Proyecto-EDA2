@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Container, Row, Col } from "react-bootstrap";
 import {
   Sidebar,
@@ -10,8 +10,8 @@ import {
   EditUserModal,
 } from "../components/index";
 import styles from "../../src/assets/css/AdminDashBoard.module.css";
-import { useJobs } from "../context/JobsContext";
-import { useAdmin } from "../context/AdminContext";
+import { useJobs } from "../hooks/useJobs.js";
+import { useAdmin } from "../hooks/useAdmin.js";
 
 const AdminDashboard = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -56,10 +56,11 @@ const AdminDashboard = () => {
     try {
       await editUser(userId, userData);
       showToastMessage("User edited successfully", "success");
-    } catch (error) {
+      return true;
+    } catch {
       showToastMessage("Failed to edit user", "error");
+      return false;
     }
-    setShowEditModal(false);
   };
 
   const handleDeleteUserClick = (userId) => {
@@ -70,18 +71,14 @@ const AdminDashboard = () => {
     try {
       await deleteUser(userId);
       showToastMessage("User deleted successfully", "success");
-    } catch (error) {
+      setShowDeleteConfirm(false);
+    } catch {
       showToastMessage("Failed to delete user", "error");
     }
-    setShowDeleteConfirm(false);
   };
 
   const handleCloseEditModal = () => {
     setShowEditModal(false);
-  };
-
-  const handleCloseDeleteConfirm = () => {
-    setShowDeleteConfirm(false);
   };
 
   return (

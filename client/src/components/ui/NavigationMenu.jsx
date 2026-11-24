@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { Container, Nav, Navbar, NavDropdown, Button, Image } from "react-bootstrap";
 import logo from "../../assets/images/logo.png";
-import { useAuth } from "../../context/AuthContext";
+import { useAuth } from "../../hooks/useAuth.js";
 import styles from "../../assets/css/NavigationMenu.module.css";
 
 const NavigationMenu = () => {

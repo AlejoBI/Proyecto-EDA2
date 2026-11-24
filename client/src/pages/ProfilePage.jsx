@@ -1,4 +1,3 @@
-import React from "react";
 import { ProfileInformation } from "../components/index";
 
 function ProfilePage() {

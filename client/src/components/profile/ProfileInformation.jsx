@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Card, Col, Container, Row, Image, Button, Modal } from "react-bootstrap";
 import { useForm } from "react-hook-form";
-import { useAuth } from "../../context/AuthContext";
+import { useAuth } from "../../hooks/useAuth.js";
 import logo from "../../assets/images/logo.png";
 import { capitalizeFirstLetter } from "../../hooks/CapitalizeFirstLetter";
 import { UpdateProfile } from "../index";
@@ -12,7 +12,7 @@ const ProfileInformation = () => {
   const [showModal, setShowModal] = useState(false);
   const [updateInformation, setUpdateInformation] = useState(false);
 
-  const { register, handleSubmit, setValue } = useForm({
+  const { setValue } = useForm({
     defaultValues: {
       username: user?.username || "",
       lastName: user?.lastName || "",

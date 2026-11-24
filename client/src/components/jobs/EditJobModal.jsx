@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
+import PropTypes from "prop-types";
 import { useForm } from "react-hook-form";
-import { useJobs } from "../../context/JobsContext";
-import { useAuth } from "../../context/AuthContext";
+import { useJobs } from "../../hooks/useJobs.js";
+import { useAuth } from "../../hooks/useAuth.js";
 import { CustomToast, ConfirmModal } from "../index";
 import { Modal, Button, Dropdown } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
@@ -108,7 +109,6 @@ const EditJob = ({ show, handleClose, job }) => {
 
             <h4>Description</h4>
             <textarea
-              typeof="text"
               {...register("description", { required: true })}
               style={{ resize: "none", overflow: "hidden" }}
               onInput={(e) => {
@@ -192,6 +192,20 @@ const EditJob = ({ show, handleClose, job }) => {
       />
     </>
   );
+};
+
+EditJob.propTypes = {
+  show: PropTypes.bool.isRequired,
+  handleClose: PropTypes.func.isRequired,
+  job: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    title: PropTypes.string,
+    description: PropTypes.string,
+    company: PropTypes.string,
+    salary: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    country: PropTypes.string,
+    city: PropTypes.string,
+  }).isRequired,
 };
 
 export default EditJob;

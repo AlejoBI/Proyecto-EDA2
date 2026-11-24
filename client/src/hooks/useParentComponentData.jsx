@@ -1,4 +1,4 @@
-const useParentComponentData = () => {
+const parentComponentData = (() => {
   const professionalAreas = [
     "Technology and Programming",
     "Graphic Design",
@@ -279,6 +279,8 @@ const useParentComponentData = () => {
     professionalAreasAndSkills,
     tableData,
   };
-};
+})();
+
+const useParentComponentData = () => parentComponentData;
 
 export default useParentComponentData;

@@ -1,8 +1,17 @@
-import { useState, useEffect } from "react";
+import { useCallback, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useJobs } from "../context/JobsContext";
-import { useAuth } from "../context/AuthContext";
-import { useChat } from "../context/ChatContext";
+import { useJobs } from "./useJobs.js";
+import { useAuth } from "./useAuth.js";
+import { useChat } from "./useChat.js";
+
+const getErrorMessage = (error, fallback) => {
+  try {
+    const message = error?.message;
+    return typeof message === "string" && message.trim() ? message : fallback;
+  } catch {
+    return fallback;
+  }
+};
 
 const useJobsList = () => {
   const { jobs, deleteJob } = useJobs();
@@ -27,22 +36,7 @@ const useJobsList = () => {
     setShowModal((prev) => !prev);
   };
 
-  useEffect(() => {
-    applyFilters();
-    setJobsCount(jobs.length);
-
-    const uniqueCustomerIds = [];
-
-    jobs.forEach((job) => {
-      if (!uniqueCustomerIds.includes(job.id_user)) {
-        uniqueCustomerIds.push(job.id_user);
-      }
-    });
-
-    setUsersJobsCount(uniqueCustomerIds);
-  }, [selectedCountry, selectedCity, jobs]);
-
-  const applyFilters = () => {
+  const applyFilters = useCallback(() => {
     let updatedList = jobs;
 
     if (selectedCountry !== "All") {
@@ -59,7 +53,22 @@ const useJobsList = () => {
 
     setFilteredJobs(updatedList);
     setCurrentPage(1); 
-  };
+  }, [jobs, selectedCountry, selectedCity]);
+
+  useEffect(() => {
+    applyFilters();
+    setJobsCount(jobs.length);
+
+    const uniqueCustomerIds = [];
+
+    jobs.forEach((job) => {
+      if (!uniqueCustomerIds.includes(job.id_user)) {
+        uniqueCustomerIds.push(job.id_user);
+      }
+    });
+
+    setUsersJobsCount(uniqueCustomerIds);
+  }, [applyFilters, jobs]);
 
   const handleCountryChange = (country) => {
     setSelectedCountry(country);
@@ -109,17 +118,18 @@ const useJobsList = () => {
 
   const handleStartChat = async (participantId) => {
     try {
-      await createChat({
+      const result = await createChat({
         userId: user.id,
         participantId,
       });
+      if (!result?.chatId) throw new Error("Error al iniciar el chat");
       setToastMessage("Chat iniciado con éxito, redirigiendo...");
       setToastType("success");
       setTimeout(() => {
         navigate("/user/chat");
       }, 3000);
     } catch (error) {
-      setToastMessage("Error al iniciar el chat");
+      setToastMessage(getErrorMessage(error, "Error al iniciar el chat"));
       setToastType("error");
     } finally {
       setShowToast(true);

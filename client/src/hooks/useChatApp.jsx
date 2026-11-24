@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import { useChat } from "../context/ChatContext";
-import { useAuth } from "../context/AuthContext";
+import { useChat } from "./useChat.js";
+import { useAuth } from "./useAuth.js";
 
 const useChatApp = () => {
   const {
@@ -24,14 +24,14 @@ const useChatApp = () => {
       const unsubscribeChats = getUserChats(currentUserId);
       return () => unsubscribeChats && unsubscribeChats();
     }
-  }, [currentUserId]);
+  }, [currentUserId, getUserChats]);
 
   useEffect(() => {
     if (activeChat) {
       const unsubscribeMessages = listenToMessages(activeChat);
       return () => unsubscribeMessages && unsubscribeMessages();
     }
-  }, [activeChat]);
+  }, [activeChat, listenToMessages]);
 
   useEffect(() => {
     setFilteredChats(
@@ -48,8 +48,10 @@ const useChatApp = () => {
   const handleSendMessage = async () => {
     if (newMessage.trim() && activeChat) {
       try {
-        await sendMessage(activeChat, currentUserId, newMessage);
-        setNewMessage("");
+        const result = await sendMessage(activeChat, currentUserId, newMessage);
+        if (result?.success) {
+          setNewMessage("");
+        }
       } catch {
         console.error(errors || "Failed to send message.");
       }

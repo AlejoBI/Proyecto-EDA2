@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
+import PropTypes from "prop-types";
 import useParentComponentData from "../../hooks/useParentComponentData";
 import styles from "../../assets/css/ProfilePage.module.css";
 
@@ -14,7 +15,7 @@ const ProfessionalAreaSelector = ({ register, setValue, getValues }) => {
     } else {
       setFilteredSkills([]);
     }
-  }, [selectedArea]);
+  }, [selectedArea, professionalAreasAndSkills]);
 
   useEffect(() => {
     // Load existing skills when the component mounts
@@ -127,6 +128,12 @@ const ProfessionalAreaSelector = ({ register, setValue, getValues }) => {
       )}
     </div>
   );
+};
+
+ProfessionalAreaSelector.propTypes = {
+  register: PropTypes.func.isRequired,
+  setValue: PropTypes.func.isRequired,
+  getValues: PropTypes.func.isRequired,
 };
 
 export default ProfessionalAreaSelector;
